@@ -1,0 +1,4 @@
+/var/log/cron.log {
+	rotate 4
+	weekly
+}

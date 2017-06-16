@@ -1,0 +1,35 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=s6-rc
+pkgver=0.1.0.0
+pkgrel=1
+pkgdesc="s6-rc is a service manager for s6-based systems."
+arch=('x86_64')
+url="http://skarnet.org/software/s6-linux-init/"
+license=('ISC')
+depends=('skalibs' 'execline' 's6')
+makedepends=('s6-rc')
+source=("http://skarnet.org/software/s6-rc/$pkgname-$pkgver.tar.gz"
+		"source.tar.gz")
+md5sums=('4d17dea017a07d0d1b5fc0d0ba5ade41'
+         '05dc6200d05bd9d1523c91a33b7c40c0')
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    ./configure --prefix=/usr \
+		--libdir=/usr/lib \
+		--libexecdir=/usr/lib
+    make
+}
+
+package() {
+	groups=('rc')
+    cd "$srcdir/$pkgname-$pkgver"
+    make DESTDIR="$pkgdir" install
+
+	mkdir -pv ${pkgdir}/etc/s6/rc/source
+
+	cp -vR ${srcdir}/source/ ${pkgdir}/etc/s6/rc/
+
+	s6-rc-compile ${pkgdir}/etc/s6/rc/compiled ${pkgdir}/etc/s6/rc/source
+}

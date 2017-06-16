@@ -1,0 +1,35 @@
+#
+# These things are run when an Openbox X Session is started.
+# You may place a similar script in $HOME/.config/openbox/autostart
+# to run user-specific things.
+#
+
+# If you want to use GNOME config tools...
+#
+#if test -x /usr/libexec/gnome-settings-daemon >/dev/null; then
+#  /usr/libexec/gnome-settings-daemon &
+#elif which gnome-settings-daemon >/dev/null; then
+#  gnome-settings-daemon &
+#fi
+
+# If you want to use XFCE config tools...
+#
+#xfce-mcs-manager &
+
+# start the task bar
+if test -x /usr/bin/tint2 >/dev/null; then
+	tint2 &
+fi
+
+# start the desktop management
+if test -x /usr/bin/spacefm >/dev/null; then
+	(spacefm --desktop) &
+fi
+
+# set the desktop background
+#if test -x /usr/bin/feh >/dev/null; then
+#	if [ -f /usr/share/backgrounds/cromnix/logo.png ]; then
+#		feh  --image-bg black --bg-center '/usr/share/backgrounds/cromnix/logo.png' &
+#	fi
+#fi
+

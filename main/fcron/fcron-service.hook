@@ -1,0 +1,10 @@
+[Trigger]
+Operation = Install
+Type = Package
+Target = fcron-cromnix
+
+[Action]
+Description = Autostart fcron...
+When = PostTransaction
+Exec = /usr/share/libalpm/scripts/fcron-service
+Depends = fcron-cromnix

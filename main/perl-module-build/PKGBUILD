@@ -1,0 +1,31 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=perl-module-build
+_pkgname=Module-Build
+pkgver=0.4220
+pkgrel=1
+pkgdesc="Build, test, and install Perl modules."
+arch=('any')
+url="http://search.cpan.org/dist/Module-Build"
+license=('GPL' 'PerlArtistic')
+depends=('perl')
+options=('!emptydirs')
+source=("http://search.cpan.org/CPAN/authors/id/L/LE/LEONT/$_pkgname-$pkgver.tar.gz")
+md5sums=('9df204e188462a4410d496f316c2c531')
+
+build() {
+    cd "$srcdir/$_pkgname-$pkgver"
+    perl Build.PL
+    perl Build
+}
+
+check() {
+    cd "$srcdir/$_pkgname-$pkgver"
+    perl Build test
+}
+
+package() {
+    cd "$srcdir/$_pkgname-$pkgver"
+
+    perl Build install destdir="$pkgdir"
+}

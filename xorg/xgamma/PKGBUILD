@@ -1,0 +1,27 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=xgamma
+pkgver=1.0.6
+pkgrel=1
+pkgdesc='Alter a monitor''s gamma correction'
+arch=('x86_64')
+url='https://xorg.freedesktop.org/'
+license=('custom')
+depends=('libx11' 'libxxf86vm')
+makedepends=('util-macros')
+groups=('xorg-apps' 'xorg')
+source=("https://www.x.org/archive/individual/app/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('90b4305157c2b966d5180e2ee61262be')
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--localstatedir=/var
+	make
+}
+
+package() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+}

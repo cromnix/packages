@@ -1,0 +1,33 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=sgml-common
+pkgver=0.6.3
+pkgrel=1
+pkgdesc="The SGML Common package contains install-catalog. This is useful for creating and maintaining centralized SGML catalogs."
+arch=('any')
+url='http://www.docbook.org/xml/'
+license=('GPL')
+backup=('etc/sgml/sgml.conf')
+install=sgml-common.install
+source=("ftp://sources.redhat.com/pub/docbook-tools/new-trials/SOURCES/$pkgname-$pkgver.tgz"
+        "http://www.linuxfromscratch.org/patches/blfs/7.10/$pkgname-$pkgver-manpage-1.patch")
+md5sums=('103c9828f24820df86e55e7862e28974'
+         '645f3c898abd270a9143036824ae121a')
+
+prepare() {
+    cd "$srcdir/$pkgname-$pkgver"
+    patch -Np1 -i ${srcdir}/sgml-common-0.6.3-manpage-1.patch
+}
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    autoreconf -f -i
+    ./configure --prefix=/usr \
+        --sysconfdir=/etc
+    make
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make DESTDIR="$pkgdir" docdir=/usr/share/doc install
+}

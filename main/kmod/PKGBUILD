@@ -1,0 +1,37 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=kmod
+pkgver=24
+pkgrel=1
+pkgdesc="The Kmod package contains libraries and utilities for loading kernel modules"
+arch=('x86_64')
+url='http://git.kernel.org/?p=utils/kernel/kmod/kmod.git;a=summary'
+license=('GPL2')
+depends=('glibc' 'zlib' 'xz')
+checkdepends=('linux-headers')
+options=('strip')
+source=("https://www.kernel.org/pub/linux/utils/kernel/kmod/$pkgname-$pkgver.tar.xz")
+md5sums=('08297dfb6f2b3f625f928ca3278528af')
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    ./configure --prefix=/usr \
+        --sysconfdir=/etc \
+        --with-rootlibdir=/usr/lib \
+        --with-xz \
+        --with-zlib \
+        --libdir=/usr/lib
+    make
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make DESTDIR="$pkgdir" install
+
+    mkdir -pv ${pkgdir}/usr/bin
+    for target in depmod insmod lsmod modinfo modprobe rmmod; do
+        ln -sfv kmod ${pkgdir}/usr/bin/$target
+    done
+
+    ln -sfv kmod ${pkgdir}/usr/bin/lsmod
+}

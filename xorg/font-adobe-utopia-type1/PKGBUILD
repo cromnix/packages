@@ -1,0 +1,30 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=font-adobe-utopia-type1
+pkgver=1.0.4
+pkgrel=1
+pkgdesc='X.org adobe utopia font'
+arch=('any')
+url='https://xorg.freedesktop.org/'
+license=('custom')
+depends=('encodings' 'font-alias' 'font-util' 'fontconfig' 'mkfontdir')
+makedepends=('util-macros')
+install=font-adobe-utopia-type1.install
+groups=('xorg-fonts' 'xorg')
+source=("https://www.x.org/archive/individual/font/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('fcf24554c348df3c689b91596d7f9971')
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--localstatedir=/var \
+		--with-fontrootdir=/usr/share/fonts
+	make
+}
+
+package() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+	rm ${pkgdir}/usr/share/fonts/Type1/fonts.{dir,scale}
+}

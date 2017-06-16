@@ -1,0 +1,31 @@
+post_install() {
+    add_catalog
+}
+
+pre_upgrade() {
+    remove_catalog
+}
+
+post_upgrade() {
+    add_catalog
+}
+
+pre_remove() {
+    remove_catalog
+}
+
+add_catalog() {
+    install-catalog --add /etc/sgml/sgml-ent.cat \
+        /usr/share/sgml/sgml-iso-entities-8879.1986/catalog
+
+    install-catalog --add /etc/sgml/sgml-docbook.cat \
+        /etc/sgml/sgml-ent.cat
+}
+
+remove_catalog() {
+    install-catalog --remove /etc/sgml/sgml-ent.cat \
+        /usr/share/sgml/sgml-iso-entities-8879.1986/catalog
+
+    install-catalog --remove /etc/sgml/sgml-docbook.cat \
+        /etc/sgml/sgml-ent.cat
+}

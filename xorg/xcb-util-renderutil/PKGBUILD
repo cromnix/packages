@@ -1,0 +1,26 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=xcb-util-renderutil
+pkgver=0.3.9
+pkgrel=1
+pkgdesc='Utility libraries for XC Binding - Convenience functions for the Render extension'
+arch=('x86_64')
+url='https://xcb.freedesktop.org'
+license=('custom')
+depends=('libxcb')
+makedepends=('util-macros')
+source=("http://xcb.freedesktop.org/dist/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('468b119c94da910e1291f3ffab91019a')
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--localstatedir=/var
+	make
+}
+
+package() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+}

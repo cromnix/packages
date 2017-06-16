@@ -1,0 +1,29 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=xkeyboard-config
+pkgver=2.21
+pkgrel=1
+pkgdesc='X keyboard configuration files'
+arch=('any')
+url='https://xorg.freedesktop.org/'
+license=('custom')
+makedepends=('intltool' 'xkbcomp' 'libxslt')
+source=("https://www.x.org/archive/individual/data/${pkgname}/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('af9498e8954907d0a47f0f7b3d21e1ef')
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--localstatedir=/var \
+		--with-xkb-base=/usr/share/X11/xkb \
+		--with-xkb-rules-symlink=xorg \
+		--enable-compat-rules=yes
+	make
+}
+
+package() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+	#mv -v ${pkgdir}/usr/share/pkgconfig ${pkgdir}/usr/lib/
+}

@@ -1,0 +1,33 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=coreutils
+pkgver=8.27
+pkgrel=1
+pkgdesc='Contains utilities for showing and setting the basic system characteristics'
+arch=('x86_64')
+url='http://www.gnu.org/software/coreutils'
+license=('GPL3')
+groups=('cromnix-base')
+depends=('glibc' 'libacl' 'libattr' 'gmp' 'libcap' 'openssl')
+makedepends=('acl-dev')
+source=("ftp://ftp.gnu.org/gnu/${pkgname}/${pkgname}-${pkgver}.tar.xz")
+md5sums=('502795792c212932365e077946d353ae')
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	./configure \
+		--prefix=/usr \
+		--libexecdir=/usr/lib \
+		--enable-no-install-program=kill,uptime
+	make
+}
+
+check() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make check
+}
+
+package() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+}

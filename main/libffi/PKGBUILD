@@ -1,0 +1,41 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=libffi
+pkgver=3.2.1
+pkgrel=1
+pkgdesc="The libffi library provides a portable, high level programming interface to various calling conventions. This allows a programmer to call any function specified by a call interface description at run time."
+arch=('x86_64')
+url="http://sourceware.org/libffi/"
+license=('MIT')
+depends=('glibc')
+checkdepends=('dejagnu')
+source=("ftp://sourceware.org/pub/libffi/$pkgname-$pkgver.tar.gz")
+md5sums=('83b89587607e3eb65c70d361f13bab43')
+
+prepare() {
+    cd "$srcdir/$pkgname-$pkgver"
+	sed -e '/^includesdir/ s/$(libdir).*$/$(includedir)/' \
+		-i include/Makefile.in
+
+	sed -e '/^includedir/ s/=.*$/=@includedir@/' \
+		-e 's/^Cflags: -I${includedir}/Cflags:/' \
+		-i libffi.pc.in
+}
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    ./configure --prefix=/usr \
+        --disable-static
+    make
+}
+
+check() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make check
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+
+    make DESTDIR="$pkgdir" install
+}

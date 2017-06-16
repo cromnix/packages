@@ -1,0 +1,26 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=lxpanel
+pkgver=0.9.3
+pkgrel=1
+pkgdesc='The LXPanel package contains a lightweight X11 desktop panel'
+arch=('x86_64')
+url='http://lxde.org/'
+license=('GPL2')
+groups=('lxde')
+depends=('alsa-lib' 'menu-cache' 'lxmenu-data' 'libwnck2' 'libfm' 'keybinder2')
+makedepends=('intltool' 'docbook-xml' 'docbook-xsl' 'wireless_tools' 'atk-dev')
+optdepends=('wireless_tools: netstat plugin')
+source=("http://downloads.sourceforge.net/lxde/${pkgname}-${pkgver}.tar.xz")
+md5sums=('57f0add873815dc608eb45241c9504a7')
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}

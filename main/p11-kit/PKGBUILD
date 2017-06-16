@@ -1,0 +1,30 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=p11-kit
+pkgver=0.23.7
+pkgrel=1
+pkgdesc="The p11-kit package provides a way to load and enumerate PKCS #11 (a Cryptographic Token Interface Standard) modules."
+arch=('x86_64')
+url="http://p11-glue.freedesktop.org"
+license=('BSD')
+depends=('glibc' 'ca-certificates' 'libtasn1' 'libffi')
+source=("https://github.com/p11-glue/${pkgname}/releases/download/${pkgver}/${pkgname}-${pkgver}.tar.gz")
+md5sums=('ebbefd123210594231adb4bde21b8560')
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    ./configure --prefix=/usr \
+		--libexecdir=/usr/lib \
+        --sysconfdir=/etc
+    make
+}
+
+check() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make check
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make DESTDIR="$pkgdir" install
+}

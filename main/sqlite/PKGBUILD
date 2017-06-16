@@ -1,0 +1,38 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=sqlite
+pkgver=3.19.3
+_srcver=3190300
+pkgrel=1
+pkgdesc='The SQLite package is a software library that implements a self-contained, serverless, zero-configuration, transactional SQL database engine'
+arch=('x86_64')
+url='http://www.sqlite.org/'
+license=('custom:Public Domain')
+depends=('glibc' 'readline')
+makedepends=('tcl' 'readline')
+options=('!emptydirs' '!makeflags')
+source=("http://sqlite.org/2017/${pkgname}-autoconf-${_srcver}.tar.gz"
+		"http://sqlite.org/2017/${pkgname}-doc-${_srcver}.zip")
+md5sums=('c93070d5bf136ce271db23d2dfbc2435'
+         'e33ee181a52f5e944b6c0e3c3fd44069')
+
+# todo: rebuild with libedit and unzip for docs
+
+build() {
+	cd "${srcdir}/${pkgname}-autoconf-${_srcver}"
+
+	export CPPFLAGS="$CPPFLAGS -DSQLITE_ENABLE_FTS3=1 \
+		-DSQLITE_ENABLE_COLUMN_METADATA=1 \
+		-DSQLITE_ENABLE_UNLOCK_NOTIFY=1 \
+		-DSQLITE_SECURE_DELETE=1 \
+		-DSQLITE_ENABLE_DBSTAT_VTAB=1"
+
+	./configure --prefix=/usr \
+		--disable-static
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-autoconf-${_srcver}"
+	make DESTDIR="${pkgdir}" install
+}

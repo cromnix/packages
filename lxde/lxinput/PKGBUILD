@@ -1,0 +1,25 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=lxinput
+pkgver=0.3.5
+pkgrel=1
+pkgdesc='The LXInput package contains a small program used to configure keyboard and mouse for LXDE'
+arch=('x86_64')
+url='https://www.lxde.org/'
+license=('GPL2')
+groups=('lxde')
+depends=('gtk2')
+makedepends=('intltool' 'atk-dev')
+source=("http://downloads.sourceforge.net/lxde/${pkgname}-${pkgver}.tar.xz")
+md5sums=('69680debaef053d540ae3a5f4b237150')
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}

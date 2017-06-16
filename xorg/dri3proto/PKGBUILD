@@ -1,0 +1,23 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=dri3proto
+pkgver=1.0
+pkgrel=1
+pkgdesc='X11 DRI3 protocol'
+arch=('any')
+url='https://www.x.org/wiki/'
+license=('custom')
+makedepends=('util-macros' 'xmlto' 'docbook-xml')
+source=("http://ftp.x.org/pub/individual/proto/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('a3d2cbe60a9ca1bf3aea6c93c817fee3')
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	./configure --prefix=/usr
+	make
+}
+
+package() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+}

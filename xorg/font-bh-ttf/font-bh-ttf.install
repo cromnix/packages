@@ -1,0 +1,20 @@
+post_install() {
+	fc-cache -s > /dev/null
+	mkfontscale usr/share/fonts/TTF
+	mkfontdir usr/share/fonts/TTF
+}
+
+post_upgrade() {
+	post_install
+}
+
+post_remove() {
+	post_install
+
+	# if only fonts.dir and fonts.scale remain then remove them
+	if  [[ $(ls -1 /usr/share/fonts/TTF/ | wc -l) -le 2 ]]; then
+		if [ -f /usr/share/fonts/TTF/fonts.dir ] && [ -f /usr/share/fonts/TTF/fonts.scale ]; then
+			rm -rf /usr/share/fonts/TTF
+		fi
+	fi
+}

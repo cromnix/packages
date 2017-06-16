@@ -1,0 +1,66 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=sysklogd
+pkgver=1.5.1
+pkgrel=1
+pkgdesc="The Sysklogd package contains programs for logging system messages, such as those given by the kernel when unusual things happen."
+arch=('x86_64')
+url="http://www.infodrom.org/projects/sysklogd/"
+license=('BSD')
+groups=('cromnix-base')
+depends=('perl')
+backup=('etc/syslog.conf'
+		'etc/logrotate.d/auth'
+		'etc/logrotate.d/cron'
+		'etc/logrotate.d/daemon'
+		'etc/logrotate.d/kern'
+		'etc/logrotate.d/mail'
+		'etc/logrotate.d/user'
+		'etc/logrotate.d/sys')
+source=("http://www.infodrom.org/projects/sysklogd/download/$pkgname-$pkgver.tar.gz"
+        'syslog.conf'
+        'auth.logrotate'
+        'cron.logrotate'
+        'daemon.logrotate'
+        'kern.logrotate'
+        'mail.logrotate'
+        'user.logrotate'
+        'sys.logrotate')
+md5sums=('c70599ab0d037fde724f7210c2c8d7f8'
+         '3bcfdcaa9bf5935c05e362d331389d5e'
+         'e69eda582124fda164441e674f42c171'
+         '6734aec711c5dd629bb8106e6f7ee06a'
+         'c8235a3a64c5e79d32262f8fad5f632e'
+         '99628aac9b7aa412438c1a0d460c344e'
+         '0c0a16d29b8c64c60d9d30ab646f0fef'
+         'df587796d98c9e7ee9c893b2aa0b4361'
+         '5e568fe7da135545955f22560b7b0b97')
+
+prepare() {
+    cd "$srcdir/$pkgname-$pkgver"
+    sed -i '/Error loading kernel symbols/{n;n;d}' ksym_mod.c
+    sed -i 's/union wait/int/' syslogd.c
+}
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    mkdir -pv ${pkgdir}/usr/bin
+    mkdir -pv ${pkgdir}/usr/share/man/man5
+    mkdir -pv ${pkgdir}/usr/share/man/man8
+    make BINDIR="$pkgdir/usr/bin" MANDIR="$pkgdir/usr/share/man" DESTDIR="$pkgdir" install
+
+    mkdir -pv ${pkgdir}/etc/logrotate.d
+    install -m0644 ${srcdir}/syslog.conf ${pkgdir}/etc/syslog.conf
+    install -m0644 ${srcdir}/auth.logrotate ${pkgdir}/etc/logrotate.d/auth
+	install -m0644 ${srcdir}/cron.logrotate ${pkgdir}/etc/logrotate.d/cron
+	install -m0644 ${srcdir}/daemon.logrotate ${pkgdir}/etc/logrotate.d/deamon
+	install -m0644 ${srcdir}/kern.logrotate ${pkgdir}/etc/logrotate.d/kern
+	install -m0644 ${srcdir}/mail.logrotate ${pkgdir}/etc/logrotate.d/mail
+	install -m0644 ${srcdir}/user.logrotate ${pkgdir}/etc/logrotate.d/user
+	install -m0644 ${srcdir}/sys.logrotate ${pkgdir}/etc/logrotate.d/sys
+}

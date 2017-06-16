@@ -1,0 +1,11 @@
+#!/bin/execlineb -P
+
+/usr/bin/export RUNLEVEL "S"
+
+if { /usr/bin/openrc sysinit }
+if { /usr/bin/openrc boot }
+if { /usr/bin/openrc default }
+
+# not needed if openrc starts agetty
+#if { s6-hiercopy "/etc/s6/init/tty" "/run/s6/service" }
+s6-svscanctl -an "/run/s6/service"

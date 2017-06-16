@@ -1,0 +1,39 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=lxsession
+pkgver=0.5.3
+pkgrel=1
+pkgdesc='The LXSession package contains the default session manager for LXDE'
+arch=('x86_64')
+url='http://lxde.org/'
+license=('GPL2')
+groups=('lxde')
+depends=('consolekit' 'gtk2' 'polkit')
+makedepends=('intltool' 'docbook-xsl' 'vala' 'atk-dev')
+source=("http://downloads.sourceforge.net/lxde/${pkgname}-${pkgver}.tar.xz"
+		'0001-Use-GApplication-for-unique-app-handling.patch')
+md5sums=('823c50e6d0e4ce15a23a42e8f8bf4221'
+         '496695802467c84a3f71c67bc0b244b6')
+
+#todo: unique
+
+prepare() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	patch -Np1 -i "${srcdir}"/0001-Use-GApplication-for-unique-app-handling.patch
+	rm *.stamp
+	autoreconf -fi
+}
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--libexecdir=/usr/lib \
+		--disable-man
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}

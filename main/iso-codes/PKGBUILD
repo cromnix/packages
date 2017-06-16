@@ -1,0 +1,28 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=iso-codes
+pkgver=3.75
+pkgrel=1
+pkgdesc='The ISO Codes package contains a list of country, language and currency names and it is used as a central database for accessing this data'
+arch=('x86_64')
+url='https://pkg-isocodes.alioth.debian.org/'
+license=('LGPL')
+makedepends=('python')
+source=("https://pkg-isocodes.alioth.debian.org/downloads/${pkgname}-${pkgver}.tar.xz")
+md5sums=('9ba173b69d4360003414f23837597a92')
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr
+	make
+}
+
+check() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make check
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" pkgconfigdir=/usr/lib/pkgconfig install
+}

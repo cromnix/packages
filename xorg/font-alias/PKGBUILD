@@ -1,0 +1,26 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=font-alias
+pkgver=1.0.3
+pkgrel=1
+pkgdesc='X.org font alias files'
+arch=('any')
+url='https://xorg.freedesktop.org/'
+license=('custom')
+groups=('xorg-fonts' 'xorg')
+source=("https://www.x.org/archive/individual/font/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('6d25f64796fef34b53b439c2e9efa562')
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--localstatedir=/var \
+		--with-fontrootdir=/usr/share/fonts
+	make
+}
+
+package() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+}

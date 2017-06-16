@@ -1,0 +1,39 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=iproute2
+pkgver=4.11.0
+pkgrel=1
+pkgdesc="The IPRoute2 package contains programs for basic and advanced IPV4-based networking."
+arch=('x86_64')
+url="http://www.linuxfoundation.org/collaborate/workgroups/networking/iproute2"
+license=('GPL2')
+groups=('cromnix-base')
+depends=('glibc')
+backup=('etc/iproute2/ematch_map'
+        'etc/iproute2/rt_dsfield'
+        'etc/iproute2/rt_protos'
+        'etc/iproute2/rt_realms'
+        'etc/iproute2/rt_scopes'
+        'etc/iproute2/rt_tables')
+options=('staticlibs' '!makeflags')
+source=("https://www.kernel.org/pub/linux/utils/net/iproute2/$pkgname-$pkgver.tar.xz")
+md5sums=('7a9498de88bcca95c305df6108ae197e')
+
+prepare() {
+    cd "$srcdir/$pkgname-$pkgver"
+    sed -i /ARPD/d Makefile
+    sed -i 's/arpd.8//' man/man8/Makefile
+    rm -v doc/arpd.sgml
+
+    sed -i 's/m_ipt.o//' tc/Makefile
+}
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make DESTDIR="$pkgdir" SBINDIR=/usr/bin LIBDIR=/usr/lib DOCDIR=/usr/share/doc/${pkgname}-${pkgver} install
+}

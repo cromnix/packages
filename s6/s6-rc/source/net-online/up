@@ -1,0 +1,1 @@
+rc-service start net-online -D -q

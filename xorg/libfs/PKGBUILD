@@ -1,0 +1,33 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=libfs
+_pkgname=libFS
+pkgver=1.0.7
+pkgrel=1
+pkgdesc='X11 Font Services Library'
+arch=('x86_64')
+url='https://www.x.org/wiki/'
+license=('custom')
+depends=('glibc' 'xproto' 'fontsproto')
+makedepends=('util-macros' 'xmlto' 'docbook-xml' 'asciidoc' 'xtrans')
+source=("http://ftp.x.org/pub/individual/lib/${_pkgname}-${pkgver}.tar.bz2")
+md5sums=('d79d9fe2aa55eb0f69b1a4351e1368f7')
+
+build() {
+	cd ${srcdir}/${_pkgname}-${pkgver}
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--localstatedir=/var \
+		--disable-static
+	make
+}
+
+check() {
+	cd ${srcdir}/${_pkgname}-${pkgver}
+	make check
+}
+
+package() {
+	cd ${srcdir}/${_pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+}

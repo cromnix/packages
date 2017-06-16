@@ -1,0 +1,61 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=xorg-server
+pkgver=1.19.3
+pkgrel=1
+pkgdesc='The Xorg Server is the core of the X Window system'
+arch=('x86_64')
+url='http://xorg.freedesktop.org'
+license=('custom')
+depends=('xkeyboard-config' 'xkbcomp' 'setxkbmap' 'libepoxy' 'libxfont2' 'pixman' 'libgl')
+# 'mesa-libgl'
+makedepends=('pixman' 'libx11' 'mesa' 'xf86driproto' 'xcmiscproto' 'xtrans' 'bigreqsproto' 'randrproto'
+			 'inputproto' 'fontsproto' 'videoproto' 'presentproto' 'compositeproto' 'recordproto' 'scrnsaverproto'
+			 'resourceproto' 'xineramaproto' 'libxkbfile' 'libxfont2' 'renderproto' 'libpciaccess' 'libxv'
+			 'xf86dgaproto' 'libxmu' 'libxrender' 'libxi' 'dmxproto' 'libxaw' 'libdmx' 'libxtst' 'libxres'
+			 'xkbcomp' 'util-macros' 'font-util' 'glproto' 'dri2proto' 'libgcrypt' 'libepoxy'
+			 'xcb-util' 'xcb-util-image' 'xcb-util-renderutil' 'xcb-util-wm' 'xcb-util-keysyms' 'dri3proto'
+			 'libxshmfence' 'xmlto' 'docbook-xml' 'asciidoc')
+source=("https://xorg.freedesktop.org/releases/individual/xserver/${pkgname}-${pkgver}.tar.gz"
+		'add-prime-support.patch')
+md5sums=('a7a51420874af84d90720b60de7936be'
+         '45563dbf8f46e54267a13d2a9289ed94')
+
+prepare() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	# todo: create a seperate package with the prime support patch, prime support makes xorg unstable if the intel.conf xorg file is missing
+	#patch -Np1 -i "${srcdir}/add-prime-support.patch"
+}
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	./autogen.sh
+	./configure --prefix=/usr \
+		--libexecdir=/usr/lib/xorg-server \
+		--sysconfdir=/etc \
+		--localstatedir=/var \
+		--enable-dri \
+		--enable-glamor \
+		--enable-install-setuid \
+		--enable-suid-wrapper \
+		--disable-systemd-logind \
+		--with-xkb-output=/var/lib/xkb \
+		--disable-static
+	make
+}
+
+check() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make check
+}
+
+package() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+	mkdir -pv ${pkgdir}/etc/X11/xorg.conf.d
+
+#cat >> /etc/sysconfig/createfiles << "EOF"
+#/tmp/.ICE-unix dir 1777 root root
+#/tmp/.X11-unix dir 1777 root root
+#EOF
+}

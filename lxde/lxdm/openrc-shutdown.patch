@@ -1,0 +1,12 @@
+diff -Naur lxdm-0.5.3-orig/src/lxdm.c lxdm-0.5.3/src/lxdm.c
+--- lxdm-0.5.3-orig/src/lxdm.c	2015-11-23 08:15:52.000000000 -0300
++++ lxdm-0.5.3/src/lxdm.c	2017-06-06 21:52:17.818000000 -0400
+@@ -1454,7 +1454,7 @@
+ {
+ 	char *cmd;
+ 	cmd = g_key_file_get_string(config, "cmd", "shutdown", 0);
+-	if( !cmd ) cmd = g_strdup("shutdown -h now");
++	if( !cmd ) cmd = g_strdup("poweroff");
+ 	g_spawn_command_line_sync("/etc/lxdm/PreShutdown",0,0,0,0);
+ 	g_spawn_command_line_async(cmd,0);
+ 	g_free(cmd);

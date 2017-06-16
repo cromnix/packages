@@ -1,0 +1,27 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=iceauth
+pkgver=1.0.7
+pkgrel=1
+pkgdesc='ICE authority file utility'
+arch=('x86_64')
+url='https://xorg.freedesktop.org/'
+license=('custom')
+depends=('libice')
+makedepends=('util-macros' 'xproto')
+groups=('xorg-apps' 'xorg')
+source=("https://www.x.org/archive/individual/app/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('25dab02f8e40d5b71ce29a07dc901b8c')
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--localstatedir=/var
+	make
+}
+
+package() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+}

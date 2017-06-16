@@ -1,0 +1,30 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=cromnix-utils
+pkgver=r1.307e272
+pkgrel=1
+pkgdesc='Utilities for various tasks in cromnix'
+arch=('any')
+url='https://www.cromer.cl'
+license=('GPL')
+depends=('cromnix')
+makedepends=('git')
+#source=("git+https://github.com/cromnix/${pkgname}.git")
+source=("git+https://gitlab.com/cromnix/${pkgname}.git")
+md5sums=('SKIP')
+
+pkgver() {
+	cd ${pkgname}
+	#printf "r%s.%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)" "$(date +%Y%m%d)"
+	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+	cd ${pkgname}
+	make
+}
+
+package() {
+	cd ${pkgname}
+	make PREFIX=/usr DESTDIR="${pkgdir}" install
+}

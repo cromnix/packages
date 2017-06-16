@@ -1,0 +1,31 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=perl-xml-parser
+_pkgname=XML-Parser
+pkgver=2.44
+pkgrel=1
+pkgdesc="The XML::Parser module is a Perl interface to James Clark's XML parser, Expat."
+arch=('x86_64')
+url="http://search.cpan.org/~msergeant/XML-Parser-2.36/Parser.pm"
+license=('GPL' 'PerlArtistic')
+depends=('perl' 'expat')
+options=('!emptydirs')
+source=("http://cpan.metacpan.org/authors/id/T/TO/TODDR/$_pkgname-$pkgver.tar.gz")
+md5sums=('af4813fe3952362451201ced6fbce379')
+
+build() {
+    cd "$srcdir/$_pkgname-$pkgver"
+    perl Makefile.PL
+    make
+}
+
+check() {
+    cd "$srcdir/$_pkgname-$pkgver"
+    make test
+}
+
+package() {
+    cd "$srcdir/$_pkgname-$pkgver"
+    
+    make DESTDIR="$pkgdir" install
+}

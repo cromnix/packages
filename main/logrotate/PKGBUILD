@@ -1,0 +1,43 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=logrotate
+pkgver=3.11.0
+pkgrel=1
+pkgdesc='The logrotate package allows automatic rotation, compression, removal, and mailing of log files'
+arch=('x86_64')
+url='https://github.com/logrotate/logrotate'
+license=('GPL')
+depends=('popt' 'gzip' 'acl')
+backup=('etc/logrotate.conf')
+source=("https://github.com/${pkgname}/${pkgname}/releases/download/${pkgver}/${pkgname}-${pkgver}.tar.xz"
+		'logrotate.conf')
+md5sums=('3a9280e4caeb837427a2d54518fbcdac'
+         '7932d4851874957c7fe4a3621730948c')
+
+prepare() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	sed -i '/exit 5/s/^/echo uncompress failed -- skipping #/' test/test
+}
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr \
+		--sbindir=/usr/bin \
+		--mandir=/usr/share/man \
+		--with-acl
+	make
+}
+
+check() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make test
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+
+	install -v -m755 -d "${pkgdir}"/etc/logrotate.d
+	
+	install -v -m644 "${srcdir}"/logrotate.conf "${pkgdir}"/etc
+}

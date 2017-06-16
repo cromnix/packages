@@ -1,0 +1,10 @@
+[Trigger]
+Operation = Install
+Type = Package
+Target = dbus-cromnix
+
+[Action]
+Description = Autostart dbus...
+When = PostTransaction
+Exec = /usr/share/libalpm/scripts/dbus-service
+Depends = dbus-cromnix

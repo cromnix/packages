@@ -1,0 +1,15 @@
+post_install() {
+	rc-update add wpa_supplicant default
+}
+
+post_upgrade() {
+	if rc-status | grep -q "wpa_supplicant"; then
+		echo "==> wpa_supplicant needs to be restarted"
+	fi
+}
+
+post_remove() {
+	for _service in $(find /etc/openrc/runlevels/*/ -name 'wpa_supplicant'); do
+		rm ${_service}
+	done
+}

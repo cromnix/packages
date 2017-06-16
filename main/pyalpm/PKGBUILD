@@ -1,0 +1,28 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=pyalpm
+pkgver=0.8
+pkgrel=1
+pkgdesc='Libalpm bindings for Python 3'
+arch=('x86_64')
+url='http://projects.archlinux.org/users/remy/pyalpm.git/'
+license=('GPL')
+depends=('pacman' 'python')
+source=("https://sources.archlinux.org/other/pyalpm/${pkgname}-${pkgver}.tar.gz")
+md5sums=('d77d0b3596aca2e7f44b7462c0e8a7ce')
+
+prepare() {
+	sed -i 's/-ansi/-std=c99/' ${pkgname}-${pkgver}/setup.py
+}
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	python3 setup.py build
+}
+
+# todo: can be seperated to any/x86_64 once libs and bin are seperated
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	python3 setup.py install --root=${pkgdir}
+}

@@ -1,0 +1,57 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=nss
+pkgver=3.31
+_pkgver=${pkgver//./_}
+pkgrel=1
+pkgdesc='The Network Security Services (NSS) package is a set of libraries designed to support cross-platform development of security-enabled client and server applications'
+arch=('x86_64')
+url='https://developer.mozilla.org/en-US/docs/Mozilla/Projects/NSS'
+license=('MPL' 'GPL')
+depends=('nspr' 'zlib' 'sh' 'p11-kit' 'sqlite')
+makedepends=('perl' 'python2' 'xmlto' 'docbook-xsl')
+options=('!strip' '!makeflags' 'staticlibs')
+source=("https://ftp.mozilla.org/pub/mozilla.org/security/${pkgname}/releases/NSS_${_pkgver}_RTM/src/${pkgname}-${pkgver}.tar.gz"
+		'standalone.patch')
+md5sums=('4c1204af8372a9a07c6fc7ed5c636f74'
+         'de3565f9e38914f5035fc62c30f3a055')
+
+# todo: change variables to export style
+
+prepare() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	patch -Np1 -i "${srcdir}/standalone.patch"
+}
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}/${pkgname}"
+	make BUILD_OPT=1 \
+		NSPR_INCLUDE_DIR=/usr/include/nspr \
+		NSS_USE_SYSTEM_SQLITE=1 \
+		NSS_ENABLE_WERROR=0 \
+		USE_SYSTEM_ZLIB=1 \
+		ZLIB_LIBS=-lz \
+		USE_64=1
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}/dist"
+	install -v -m755 -d ${pkgdir}/usr/lib
+	install -v -m755 Linux*/lib/*.so ${pkgdir}/usr/lib
+	install -v -m644 Linux*/lib/{*.chk,libcrmf.a} ${pkgdir}/usr/lib
+
+	install -v -m755 -d ${pkgdir}/usr/include/nss
+	cp -v -RL {public,private}/nss/* ${pkgdir}/usr/include/nss
+	chmod -v 644 ${pkgdir}/usr/include/nss/*
+
+	install -v -m755 -d ${pkgdir}/usr/bin
+	install -v -m755 Linux*/bin/{certutil,nss-config,pk12util} ${pkgdir}/usr/bin
+
+	install -v -m755 -d ${pkgdir}/usr/lib/pkgconfig
+	install -v -m644 Linux*/lib/pkgconfig/nss.pc ${pkgdir}/usr/lib/pkgconfig
+
+	# use system ca-certificates
+	readlink ${pkgdir}/usr/lib/libnssckbi.so || \
+		mv -v ${pkgdir}/usr/lib/libnssckbi.so ${pkgdir}/usr/lib/libnssckbi.so.orig &&
+	ln -sfv libp11-kit.so ${pkgdir}/usr/lib/libnssckbi.so
+}

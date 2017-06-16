@@ -1,0 +1,63 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=gnupg
+pkgver=2.1.21
+pkgrel=1
+pkgdesc="The GnuPG package is GNU's tool for secure communication and data storage. It can be used to encrypt data and to create digital signatures. It includes an advanced key management facility and is compliant with the proposed OpenPGP Internet standard as described in RFC2440 and the S/MIME standard as described by several RFCs. GnuPG 2 is the stable version of GnuPG integrating support for OpenPGP and S/MIME."
+arch=('x86_64')
+url="https://www.gnupg.org/index.html"
+license=('GPL3')
+depends=('libassuan' 'libgcrypt' 'libgpg-error' 'libksba' 'npth' 'pinentry' 'libbzip2' 'readline' 'gnutls')
+source=("https://gnupg.org/ftp/gcrypt/gnupg/$pkgname-$pkgver.tar.bz2")
+md5sums=('685ebf4c3a7134ba0209c96b18b2f064')
+
+prepare() {
+    cd "$srcdir/$pkgname-$pkgver"
+    sed -e 's|\(GNUPGHOME\)=\$(abs_builddir)|\1=`/bin/pwd`|' \
+        -i tests/openpgp/Makefile.in
+}
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    ./configure --prefix=/usr \
+		--sbindir=/usr/bin \
+        --enable-symcryptrun \
+        --libexecdir=/usr/lib/gnupg \
+        --docdir=/usr/share/doc/${pkgname}-${pkgver}
+    make
+
+    makeinfo --html --no-split \
+         -o doc/gnupg_nochunks.html doc/gnupg.texi
+    makeinfo --plaintext       \
+         -o doc/gnupg.txt           doc/gnupg.texi
+
+    # more documentation needs texalive
+    #make -C doc pdf ps html
+}
+
+check() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make check
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make DESTDIR="$pkgdir" install
+
+    install -v -m755 -d ${pkgdir}/usr/share/doc/${pkgname}-${pkgver}/html
+    install -v -m644 doc/gnupg_nochunks.html ${pkgdir}/usr/share/doc/${pkgname}-${pkgver}/html/gnupg.html
+    install -v -m644 doc/*.texi doc/gnupg.txt ${pkgdir}/usr/share/doc/${pkgname}-${pkgver}
+
+    for f in gpg gpgv
+    do
+        ln -svf ${f}2.1 ${pkgdir}/usr/share/man/man1/$f.1
+        ln -svf ${f}2 ${pkgdir}/usr/bin/$f
+    done
+    unset f
+
+    #documentation
+    #install -v -m644 doc/gnupg.html/* \
+    #                 /usr/share/doc/gnupg-2.1.15/html &&
+    #install -v -m644 doc/gnupg.{pdf,dvi,ps} \
+    #                 /usr/share/doc/gnupg-2.1.15
+}

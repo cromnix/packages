@@ -1,0 +1,25 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=adwaita-icon-theme
+pkgver=3.24.0
+_pkgver=${pkgver%.*}
+pkgrel=1
+pkgdesc='The Adwaita Icon Theme package contains an icon theme for Gtk+ 3 applications'
+arch=('any')
+url='https://git.gnome.org/browse/adwaita-icon-theme'
+license=('LGPL3' 'CCPL:cc-by-sa')
+depends=('hicolor-icon-theme' 'gtk3' 'librsvg')
+makedepends=('intltool' 'gtk3')
+source=("http://ftp.gnome.org/pub/gnome/sources/${pkgname}/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
+md5sums=('3ccac0d600ffc936d2adfb80e9245bc5')
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}

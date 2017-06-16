@@ -1,0 +1,211 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=cromnix
+pkgver=17.06
+_codename='ale'
+_codename_pretty='Ale'
+pkgrel=1
+pkgdesc='Cromnix base filesystem'
+arch=('any')
+license=('GPL')
+url='https://cromer.cl'
+groups=('cromnix-base')
+depends=('iana-etc')
+backup=('etc/cromnix.conf'
+		'etc/resolv.conf'
+		'etc/nsswitch.conf'
+		'etc/ld.so.conf'
+		'etc/profile'
+		'etc/environment'
+		'etc/passwd'
+		'etc/group'
+		'etc/shadow'
+		'etc/gshadow'
+		'etc/inputrc'
+		'etc/hosts'
+		'etc/shells'
+		'etc/fstab'
+		'etc/issue'
+		'etc/motd')
+source=('cromnix.conf'
+		'resolv.conf'
+		'nsswitch.conf'
+		'ld.so.conf'
+		'passwd'
+		'group'
+		'shadow'
+		'gshadow'
+		'hosts'
+		'fstab'
+		'shells'
+		'lsb-release'
+		'os-release'
+		'cromnix-release'
+		'profile'
+		'environment'
+		'inputrc'
+		'issue'
+		'motd'
+		'dircolors.sh'
+		'umask.sh'
+		'i18n.sh')
+md5sums=('2e56c015e0ff46d6296f13a401f57069'
+         'eac16c640077bdbe06f04b36978aaed1'
+         'd647291edd0e34efd899c9f2dbfe7703'
+         'ee3a71feb17c91e4787a9bd86c31575e'
+         '28faae9c64e08d60bb0e1a3053671d06'
+         '0072d493ae26a8f50e2661b7c69cb8af'
+         '01249bb0ba4468f95e2cc3a627f5e6e3'
+         'a9f27f7524d87d3b9fdbc716fb008cc3'
+         'b24b3d67cc3f2c2afa47e06484aa4eda'
+         '6bde2183651434f18c95e128ba8d5871'
+         '2ed0cf9d92e8a8fa49a41918b8a0207f'
+         'a70c6026dcbb7cabdc35da78abc4c285'
+         'c953869136c4d533c11847ab24875bf2'
+         '18abd5ced09bd469fb9daa49dfe9b4bd'
+         '5a42cdfd3e6d944d109514a3e9a8cf2e'
+         'f5e2d783d5f61af54590139f0de80223'
+         'a1514268c756b0029d071e2c33b3feb5'
+         '24dee8dc8be6556d90a948ff98929f58'
+         'd41d8cd98f00b204e9800998ecf8427e'
+         '1b3d12993d06081c7efd58a8fb51e7f9'
+         'eb426f16468c8f4da4904a25e3f4925c'
+         'bac0d8dedad1bed2ab5d127f21ed5e2f')
+
+pkgver() {
+	date +%y.%m
+}
+
+prepare() {
+	# ensure that passwd is sync'd to shadow and group is sync'd to gshadow.
+	local r=0
+
+	local passwd shadow group gshadow
+
+	for f in passwd shadow group gshadow; do
+		 mapfile -t "$f" < <(cut -d: -f1 "$f" | sort)
+	done
+
+	# we can cheat and do simple string comparison only because we can make some
+	# assumptions about the data in these files
+	if [[ ${passwd[*]} != "${shadow[*]}" ]]; then
+		error 'passwd is not in sync with shadow!'
+		r=1
+	fi
+
+	if [[ ${group[*]} != "${gshadow[*]}" ]]; then
+		error 'group is not in sync with gshadow!'
+		r=1
+	fi
+}
+
+package() {
+	cd ${pkgdir}
+
+	install -vd -m755 boot
+	install -vd -m755 etc
+	install -vd -m755 home
+	install -vd -m755 mnt
+	install -vd -m755 opt
+	install -vd -m755 srv
+	install -vd -m755 var
+	install -vd -m755 dev
+	install -vd -m1777 run
+
+	install -vd -m555 proc
+	install -vd -m555 sys
+	install -vd -m0750 root
+	install -vd -m1777 tmp
+	install -vd -m1777 var/tmp
+
+	mkdir -pv etc/ld.so.conf.d
+
+	mkdir -pv usr/{,local/}{bin,include,lib}
+	mkdir -pv usr/{,local/}share/{color,dict,doc,info,locale,man}
+	mkdir -pv usr/{,local/}share/{misc,terminfo,zoneinfo}
+	mkdir -pv usr/{,local/}share/man/man{1..8}
+	mkdir -pv usr/lib/firmware
+	mkdir -pv usr/local/sbin
+	
+	# default config files for packages
+	mkdir -pv usr/etc
+
+	# /usr merge
+	ln -sv usr/bin ${pkgdir}/bin
+	ln -sv usr/sbin ${pkgdir}/sbin
+	ln -sv usr/lib ${pkgdir}/lib
+	ln -sv usr/lib64 ${pkgdir}/lib64
+	ln -sv bin ${pkgdir}/usr/sbin
+
+	ln -sv lib ${pkgdir}/usr/lib64
+	ln -sv lib ${pkgdir}/usr/local/lib64
+
+	mkdir -pv var/{log,mail,spool}
+	ln -sv ../run var/run
+	ln -sv ../run/lock var/lock
+	mkdir -pv var/{opt,cache,lib/{color,misc,locate},local}
+
+	install -v -m644 ${srcdir}/cromnix.conf etc/
+	install -v -m644 ${srcdir}/passwd etc/
+	install -v -m644 ${srcdir}/group etc/
+	install -v -m644 ${srcdir}/shadow etc/
+	install -v -m644 ${srcdir}/gshadow etc/
+	install -v -m644 ${srcdir}/resolv.conf etc/
+	install -v -m644 ${srcdir}/nsswitch.conf etc/
+	install -v -m644 ${srcdir}/ld.so.conf etc/
+	install -v -m644 ${srcdir}/hosts etc/
+	install -v -m644 ${srcdir}/fstab etc/
+	install -v -m644 ${srcdir}/shells etc/
+	install -v -m644 ${srcdir}/profile etc/
+	install -v -m644 ${srcdir}/environment etc/
+	install -v -m644 ${srcdir}/inputrc etc/
+	install -v -m644 ${srcdir}/issue etc/
+	install -v -m644 ${srcdir}/motd etc/
+	install -v -m644 ${srcdir}/lsb-release etc/
+	install -v -m644 ${srcdir}/os-release usr/lib/
+	install -v -m644 ${srcdir}/cromnix-release etc/
+
+	ln -sv ../usr/lib/os-release etc/os-release
+
+	install -v -m755 -d etc/env.d
+
+	install -v -m755 -d etc/profile.d
+	install -v -m644 ${srcdir}/dircolors.sh etc/profile.d/
+	install -v -m644 ${srcdir}/umask.sh etc/profile.d/
+	install -v -m644 ${srcdir}/i18n.sh etc/profile.d/
+
+	dircolors -p > etc/dircolors
+
+	ln -sv bash bin/sh
+
+	ln -sv /proc/self/mounts etc/mtab
+
+	touch var/log/{btmp,lastlog,faillog,wtmp}
+	chgrp -v utmp var/log/lastlog
+	chmod -v 664 var/log/lastlog
+	chmod -v 600 var/log/btmp
+
+	sed -i "${pkgdir}/etc/cromnix-release" \
+		-e "s|@version@|${pkgver}|g" \
+		-e "s|@codename@|${_codename_pretty}|g"
+
+	sed -i "${pkgdir}/etc/lsb-release" \
+		-e "s|@id@|Cromnix|g" \
+		-e "s|@version@|${pkgver}|g" \
+		-e "s|@codename@|${_codename_pretty}|g" \
+		-e "s|@description@|Cromnix ${pkgver}|g"
+
+	sed -i "${pkgdir}/usr/lib/os-release" \
+		-e "s|@name@|Cromnix|g" \
+		-e "s|@version@|${pkgver} (${_codename_pretty})|g" \
+		-e "s|@id@|${pkgname}|g" \
+		-e "s|@id_like@|arch|g" \
+		-e "s|@pretty_name@|Cromnix ${pkgver}|g" \
+		-e "s|@version_id@|${pkgver}|g" \
+		-e "s|@home_url@|${url}|g" \
+		-e "s|@support_url@|${url}|g" \
+		-e "s|@bug_report_url@|${url}|g" \
+		-e "s|@privacy_policy_url@|${url}|g" \
+		-e "s|@version_codename@|${_codename}|g" \
+		-e "s|@cromnix_codename@|${_codename}|g"
+}

@@ -1,0 +1,35 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=libvpx
+pkgver=1.6.1
+pkgrel=1
+pkgdesc='This package, from the WebM project, provides the reference implementations of the VP8 Codec, used in most current html5 video, and of the next-generation VP9 Codec'
+arch=('x86_64')
+url='http://www.webmproject.org/'
+license=('BSD')
+depends=('glibc' 'gcc-libs')
+makedepends=('yasm' 'which')
+source=("http://storage.googleapis.com/downloads.webmproject.org/releases/webm/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('a19518c8111fa93bdabdd85259162611')
+
+# todo: rebuild with doxygen
+
+prepare() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	sed -i 's/cp -p/cp/' build/make/Makefile
+
+	mkdir libvpx-build
+}
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}/libvpx-build"
+	../configure --prefix=/usr \
+		--enable-shared \
+		--disable-static
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}/libvpx-build"
+	make DESTDIR="${pkgdir}" install
+}

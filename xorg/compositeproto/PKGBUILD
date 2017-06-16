@@ -1,0 +1,24 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=compositeproto
+pkgver=0.4.2
+pkgrel=1
+pkgdesc='X11 Composite extension wire protocol'
+arch=('any')
+url='https://www.x.org/wiki/'
+license=('custom')
+depends=('fixesproto')
+makedepends=('util-macros' 'xmlto' 'docbook-xml')
+source=("http://ftp.x.org/pub/individual/proto/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('98482f65ba1e74a08bf5b056a4031ef0')
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	./configure --prefix=/usr
+	make
+}
+
+package() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+}

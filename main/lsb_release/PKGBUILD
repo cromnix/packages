@@ -1,0 +1,27 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=lsb_release
+_pkgname=${pkgname/_/-}
+pkgver=1.4
+pkgrel=1
+pkgdesc='The lsb_release script gives information about the Linux Standards Base (LSB) status of the distribution'
+arch=('any')
+url='http://www.linuxbase.org/'
+license=('GPL2')
+depends=('bash')
+source=("http://sourceforge.net/projects/lsb/files/${pkgname}/${pkgver}/${_pkgname}-${pkgver}.tar.gz")
+md5sums=('30537ef5a01e0ca94b7b8eb6a36bb1e4')
+
+build() {
+	cd "${srcdir}/${_pkgname}-${pkgver}"
+	./help2man -N --include ./lsb_release.examples \
+		--alt_version_key=program_version ./lsb_release > lsb_release.1
+}
+
+package() {
+	cd "${srcdir}/${_pkgname}-${pkgver}"
+	install -v -m755 -d "${pkgdir}/usr/bin"
+	install -v -m755 -d "${pkgdir}/usr/share/man/man1"
+	install -v -m644 lsb_release.1 "${pkgdir}/usr/share/man/man1/lsb_release.1"
+	install -v -m755 lsb_release "${pkgdir}/usr/bin/lsb_release"
+}

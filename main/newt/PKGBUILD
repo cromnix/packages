@@ -1,0 +1,48 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgbase=newt
+pkgname=('whiptail' 'libnewt')
+pkgver=0.52.20
+pkgrel=1
+pkgdesc="Newt is a programming library for color text mode, widget based user interfaces."
+arch=('x86_64')
+url="https://pagure.io/newt"
+license=('GPL')
+depends=('popt' 'slang')
+makedepends=('tcl' 'python' 'python2')
+optdepends=('gpm: mouse support'
+            'python: newt support with the _snack module'
+            'python2: newt support with the _snack module')
+source=("https://pagure.io/releases/newt/$pkgbase-$pkgver.tar.gz")
+md5sums=('70b288f821234593a8e7920e435b259b')
+
+prepare() {
+    cd "$srcdir/$pkgbase-$pkgver"
+    sed -e 's/^LIBNEWT =/#&/' \
+        -e '/install -m 644 $(LIBNEWT)/ s/^/#/' \
+        -e 's/$(LIBNEWT)/$(LIBNEWTSONAME)/g' \
+        -i Makefile.in
+}
+
+build() {
+    cd "$srcdir/$pkgbase-$pkgver"
+    ./configure --prefix=/usr \
+        --with-gpm-support
+    make
+}
+
+package_whiptail() {
+    depends=('libnewt')
+    cd "$srcdir/$pkgbase-$pkgver"
+    make DESTDIR="$pkgdir" install
+    rm -rfv ${pkgdir}/usr/lib
+    rm -rfv ${pkgdir}/usr/include
+    rm -rfv ${pkgdir}/usr/share/locale
+}
+
+package_libnewt() {
+    cd "$srcdir/$pkgbase-$pkgver"
+    make DESTDIR="$pkgdir" install
+    rm -rfv ${pkgdir}/usr/bin
+    rm -rfv ${pkgdir}/usr/share/man
+}

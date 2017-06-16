@@ -1,0 +1,48 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=sysvinit
+pkgver=2.88dsf
+pkgrel=1
+pkgdesc="The Sysvinit package contains programs for controlling the startup, running, and shutdown of the system."
+arch=('x86_64')
+url="http://savannah.nongnu.org/projects/sysvinit"
+license=('GPL')
+source=("http://download.savannah.gnu.org/releases/sysvinit/$pkgname-$pkgver.tar.bz2"
+        "http://www.linuxfromscratch.org/patches/lfs/7.10/$pkgname-$pkgver-consolidated-1.patch"
+        'inittab.openrc'
+        'inittab.lfs')
+backup=('etc/inittab.openrc'
+		'etc/inittab.lfs')
+md5sums=('6eda8a97b86e0a6f59dabbf25202aa6f'
+         '0b7b5ea568a878fdcc4057b2bf36e5cb'
+         '70d5282144226bb506d7c285a5b07cf6'
+         '4c237b74a64155c12c0f2169efeb9a07')
+
+prepare() {
+    cd "$srcdir/$pkgname-$pkgver"
+    patch -Np1 -i ${srcdir}/sysvinit-2.88dsf-consolidated-1.patch
+}
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make -C src
+}
+
+package() {
+	groups=('init')
+    cd "$srcdir/$pkgname-$pkgver"
+    make ROOT="$pkgdir" -C src install
+
+	mkdir -pv ${pkgdir}/usr/bin
+    mv -v ${pkgdir}/sbin/* ${pkgdir}/usr/bin
+    rm -rf ${pkgdir}/sbin
+    mv ${pkgdir}/usr/bin/init ${pkgdir}/usr/bin/init-sysvinit
+    mv ${pkgdir}/usr/bin/shutdown ${pkgdir}/usr/bin/shutdown-sysvinit
+    mv ${pkgdir}/usr/bin/halt ${pkgdir}/usr/bin/halt-sysvinit
+    mv ${pkgdir}/usr/bin/reboot ${pkgdir}/usr/bin/reboot-sysvinit
+    mv ${pkgdir}/usr/bin/poweroff ${pkgdir}/usr/bin/poweroff-sysvinit
+    
+    mkdir -pv ${pkgdir}/etc
+    install -m644 "${srcdir}/inittab.openrc" "${pkgdir}/etc/"
+    install -m644 "${srcdir}/inittab.lfs" "${pkgdir}/etc/"
+}

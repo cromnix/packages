@@ -1,0 +1,87 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgbase=pacman
+pkgname=('pacman' 'pacman-contrib')
+pkgver=5.0.1
+pkgrel=1
+pkgdesc="A library-based package manager with dependency support"
+arch=('x86_64')
+url="http://www.archlinux.org/pacman/"
+license=('GPL')
+makedepends=('asciidoc' 'python2')
+#checkdepends=('python2' 'fakechroot')
+options=('strip')
+source=("https://sources.archlinux.org/other/pacman/$pkgname-$pkgver.tar.gz"
+        "pacman-5.0.1-roundup.patch"
+        "pacman.conf"
+        "makepkg.conf"
+        'pacman.logrotate')
+md5sums=('377a2664d6007d72d6d8a126add83bcf'
+         '1a6573187531068d38cb4478cd20368c'
+         '5f479d685403db1471ff9b6b6e5158a1'
+         '5f978a84b691754a7a1588b8a5414b46'
+         'bfed0ae8b6ec38fe6f5a1a6b1fcec871')
+
+prepare() {
+    cd "$srcdir/$pkgname-$pkgver"
+    patch -p1 -i ${srcdir}/pacman-5.0.1-roundup.patch
+}
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    ./configure --prefix=/usr \
+        --sysconfdir=/etc \
+        --localstatedir=/var \
+        --enable-doc \
+        --with-scriptlet-shell=/usr/bin/bash \
+        --with-ldconfig=/usr/bin/ldconfig
+    make V=1
+    make -C contrib
+}
+
+check() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make check
+}
+
+package_pacman() {
+	groups=('cromnix-base')
+	depends=('perl' 'bash' 'glibc' 'libarchive' 'curl' 'gpgme' 'libxml2' 'xdelta3')
+	optdepends=('pacman-contrib: extra scripts for use with pacman'
+				'bzip2: uncrompess bz2 source files')
+	backup=('etc/pacman.conf'
+			'etc/makepkg.conf'
+			'etc/logrotate.d/pacman')
+
+    cd "$srcdir/$pkgname-$pkgver"
+    make DESTDIR="$pkgdir" install
+
+    install -dm755 ${pkgdir}/etc/logrotate.d
+    install -m644 ${srcdir}/makepkg.conf ${pkgdir}/etc
+    install -m644 ${srcdir}/pacman.conf ${pkgdir}/etc
+    sed -i "$pkgdir/etc/makepkg.conf" \
+        -e "s|@CARCH[@]|x86_64|g" \
+        -e "s|@CHOST[@]|x86_64-pc-linux-gnu|g" \
+        -e "s|@CARCHFLAGS[@]|-march=x86-64|g"
+        
+    install -m644 ${srcdir}/pacman.logrotate ${pkgdir}/etc/logrotate.d/pacman
+
+    install -dm755 "$pkgdir/usr/share/bash-completion/completions"
+    cp contrib/bash_completion "$pkgdir/usr/share/bash-completion/completions/pacman"
+
+    for f in makepkg pacman-key; do
+        ln -s pacman "$pkgdir/usr/share/bash-completion/completions/$f"
+    done
+}
+
+package_pacman-contrib() {
+	groups=('cromnix-dev')
+	depends=('pacman' 'bash' 'perl' 'curl')
+	optdepends=('vim: for pacdiff')
+	arch=('any')
+
+    cd "$srcdir/$pkgbase-$pkgver"
+    make DESTDIR="$pkgdir" -C contrib install
+
+    rm -rf ${pkgdir}/etc
+}

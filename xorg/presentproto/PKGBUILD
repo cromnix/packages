@@ -1,0 +1,23 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=presentproto
+pkgver=1.0
+pkgrel=1
+pkgdesc='X11 Present protocol specification'
+arch=('any')
+url='https://www.x.org/wiki/'
+license=('custom')
+makedepends=('util-macros' 'xmlto' 'docbook-xml' 'asciidoc')
+source=("http://ftp.x.org/pub/individual/proto/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('2d569c75884455c7148d133d341e8fd6')
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	./configure --prefix=/usr
+	make
+}
+
+package() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+}

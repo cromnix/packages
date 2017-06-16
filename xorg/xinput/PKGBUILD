@@ -1,0 +1,27 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=xinput
+pkgver=1.6.2
+pkgrel=1
+pkgdesc='Small commandline tool to configure devices'
+arch=('x86_64')
+url='https://xorg.freedesktop.org/'
+license=('custom')
+depends=('libx11' 'libxi' 'xrandr' 'libxinerama')
+makedepends=('util-macros' 'inputproto' 'libxfixes')
+groups=('xorg-apps' 'xorg')
+source=("https://www.x.org/archive/individual/app/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('6a889412eff2e3c1c6bb19146f6fe84c')
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--localstatedir=/var
+	make
+}
+
+package() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+}

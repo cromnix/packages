@@ -1,0 +1,25 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=lxterminal
+pkgver=0.3.0
+pkgrel=1
+pkgdesc='The LXTerminal package contains a VTE-based terminal emulator for LXDE with support for multiple tabs'
+arch=('x86_64')
+url='https://www.lxde.org/'
+license=('GPL2')
+groups=('lxde')
+depends=('vte')
+makedepends=('intltool' 'atk-dev')
+source=("http://downloads.sourceforge.net/lxde/${pkgname}-${pkgver}.tar.xz")
+md5sums=('235cda66f5a35654cb162dcc518a5171')
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}

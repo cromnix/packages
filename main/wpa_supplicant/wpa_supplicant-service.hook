@@ -1,0 +1,10 @@
+[Trigger]
+Operation = Install
+Type = Package
+Target = wpa_supplicant-cromnix
+
+[Action]
+Description = Autostart wpa_supplicant...
+When = PostTransaction
+Exec = /usr/share/libalpm/scripts/wpa_supplicant-service
+Depends = wpa_supplicant-cromnix

@@ -1,0 +1,27 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=bash-completion
+pkgver=2.5
+pkgrel=1
+pkgdesc='Auto tab completion for bash'
+arch=('any')
+url='https://github.com/scop/bash-completion'
+license=('GPL')
+depends=('bash')
+source=("https://github.com/scop/${pkgname}/releases/download/${pkgver}/${pkgname}-${pkgver}.tar.xz")
+md5sums=('15300010bd4034de12c3fc4f171692e3')
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	./configure --prefix=/usr \
+		--sysconfdir=/etc
+	make
+}
+
+package() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+
+	rm -v ${pkgdir}/usr/share/bash-completion/completions/makepkg
+	rm -v ${pkgdir}/usr/share/bash-completion/completions/{u,}mount
+}

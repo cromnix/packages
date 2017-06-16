@@ -1,0 +1,35 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=gnutls
+pkgver=3.5.13
+pkgrel=1
+pkgdesc="The GnuTLS package contains libraries and userspace tools which provide a secure layer over a reliable transport layer. Currently the GnuTLS library implements the proposed standards by the IETF's TLS working group."
+arch=('x86_64')
+url="http://www.gnutls.org/"
+license=('GPL3' 'LGPL2.1')
+depends=('gcc-libs' 'ca-certificates' 'libtasn1' 'readline' 'zlib' 'nettle' 'p11-kit')
+checkdepends=('net-tools')
+options=('!zipman')
+source=("ftp://ftp.gnutls.org/gcrypt/gnutls/v3.5/$pkgname-$pkgver.tar.xz")
+md5sums=('4fd41ad86572933c2379b4cc321a0959')
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+# todo: REMOVE included uninstring later
+    ./configure --prefix=/usr \
+        --with-default-trust-store-file=/etc/ssl/ca-bundle.crt \
+    --with-included-unistring
+    make
+}
+
+check() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make check
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make DESTDIR="$pkgdir" install
+
+    make -C doc/reference DESTDIR="$pkgdir" install-data-local
+}

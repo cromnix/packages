@@ -1,0 +1,79 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgbase=runit
+pkgname=('runit' 'runit-init' 'runit-doc')
+pkgver=2.1.2
+pkgrel=1
+pkgdesc='runit is a cross-platform Unix init scheme with service supervision'
+arch=('x86_64')
+url='http://smarden.org/runit/'
+license=('BSD')
+source=("http://smarden.org/${pkgname}/${pkgbase}-${pkgver}.tar.gz"
+		'runit.sh'
+		'runit-cromnix.tar.gz')
+md5sums=('6c985fbfe3a34608eb3c53dc719172c4'
+         'feaf222776c387289a8e148c4afe7be7'
+         '72b74e183d31fc51da9a8e1764a9ea01')
+
+build() {
+	cd "${srcdir}/admin/${pkgbase}-${pkgver}"
+
+	CFLAGS="${CFLAGS} -static"
+	LDFLAGS="${LDFLAGS} -static"
+
+	package/compile
+}
+
+check() {
+	cd "${srcdir}/admin/${pkgbase}-${pkgver}"
+	package/check
+}
+
+package_runit() {
+	depends=('bash' 'util-linux')
+	optdepends=('runit-doc: documentation')
+	# commands
+	cd "${srcdir}/admin/${pkgbase}-${pkgver}/command"
+	install -v -m755 -d "${pkgdir}/usr/bin"
+	cp * "${pkgdir}/usr/bin"
+
+	# man pages
+	cd "${srcdir}/admin/${pkgbase}-${pkgver}/man"
+	for i in *.[1-8]; do
+		gzip -c ${i} > ${i}.gz
+	done
+	install -v -m755 -d "${pkgdir}/usr/local/man/man8"
+	cp *.gz "${pkgdir}/usr/local/man/man8"
+
+	mkdir -p "${pkgdir}"/etc/runit/sv/{installed,active}
+
+	install -v -m755 -d "${pkgdir}/etc/env.d"
+	install -v -m644 "${srcdir}/runit.sh" "${pkgdir}/etc/env.d/runit.sh"
+}
+
+package_runit-init() {
+	groups=('init')
+	depends=('runit')
+	arch=('any')
+	install -v -m755 -d "${pkgdir}/usr/bin"
+	mkdir -p "${pkgdir}/etc/runit/init"
+	cp -p "${srcdir}"/runit-cromnix/[123] "${pkgdir}/etc/runit"
+	cp -p "${srcdir}"/runit-cromnix/ctrlaltdel "${pkgdir}/etc/runit"
+
+	for i in `seq 1 6`; do
+		mkdir -p "${pkgdir}/etc/runit/init/getty-${i}"
+		cp -p "${srcdir}"/runit-cromnix/init/getty-tty${i}/* "${pkgdir}/etc/runit/init/getty-${i}"
+	done
+
+	# use the run directory
+	ln -s /run/runit/stopit "${pkgdir}/etc/runit/stopit"
+	ln -s /run/runit/reboot "${pkgdir}/etc/runit/reboot"
+}
+
+package_runit-doc() {
+	groups=('init-doc')
+	arch=('any')
+	install -v -m755 -d "${pkgdir}/usr/share/doc"
+	cp -r "${srcdir}/admin/${pkgbase}-${pkgver}/doc" "${pkgdir}/usr/share/doc/${pkgbase}-${pkgver}"
+	rm "${pkgdir}/usr/share/doc/${pkgbase}-${pkgver}/debian"
+}

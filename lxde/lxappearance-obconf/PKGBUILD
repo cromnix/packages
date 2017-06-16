@@ -1,0 +1,26 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=lxappearance-obconf
+pkgver=0.2.3
+pkgrel=1
+pkgdesc='The LXAppearance OBconf package contains a plugin for LXAppearance to configure OpenBox'
+arch=('x86_64')
+url='https://www.lxde.org/'
+license=('GPL2')
+groups=('lxde')
+depends=('lxappearance' 'openbox')
+makedepends=('intltool' 'atk-dev')
+source=("http://downloads.sourceforge.net/lxde/${pkgname}-${pkgver}.tar.xz")
+md5sums=('ae0076d489aa786f5d573f7ff592a4ab')
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr \
+		--disable-static
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}

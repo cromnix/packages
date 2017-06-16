@@ -1,0 +1,27 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=xauth
+pkgver=1.0.10
+pkgrel=1
+pkgdesc='X.Org authorization settings program'
+arch=('x86_64')
+url='https://xorg.freedesktop.org/'
+license=('custom')
+depends=('libxmu')
+makedepends=('util-macros')
+groups=('xorg-apps' 'xorg')
+source=("https://www.x.org/archive/individual/app/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('f3f76cb10f69b571c43893ea6a634aa4')
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--localstatedir=/var
+	make
+}
+
+package() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+}

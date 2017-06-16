@@ -1,0 +1,21 @@
+#!/bin/sh
+exec 2>&1
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+
+#LAST=0
+#test -x /etc/runit/reboot && LAST=6
+
+echo 'Waiting for services to stop...'
+sv -w196 force-stop /run/runit/service/*
+sv exit /run/runit/service/*
+
+#/etc/init.d/rc $LAST
+
+if test -x /etc/runit/reboot; then
+	echo 'Reboot...'
+	openrc reboot
+else
+	echo 'Shutdown...'
+	openrc shutdown
+fi

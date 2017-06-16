@@ -1,0 +1,81 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgbase=twm
+pkgname=('twm' 'twm-cromnix' 'twm-vanilla' 'twm-session')
+pkgver=1.0.9
+pkgrel=1
+pkgdesc='The twm package contains a very minimal window manager'
+arch=('x86_64')
+url='https://xorg.freedesktop.org/'
+license=('custom')
+makedepends=('util-macros' 'libxmu')
+source=("https://www.x.org/archive/individual/app/${pkgbase}-${pkgver}.tar.bz2"
+	'system.twmrc'
+	'twm.desktop'
+	'close.xbm'
+	'maximize.xbm'
+	'minimize.xbm'
+	'refresh.xbm'
+	'resize.xbm')
+md5sums=('59a6f076cdacb5f6945dac809bcf4906'
+         '4e8ad12af2c3f06eb939106db9273667'
+         'd4d5b51c916ce21ce2dcccdf7ec934fc'
+         'afd7e63dc2c859fed94c8bf9bc9d297d'
+         '84398d0aef4a0899211b6bb6d675e0c0'
+         'e911eafa08ef1d40a76a462b0d4b4666'
+         '96dc1dd7a637a775bf2af3dd44a575a6'
+         '6fc27952fdcd2bfc3880d1ff9b93a30f')
+
+prepare() {
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	#sed -i -e '/^rcdir =/s,^\(rcdir = \).*,\1/etc/X11/app-defaults,' src/Makefile.in
+}
+
+build() {
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	./configure --prefix=/usr
+	make
+}
+
+package_twm() {
+	# meta package
+	groups=('wm')
+	depends=('twm-bin')
+	arch=('any')
+}
+
+package_twm-session() {
+	arch=('any')
+	optdepends=('twm: to use twm')
+	mkdir -p "${pkgdir}"/usr/share/xsessions
+	cp "${srcdir}"/twm.desktop "${pkgdir}"/usr/share/xsessions/twm.desktop
+}
+
+package_twm-vanilla() {
+	backup=('usr/share/X11/twm/system.twmrc')
+	depends=('libxmu')
+	provides=('twm-bin')
+	conflicts=('twm-cromnix')
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	make DESTDIR=${pkgdir} install
+	#mkdir -pv ${pkgdir}/etc/X11/app-defaults
+	#ln -sv /usr/share/X11/twm/system.twmrc ${pkgdir}/etc/X11/app-defaults/system.twmrc
+}
+
+
+package_twm-cromnix() {
+	backup=('usr/share/X11/twm/system.twmrc')
+	depends=('libxmu')
+	provides=('twm-bin')
+	conflicts=('twm-vanilla')
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	make DESTDIR=${pkgdir} install
+
+	#mkdir -pv ${pkgdir}/etc/X11/app-defaults
+	#ln -sv /usr/share/X11/twm/system.twmrc ${pkgdir}/etc/X11/app-defaults/system.twmrc
+
+	install ${srcdir}/system.twmrc ${pkgdir}/usr/share/X11/twm/system.twmrc
+
+	mkdir -pv ${pkgdir}/usr/share/X11/twm/icons
+	cp -v ${srcdir}/*.xbm ${pkgdir}/usr/share/X11/twm/icons
+}

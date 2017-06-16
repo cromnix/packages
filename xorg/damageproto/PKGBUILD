@@ -1,0 +1,24 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=damageproto
+pkgver=1.2.1
+pkgrel=1
+pkgdesc='X11 Damage extension wire protocol'
+arch=('any')
+url='https://www.x.org/wiki/'
+license=('custom')
+depends=('xproto' 'fixesproto')
+makedepends=('util-macros' 'xmlto' 'docbook-xml')
+source=("http://ftp.x.org/pub/individual/proto/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('998e5904764b82642cc63d97b4ba9e95')
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	./configure --prefix=/usr
+	make
+}
+
+package() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+}

@@ -1,0 +1,659 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgbase=linux-firmware
+pkgname=('linux-firmware-misc'
+		'linux-firmware-iwlwifi'
+		# start autogen
+		'linux-firmware-tigon'
+		'linux-firmware-cis'
+		'linux-firmware-ti-connectivity'
+		'linux-firmware-brcm'
+		'linux-firmware-cxgb4'
+		'linux-firmware-dsp56k'
+		'linux-firmware-go7007'
+		'linux-firmware-ath6k'
+		'linux-firmware-ositech'
+		'linux-firmware-qed'
+		'linux-firmware-tehuti'
+		'linux-firmware-libertas'
+		'linux-firmware-amdgpu'
+		'linux-firmware-ueagle-atm'
+		'linux-firmware-cxgb3'
+		'linux-firmware-i915'
+		'linux-firmware-myricom'
+		'linux-firmware-3com'
+		'linux-firmware-ar3k'
+		'linux-firmware-sb16'
+		'linux-firmware-korg'
+		'linux-firmware-ath9k_htc'
+		'linux-firmware-edgeport'
+		'linux-firmware-moxa'
+		'linux-firmware-vxge'
+		'linux-firmware-radeon'
+		'linux-firmware-sxg'
+		'linux-firmware-emi26'
+		'linux-firmware-mrvl'
+		'linux-firmware-ess'
+		'linux-firmware-ene-ub6250'
+		'linux-firmware-e100'
+		'linux-firmware-adaptec'
+		'linux-firmware-rtl_bt'
+		'linux-firmware-atmel'
+		'linux-firmware-carl9170fw'
+		'linux-firmware-yamaha'
+		'linux-firmware-qca'
+		'linux-firmware-r128'
+		'linux-firmware-kaweth'
+		'linux-firmware-sun'
+		'linux-firmware-av7110'
+		'linux-firmware-dabusb'
+		'linux-firmware-keyspan_pda'
+		'linux-firmware-ti-keystone'
+		'linux-firmware-usbdux'
+		'linux-firmware-yam'
+		'linux-firmware-keyspan'
+		'linux-firmware-RTL8192E'
+		'linux-firmware-mwlwifi'
+		'linux-firmware-rtlwifi'
+		'linux-firmware-atusb'
+		'linux-firmware-amd-ucode'
+		'linux-firmware-rockchip'
+		'linux-firmware-bnx2x'
+		'linux-firmware-vicam'
+		'linux-firmware-advansys'
+		'linux-firmware-mwl8k'
+		'linux-firmware-ath10k'
+		'linux-firmware-liquidio'
+		'linux-firmware-cpia2'
+		'linux-firmware-emi62'
+		'linux-firmware-bnx2'
+		'linux-firmware-acenic'
+		'linux-firmware-qlogic'
+		'linux-firmware-slicoss'
+		'linux-firmware-isci'
+		'linux-firmware-nvidia'
+		'linux-firmware-matrox'
+		'linux-firmware-rtl_nic'
+		'linux-firmware-intel'
+		'linux-firmware-ttusb-budget'
+		# end autogen
+		)
+pkgver=r920.3785700
+pkgrel=1
+pkgdesc='Linux firmware'
+arch=('any')
+url='http://www.kernel.org/'
+license=('GPL2' 'GPL3' 'custom')
+makedepends=('git')
+options=('!strip')
+source=("git+https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git")
+md5sums=('SKIP')
+
+# this function removes firmwares from a given packge
+_remove_firmware() {
+	_firmware=$1
+	_firmware="${_firmware#linux-firmware-}"
+	cd ${pkgdir}/usr/lib/firmware
+	for dir in $(find ./ -maxdepth 1 -type d -not -name "$_firmware" -and -not -name '.' -and -not -name '..'); do
+		rm -rf $dir
+	done
+	for file in $(find ./ -maxdepth 1 -type f -not -name "$_firmware*"); do
+		rm $file
+	done
+	for file in $(find ./ -maxdepth 1 -type l -not -name "$_firmware*"); do
+		rm $file
+	done
+}
+
+pkgver() {
+	cd "$pkgbase"
+	#printf "r%s.%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)" "$(date +%Y%m%d)"
+	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+package_linux-firmware-misc() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+
+	cd ${pkgdir}/usr/lib/firmware
+	# remove directories
+	for dir in $(find ./ -maxdepth 1 -type d -not -name "$_firmware" -and -not -name '.' -and -not -name '..'); do
+		rm -rf $dir
+	done
+
+	# remove iwlwifi
+	for file in $(find ./ -maxdepth 1 -type f -name "iwlwifi*"); do
+		rm $file
+	done
+	for link in $(find ./ -maxdepth 1 -type l -name "iwlwifi*"); do
+		rm $link
+	done
+
+	# remove bnx2x
+	for file in $(find ./ -maxdepth 1 -type f -name "bnx2x*"); do
+		rm $file
+	done
+
+	# remove usbdux
+	for file in $(find ./ -maxdepth 1 -type f -name "usbdux*"); do
+		rm $file
+	done
+}
+
+package_linux-firmware-iwlwifi() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+# start autogen
+package_linux-firmware-tigon() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-cis() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-ti-connectivity() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-brcm() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-cxgb4() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-dsp56k() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-go7007() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-ath6k() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-ositech() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-qed() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-tehuti() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-libertas() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-amdgpu() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-ueagle-atm() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-cxgb3() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-i915() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-myricom() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-3com() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-ar3k() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-sb16() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-korg() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-ath9k_htc() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-edgeport() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-moxa() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-vxge() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-radeon() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-sxg() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-emi26() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-mrvl() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-ess() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-ene-ub6250() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-e100() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-adaptec() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-rtl_bt() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-atmel() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-carl9170fw() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-yamaha() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-qca() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-r128() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-kaweth() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-sun() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-av7110() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-dabusb() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-keyspan_pda() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-ti-keystone() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-usbdux() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-yam() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-keyspan() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-RTL8192E() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-mwlwifi() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-rtlwifi() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-atusb() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-amd-ucode() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-rockchip() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-bnx2x() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-vicam() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-advansys() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-mwl8k() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-ath10k() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-liquidio() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-cpia2() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-emi62() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-bnx2() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+	cd ${pkgdir}/usr/lib/firmware
+	rm bnx2x*
+}
+
+package_linux-firmware-acenic() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-qlogic() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-slicoss() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-isci() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-nvidia() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-matrox() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-rtl_nic() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+
+package_linux-firmware-intel() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+	cd ${pkgdir}/usr/lib/firmware
+	rm intelliport2.bin
+}
+
+package_linux-firmware-ttusb-budget() {
+	groups=('linux-firmware')
+	cd "$pkgbase"
+	make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install
+	_remove_firmware $pkgname
+}
+# end autogen

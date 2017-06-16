@@ -1,0 +1,75 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=glibc
+pkgver=2.25
+pkgrel=1
+pkgdesc='The main C library'
+arch=('x86_64')
+url='https://www.gnu.org/software/libc/'
+license=('GPL' 'LGPL')
+groups=('cromnix-base')
+depends=('linux-api-headers>=4.11' 'cromnix' 'tzdata')
+makedepends=('gcc=7.1.0')
+options=('!strip' 'staticlibs' '!emptydirs')
+install=glibc.install
+source=("https://ftp.gnu.org/gnu/${pkgname}/${pkgname}-${pkgver}.tar.xz"
+		"${pkgname}-fhs.patch")
+md5sums=('1496c3bf41adf9db0ebd0af01f202eed'
+         '9a5997c3452909b1769918c759eff8a2')
+
+prepare() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	patch -Np1 -i ${srcdir}/${pkgname}-fhs.patch
+
+	mkdir -pv ${srcdir}/${pkgname}-${pkgver}/build
+}
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}/build
+
+	echo "slibdir=/usr/lib" >> configparms
+	echo "rtlddir=/usr/lib" >> configparms
+	echo "sbindir=/usr/bin" >> configparms
+	echo "rootsbindir=/usr/bin" >> configparms
+
+	CFLAGS=${CFLAGS/-fstack-protector-strong/}
+	CPPFLAGS=${CPPFLAGS/-D_FORTIFY_SOURCE=2/}
+
+	../configure --prefix=/usr \
+		--libdir=/usr/lib \
+		--libexecdir=/usr/lib \
+		--disable-profile \
+		--enable-kernel=2.6.32 \
+		--enable-obsolete-rpc \
+		--enable-stack-protector=strong \
+		libc_cv_slibdir=/usr/lib
+
+	echo "build-programs=no" >> configparms
+	make
+
+	sed -i "/build-programs=/s#no#yes#" configparms
+	echo "CC += -fstack-protector-strong" >> configparms
+	echo "CXX += -fstack-protector-strong" >> configparms
+
+	make
+}
+
+check() {
+	cd ${srcdir}/${pkgname}-${pkgver}/build
+	make check || true
+}
+
+package() {
+	cd ${srcdir}/${pkgname}-${pkgver}/build
+
+	install -dm755 ${pkgdir}/etc
+	touch ${pkgdir}/etc/ld.so.conf
+	make install_root=${pkgdir} install
+
+	rm -f ${pkgdir}/etc/ld.so.{cache,conf}
+
+	cp -v ../nscd/nscd.conf ${pkgdir}/etc/nscd.conf
+	mkdir -pv ${pkgdir}/var/cache/nscd
+
+	make localedata/install-locales install_root=${pkgdir}
+}

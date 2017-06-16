@@ -1,0 +1,37 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=slang
+pkgver="2.3.1.a"
+_pkgver=${pkgver%.*}
+_pkgver2="${_pkgver}a"
+pkgrel=1
+pkgdesc="S-Lang is an interpreted language that may be embedded into an application to make the application extensible."
+arch=('x86_64')
+url="http://www.jedsoft.org/slang/"
+license=('GPL')
+depends=('pcre' 'libpng')
+options=('!makeflags')
+source=("http://www.jedsoft.org/releases/slang/$pkgname-${_pkgver2}.tar.bz2")
+md5sums=('c5235313042ed0e71ec708f7b85ec241')
+
+build() {
+    cd "$srcdir/$pkgname-$_pkgver2"
+    ./configure --prefix=/usr \
+        --sysconfdir=/etc \
+        --with-readline=gnu
+    make
+}
+
+check() {
+    cd "$srcdir/$pkgname-$_pkgver2"
+    make check
+}
+
+package() {
+    cd "$srcdir/$pkgname-$_pkgver2"
+    make DESTDIR="$pkgdir" install_doc_dir=/usr/share/doc/${pkgname}-${_pkgver2} \
+        SLSH_DOC_DIR=/usr/share/doc/${pkgname}-${_pkgver2}/slsh \
+        install-all
+
+    chmod -v 755 ${pkgdir}/usr/lib/libslang.so.${_pkgver} ${pkgdir}/usr/lib/slang/v2/modules/*.so
+}

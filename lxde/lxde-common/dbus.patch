@@ -1,0 +1,16 @@
+diff -Naur lxde-common-0.99.2-orig/startlxde.in lxde-common-0.99.2/startlxde.in
+--- lxde-common-0.99.2-orig/startlxde.in	2016-11-21 19:59:09.000000000 -0300
++++ lxde-common-0.99.2/startlxde.in	2017-05-30 18:14:58.591959079 -0400
+@@ -34,10 +34,8 @@
+ export SAL_USE_VCLPLUGIN=gtk
+ 
+ # Launch DBus if needed
+-if which dbus-launch >/dev/null && test -z "$DBUS_SESSION_BUS_ADDRESS"; then
+-	if test -z "$XDG_RUNTIME_DIR" -o ! -S "$XDG_RUNTIME_DIR/bus" -o ! -O "$XDG_RUNTIME_DIR/bus"; then
+-		eval "$(dbus-launch --sh-syntax --exit-with-session)"
+-	fi
++if [ -z "${DBUS_SESSION_BUS_ADDRESS-}" ] && type dbus-launch >/dev/null; then
++	eval "$(dbus-launch --sh-syntax --exit-with-session)"
+ fi
+ 
+ export XDG_MENU_PREFIX="lxde-"

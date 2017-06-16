@@ -1,0 +1,27 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=menu-cache
+pkgver=1.0.2
+pkgrel=1
+pkgdesc='The Menu Cache package contains a library for creating and utilizing caches to speed up the manipulation for freedesktop.org defined application menus'
+arch=('x86_64')
+url='http://lxde.org/'
+license=('GPL2')
+depends=('libfm-extra')
+source=("http://downloads.sourceforge.net/lxde/${pkgname}-${pkgver}.tar.xz")
+md5sums=('8dde7a3f5bd9798d0129d1979a5d7640')
+
+# todo: add gtk-doc
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr \
+		--libexecdir=/usr/lib/menu-cache \
+		--disable-static
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}

@@ -1,0 +1,6 @@
+#!/bin/bash
+
+if test -r /run/openrc/softlevel; then
+	rc-service udev start
+	rc-service udev-trigger start
+fi

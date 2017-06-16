@@ -1,0 +1,48 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=libgcrypt
+pkgver=1.7.6
+pkgrel=1
+pkgdesc="The libgcrypt package contains a general purpose crypto library based on the code used in GnuPG. The library provides a high level interface to cryptographic building blocks using an extendable and flexible API."
+arch=('x86_64')
+url="https://www.gnupg.org/related_software/libgcrypt/index.html"
+license=('GPL2')
+depends=('libgpg-error')
+options=('!emptydirs')
+source=("ftp://ftp.gnupg.org/gcrypt/libgcrypt/$pkgname-$pkgver.tar.bz2")
+md5sums=('54e180679a7ae4d090f8689ca32b654c')
+
+# todo: documentation
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    ./configure --prefix=/usr
+    make
+
+    # build documentation requires texalive
+    #make -C doc pdf ps html &&
+    #makeinfo --html --no-split -o doc/gcrypt_nochunks.html doc/gcrypt.texi &&
+    #makeinfo --plaintext       -o doc/gcrypt.txt           doc/gcrypt.texi
+}
+
+check() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make check
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make DESTDIR="$pkgdir" install
+
+    install -v -dm755 ${pkgdir}/usr/share/doc/${pkgname}-${pkgver}
+    install -v -m644 README doc/{README.apichanges,fips*,libgcrypt*} ${pkgdir}/usr/share/doc/${pkgname}-${pkgver}
+
+    # documentation
+    #install -v -dm755   /usr/share/doc/libgcrypt-1.7.3/html &&
+    #install -v -m644 doc/gcrypt.html/* \
+    #                    /usr/share/doc/libgcrypt-1.7.3/html &&
+    #install -v -m644 doc/gcrypt_nochunks.html \
+    #                    /usr/share/doc/libgcrypt-1.7.3 &&
+    #install -v -m644 doc/gcrypt.{pdf,ps,dvi,txt,texi} \
+    #                    /usr/share/doc/libgcrypt-1.7.3
+}

@@ -1,0 +1,61 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=e2fsprogs
+pkgver=1.43.3
+pkgrel=1
+pkgdesc="The E2fsprogs package contains the utilities for handling the ext2 file system. It also supports the ext3 and ext4 journaling file systems."
+arch=('x86_64')
+url="http://e2fsprogs.sourceforge.net"
+license=('GPL' 'LGPL' 'MIT')
+groups=('cromnix-base')
+depends=('sh' 'libutil-linux')
+makedepends=('bc' 'util-linux')
+backup=('etc/mke2fs.conf')
+options=('staticlibs')
+source=("http://downloads.sourceforge.net/project/e2fsprogs/e2fsprogs/v$pkgver/$pkgname-$pkgver.tar.gz")
+md5sums=('ec0cd4faac71b2fcf9f73733e4d50ead')
+
+prepare() {
+    cd "$srcdir/$pkgname-$pkgver"
+    sed -i -e 's:\[\.-\]::' tests/filter.sed
+    mkdir -pv $srcdir/$pkgname-$pkgver/build
+}
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver/build"
+    ../configure --prefix=/usr \
+		--libdir=/usr/lib \
+		--sbindir=/usr/bin \
+        --with-root-prefix="" \
+        --enable-elf-shlibs \
+        --disable-libblkid \
+        --disable-libuuid \
+        --disable-uuidd \
+        --disable-fsck
+    make
+}
+
+check() {
+    cd "$srcdir/$pkgname-$pkgver/build"
+    make check
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver/build"
+
+    make DESTDIR="$pkgdir" install
+
+    make DESTDIR="$pkgdir" install-libs
+
+    sed -i -e 's#^SS_DIR=.*#SS_DIR="/usr/share/ss"#' "$pkgdir/usr/bin/mk_cmds"
+    sed -i -e 's#^ET_DIR=.*#ET_DIR="/usr/share/et"#' "$pkgdir/usr/bin/compile_et"
+
+    chmod -v u+w ${pkgdir}/usr/lib/{libcom_err,libe2p,libext2fs,libss}.a
+
+    gunzip -v ${pkgdir}/usr/share/info/libext2fs.info.gz
+    install-info --dir-file=${pkgdir}/usr/share/info/dir ${pkgdir}/usr/share/info/libext2fs.info
+
+    makeinfo -o doc/com_err.info ../lib/et/com_err.texinfo
+    install -v -m644 doc/com_err.info ${pkgdir}/usr/share/info
+    install-info --dir-file=${pkgdir}/usr/share/info/dir ${pkgdir}/usr/share/info/com_err.info
+}

@@ -1,0 +1,30 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=keybinder2
+pkgver=0.3.1
+pkgrel=1
+pkgdesc='The keybinder2 package contains a utility library registering global X keyboard shortcuts'
+arch=('x86_64')
+url='https://github.com/kupferlauncher/keybinder/tree/keybinder-legacy'
+license=('GPL')
+depends=('gtk2')
+makedepends=('python2' 'atk-dev')
+source=("https://github.com/kupferlauncher/keybinder/releases/download/v${pkgver}/keybinder-${pkgver}.tar.gz")
+md5sums=('a6d7caae0dcb040b08692b008a68a507')
+
+# todo: gtk-doc
+# todo: keybinder-3.0 is compiled against gtk3
+# todo: add python in the future
+
+build() {
+	cd "${srcdir}/keybinder-${pkgver}"
+	./configure --prefix=/usr \
+		--disable-python \
+		--disable-lua
+	make
+}
+
+package() {
+	cd "${srcdir}/keybinder-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}

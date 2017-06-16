@@ -1,0 +1,25 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=blfs-bootscripts
+pkgver=20170127
+pkgrel=1
+pkgdesc="The BLFS Bootscripts package contains the init scripts for various services."
+arch=('any')
+url="http://linuxfromscratch.org/blfs/"
+license=('GPL')
+# Since this is just the source code, there isn't a hard dependency
+optdepends=('lfs-bootscripts')
+source=("http://anduin.linuxfromscratch.org/BLFS/blfs-bootscripts/${pkgname}-${pkgver}.tar.xz"
+		'path.patch')
+md5sums=('34e7cacf5fa9177fd2ad7a3c33268ca6'
+         'fa4647037ce7506636f0312e5042d1ef')
+
+prepare() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	patch -Np1 -i "${srcdir}/path.patch"
+}
+
+package() {
+	mkdir -pv "${pkgdir}/usr/src"
+	mv -v "${srcdir}/${pkgname}-${pkgver}" "${pkgdir}/usr/src/${pkgname}"
+}

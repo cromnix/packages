@@ -1,0 +1,32 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=mpc
+pkgver=1.0.3
+pkgrel=1
+pkgdesc="Library for the arithmetic of complex numbers with arbitrarily high precision and correct rounding of the result."
+arch=('x86_64')
+url="http://www.multiprecision.org"
+license=('LGPL')
+depends=('mpfr')
+source=("http://www.multiprecision.org/mpc/download/$pkgname-$pkgver.tar.gz")
+md5sums=('d6a1d5f8ddea3abd2cc3e98f58352d26')
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    ./configure --prefix=/usr \
+        --disable-static \
+        --docdir=/usr/share/doc/${pkgname}-${pkgver}
+    make
+    make html
+}
+
+check() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make check
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make DESTDIR="$pkgdir" install
+    make DESTDIR="$pkgdir" install-html
+}

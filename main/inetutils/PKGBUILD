@@ -1,0 +1,38 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=inetutils
+pkgver=1.9.4
+pkgrel=1
+pkgdesc="The Inetutils package contains programs for basic networking."
+arch=('x86_64')
+url="http://www.gnu.org/software/inetutils/"
+license=('GPL3')
+groups=('cromnix-base')
+depends=('libcap')
+options=('!emptydirs')
+source=("http://ftp.gnu.org/gnu/inetutils/$pkgname-$pkgver.tar.xz")
+md5sums=('87fef1fa3f603aef11c41dcc097af75e')
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    ./configure --prefix=/usr \
+        --localstatedir=/var \
+        --disable-logger \
+        --disable-whois \
+        --disable-rcp \
+        --disable-rexec \
+        --disable-rlogin \
+        --disable-rsh \
+        --disable-servers
+    make
+}
+
+check() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make check || true
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make DESTDIR="$pkgdir" install
+}

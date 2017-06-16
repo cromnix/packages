@@ -1,0 +1,44 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=libxcb
+pkgver=1.12
+pkgrel=1
+pkgdesc='X11 client-side library'
+arch=('x86_64')
+url='https://www.x.org/wiki/'
+license=('custom')
+depends=('xcb-proto' 'libxdmcp' 'libxau')
+makedepends=('libxslt' 'python' 'util-macros')
+checkdepends=('check')
+source=("http://xcb.freedesktop.org/dist/${pkgname}-${pkgver}.tar.bz2"
+		"http://www.linuxfromscratch.org/patches/blfs/svn/${pkgname}-${pkgver}-python3-1.patch")
+md5sums=('28e552bd78bc1050b6b26ca1db0e5bb6'
+         '5b9bbd8730c4c7d6e0876912a61d8621')
+
+prepare() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	patch -Np1 -i ${srcdir}/${pkgname}-${pkgver}-python3-1.patch
+	sed -i "s/pthread-stubs//" configure
+}
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--localstatedir=/var \
+		--disable-static \
+		--enable-xinput \
+		--without-doxygen \
+		--docdir='${datadir}'/doc/${pkgdir}-${pkgver}
+	make
+}
+
+check() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make check
+}
+
+package() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+}

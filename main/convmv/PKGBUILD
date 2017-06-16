@@ -1,0 +1,22 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=convmv
+pkgver=2.0
+pkgrel=1
+pkgdesc='Tool for converting encodings on filesystems'
+arch=('any')
+url='http://j3e.de/linux/convmv/'
+license=('GPL2')
+depends=('perl')
+source=("http://j3e.de/linux/convmv/${pkgname}-${pkgver}.tar.gz")
+md5sums=('984a13dd5068c0c67356b87e4078d66e')
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make
+}
+
+package() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make PREFIX=${pkgdir}/usr install
+}

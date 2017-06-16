@@ -1,0 +1,41 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=ca-certificates
+pkgver=20170613
+pkgrel=1
+pkgdesc='Certificate Authority Certificates'
+arch=('x86_64')
+url="https://hg.mozilla.org/releases/mozilla-release/raw-file/default/security/nss/lib/ckfw/builtins/certdata.txt"
+license=('GPL2')
+depends=('sh')
+source=('https://hg.mozilla.org/releases/mozilla-release/raw-file/default/security/nss/lib/ckfw/builtins/certdata.txt'
+		'make-ca.sh::http://anduin.linuxfromscratch.org/BLFS/other/make-ca.sh-20161126')
+md5sums=('SKIP'
+		 'fca9ae62242800a9dcaee5d400ee5c41')
+
+pkgver() {
+	date +%Y%m%d
+}
+
+prepare() {
+	cd ${srcdir}
+	cp make-ca.sh make-ca.mod.sh
+	sed -e "s:SSLDIR=\"/etc/ssl\":SSLDIR=\"${pkgdir}/etc/ssl\":" \
+		-e "s:PKIDIR=\"/etc/pki\":PKIDIR=\"${pkgdir}/etc/pki\":" \
+		-i make-ca.mod.sh
+}
+
+package() {
+	cd ${srcdir}
+
+	chmod +x ${srcdir}/make-ca.mod.sh
+
+	mkdir -pv ${pkgdir}/etc/{ssl,pki/anchors}
+	${srcdir}/make-ca.mod.sh
+	rm ${srcdir}/make-ca.mod.sh
+
+	ln -sfv ../ca-bundle.crt ${pkgdir}/etc/ssl/certs/ca-certificates.crt
+
+	install -vd -m755 ${pkgdir}/usr/bin
+	install -v -m755 make-ca.sh ${pkgdir}/usr/bin/make-ca
+}

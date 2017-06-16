@@ -1,0 +1,32 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=libdrm
+pkgver=2.4.81
+pkgrel=1
+pkgdesc='Provides a user space library for accessing the DRM, direct rendering manager'
+arch=('x86_64')
+url='https://dri.freedesktop.org/'
+license=('custom')
+depends=('libpciaccess')
+makedepends=('util-macros' 'libxslt' 'docbook-xsl')
+checkdepends=('cairo')
+source=("http://dri.freedesktop.org/${pkgname}/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('d04f3567f0a812188d06f860fded5ab7')
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+
+	./configure --prefix=/usr \
+		--enable-udev
+	make
+}
+
+check() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make check
+}
+
+package() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+}

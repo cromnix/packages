@@ -1,0 +1,19 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=wpa_supplicant-lfs
+pkgver=20170127
+pkgrel=1
+pkgdesc='lfs init scripts for wpa_supplicant'
+arch=('any')
+url='https://w1.fi/wpa_supplicant/'
+license=('GPL')
+depends=('sysvinit')
+provides=('wpa_supplicant-init')
+makedepends=("blfs-bootscripts=${pkgver}")
+
+package() {
+	cd /usr/src/blfs-bootscripts
+	make DESTDIR="${pkgdir}" install-service-wpa
+
+	install -v -m755 -d "${pkgdir}/etc/sysconfig"
+}

@@ -1,0 +1,28 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=libfm-extra
+pkgver=1.2.5
+pkgrel=1
+pkgdesc='The libfm-extra package contains a library and other files required by menu-cache-gen libexec of menu-cache-1.0.2'
+arch=('x86_64')
+url='http://pcmanfm.sourceforge.net/'
+license=('GPL')
+depends=('glib')
+makedepends=('intltool')
+source=("http://downloads.sourceforge.net/pcmanfm/libfm-${pkgver}.tar.xz")
+md5sums=('a1ba9ae5e920f38b647dd511edd6c807')
+
+build() {
+	cd "${srcdir}/libfm-${pkgver}"
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--with-extra-only \
+		--with-gtk=no \
+		--disable-static
+	make
+}
+
+package() {
+	cd "${srcdir}/libfm-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}

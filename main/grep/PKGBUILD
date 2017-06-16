@@ -1,0 +1,30 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=grep
+pkgver=3.0
+pkgrel=1
+pkgdesc="The Grep package contains programs for searching through files."
+arch=('x86_64')
+license=('GPL3')
+url='http://www.gnu.org/software/grep/grep.html'
+groups=('cromnix-base' 'cromnix-dev')
+depends=('glibc' 'perl')
+makedepends=('texinfo')
+source=("http://ftp.gnu.org/gnu/grep/$pkgname-$pkgver.tar.xz")
+md5sums=('fa07c1616adeb9c3262be5177d10ad4a')
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    ./configure --prefix=/usr
+    make
+}
+
+check() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make check
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make DESTDIR="$pkgdir" install
+}

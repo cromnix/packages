@@ -1,0 +1,51 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=git
+pkgver=2.13.1
+pkgrel=1
+pkgdesc="Git is a free and open source, distributed version control system designed to handle everything from small to very large projects with speed and efficiency."
+arch=('x86_64')
+url="https://git-scm.com/"
+license=('GPL')
+depends=('libcurl' 'openssl' 'python2')
+makedepends=('asciidoc')
+source=("https://github.com/git/git/archive/v$pkgver.tar.gz"
+        "https://www.kernel.org/pub/software/scm/git/git-manpages-$pkgver.tar.xz"
+        "https://www.kernel.org/pub/software/scm/git/git-htmldocs-$pkgver.tar.xz")
+noextract=("git-manpages-$pkgver.tar.xz"
+           "git-htmldocs-$pkgver.tar.xz")
+md5sums=('c0e3fe359f715cb7dfc3ac63fa6e733a'
+         '20ced60758fbc2548538bc5e9981f32c'
+         'ded893d057955ef6f181b0daa90b53d4')
+
+# todo: rebuild with manpages
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make configure
+    ./configure --prefix=/usr \
+        --with-gitconfig=/etc/gitconfig \
+        --libexecdir=/usr/lib/git-core
+    make
+    make html
+    # need to install xmlto, dblatex, and docbook2x to build man
+    #make man
+}
+
+check() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make test
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+
+    make DESTDIR="$pkgdir" install
+    #make DESTDIR="$pkgdir" install-man
+    make DESTDIR="$pkgdir" htmldir=/usr/share/doc/${pkgname}-${pkgver} install-html
+
+	find ${pkgdir}/usr/share/locale -type d -exec chmod 755 {} +
+
+    # temp manpages until they can be built
+    tar -xf ${srcdir}/git-manpages-${pkgver}.tar.xz -C ${pkgdir}/usr/share/man --no-same-owner --no-overwrite-dir
+}

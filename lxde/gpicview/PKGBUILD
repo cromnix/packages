@@ -1,0 +1,26 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=gpicview
+pkgver=0.2.5
+pkgrel=1
+pkgdesc='The GPicView package contains a lightweight image viewer'
+arch=('x86_64')
+url='https://www.lxde.org/'
+license=('GPL2')
+groups=('lxde')
+depends=('gtk2')
+makedepends=('intltool' 'atk-dev')
+source=("http://downloads.sourceforge.net/lxde/${pkgname}-${pkgver}.tar.xz")
+md5sums=('26be9b0c5a234f1afe7d83d02a4a33f4')
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+	sed -i 's/Utility;//' "${pkgdir}"/usr/share/applications/gpicview.desktop
+}

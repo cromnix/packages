@@ -1,0 +1,23 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=s6-linux-utils
+pkgver=2.2.0.0
+pkgrel=1
+pkgdesc="s6-linux-utils is a set of minimalistic Linux-specific system utilities."
+arch=('x86_64')
+url="http://skarnet.org/software/s6-portable-utils/"
+license=('ISC')
+depends=('skalibs')
+source=("http://skarnet.org/software/s6-linux-utils/$pkgname-$pkgver.tar.gz")
+md5sums=('70b09e0d1b498cf647eea491a1969033')
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    ./configure --prefix=/usr
+    make
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make DESTDIR="$pkgdir" install
+}

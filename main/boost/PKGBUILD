@@ -1,0 +1,80 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=boost
+pkgver=1.64.0
+_pkgver=${pkgver//./_}
+pkgrel=1
+pkgdesc='Boost provides a set of free peer-reviewed portable C++ source libraries'
+arch=('x86_64')
+url='http://www.boost.org/'
+license=('custom')
+depends=('bzip2' 'zlib' 'icu')
+makedepends=('icu' 'python' 'python2' 'bzip2' 'zlib' 'which')
+checkdepends=('python2')
+optepends=('python: for python bindings'
+			'python2: for python2 bindings')
+options=('staticlibs')
+source=("http://downloads.sourceforge.net/project/${pkgname}/${pkgname}/${pkgver}/${pkgname}_${_pkgver}.tar.bz2")
+md5sums=('93eecce2abed9d2442c9676914709349')
+
+# todo: split and depends, if built with openmpi I beleive there will be a binary included as well
+# rebuild using a staging folder
+
+prepare() {
+	cd "${srcdir}/${pkgname}_${_pkgver}"
+	sed -e '/using python/ s@;@: /usr/include/python${PYTHON_VERSION/3*/${PYTHON_VERSION}m} ;@' -i bootstrap.sh
+}
+
+build() {
+	cd "${srcdir}/${pkgname}_${_pkgver}"
+	./bootstrap.sh --prefix=/usr \
+		--with-toolset=gcc \
+		--with-icu \
+		--with-python=/usr/bin/python3
+	local JOBS="$(sed -e 's/.*\(-j *[0-9]\+\).*/\1/' <<< ${MAKEFLAGS})"
+	./b2 --prefix=/usr \
+		stage \
+		variant=release \
+		debug-symbols=off \
+		threading=multi \
+		runtime-link=shared \
+		link=shared,static \
+		toolset=gcc \
+		python=3.6 \
+		cflags="${CPPFLAGS} ${CFLAGS} -fPIC -O3" \
+		cxxflags="${CPPFLAGS} ${CXXFLAGS} -std=c++14 -fPIC -O3" \
+		linkflags="${LDFLAGS}" \
+		--layout=system \
+		${JOBS}
+}
+
+check() {
+	cd "${srcdir}/${pkgname}_${_pkgver}/tools/build/test"
+	python test_all.py
+}
+
+package() {
+	cd "${srcdir}/${pkgname}_${_pkgver}"
+	./b2 --prefix="${pkgdir}/usr" \
+		install \
+		variant=release \
+		debug-symbols=off \
+		threading=multi \
+		runtime-link=shared \
+		link=shared,static \
+		toolset=gcc \
+		python=3.6 \
+		cflags="${CPPFLAGS} ${CFLAGS} -fPIC -O3" \
+		cxxflags="${CPPFLAGS} ${CXXFLAGS} -std=c++14 -fPIC -O3" \
+		linkflags="${LDFLAGS}" \
+		--layout=system \
+		${JOBS}
+
+	# binary
+	install -Dm755 tools/build/src/engine/bin.linuxx86_64/b2 "${pkgdir}"/usr/bin/b2
+	ln -s /usr/bin/b2 "${pkgdir}"/usr/bin/bjam
+
+	#doc
+	install -dm755 "${pkgdir}"/usr/share/boostbook
+	cp -a tools/boostbook/{xsl,dtd} "${pkgdir}"/usr/share/boostbook/
+}

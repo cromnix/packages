@@ -1,0 +1,22 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=help2man
+pkgver=1.47.4
+pkgrel=1
+pkgdesc="Produces simple manual pages"
+arch=('x86_64')
+url="https://www.gnu.org/software/patch/patch.html"
+license=('GPL')
+source=("http://ftp.gnu.org/gnu/$pkgname/$pkgname-$pkgver.tar.xz")
+md5sums=('544aca496a7d89de3e5d99e56a2f03d3')
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    ./configure --prefix=/usr
+    make
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make DESTDIR="$pkgdir" install
+}

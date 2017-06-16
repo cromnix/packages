@@ -1,0 +1,34 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=giflib
+pkgver=5.1.4
+pkgrel=1
+pkgdesc='The giflib package contains libraries for reading and writing GIFs as well as programs for converting and working with GIF files'
+arch=('x86_64')
+url='http://sourceforge.net/projects/giflib/'
+license=('MIT')
+depends=('glibc')
+makedepends=('xmlto' 'docbook-xml' 'docbook-xsl')
+source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('2c171ced93c0e83bb09e6ccad8e3ba2b')
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	./configure --prefix=/usr \
+		--disable-static
+	make
+}
+
+check() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make check-TESTS
+}
+
+package() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+	find doc \( -name Makefile\* -o -name \*.1 -o -name \*.xml \) -exec rm -v {} \;
+
+	install -v -dm755 ${pkgdir}/usr/share/doc/${pkgname}-${pkgver}
+	cp -v -R doc/* ${pkgdir}/usr/share/doc/${pkgname}-${pkgver}
+}

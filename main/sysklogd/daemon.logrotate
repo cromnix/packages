@@ -1,0 +1,4 @@
+/var/log/daemon.log {
+	rotate 4
+	weekly
+}

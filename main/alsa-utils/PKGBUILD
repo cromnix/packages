@@ -1,0 +1,80 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgbase=alsa-utils
+pkgname=('alsa-utils' 'alsa-utils-cromnix' 'alsa-utils-vanilla' 'alsa-utils-openrc')
+pkgver=1.1.4
+pkgrel=1
+pkgdesc='The ALSA Utilities package contains various utilities which are useful for controlling your sound card'
+arch=('x86_64')
+url='https://www.gnu.org/software/patch/patch.html'
+license=('GPL')
+makedepends=('alsa-lib-dev' 'libalsa')
+source=("ftp://ftp.alsa-project.org/pub/utils/${pkgbase}-${pkgver}.tar.bz2"
+		"https://gitweb.gentoo.org/repo/gentoo.git/plain/media-sound/${pkgbase}/files/alsasound.initd-r6"
+		"https://gitweb.gentoo.org/repo/gentoo.git/plain/media-sound/${pkgbase}/files/alsasound.confd-r4"
+		'alsa-utils-service.hook'
+		'alsa-utils-service.script')
+md5sums=('01e3934ca5bd22a80c27289d1b0adcdc'
+         '8e3b6845ad66d74796889ca3edc3187c'
+         'a30ad1df6f85eca2d5615cd3bb72b699'
+         '36c8314501b72627b6534352d7763c5d'
+         'a7f2963187579995b993793958afbb6d')
+
+# todo: alsa modules conf
+
+build() {
+	cd "${srcdir}/${pkgbase}-${pkgver}"
+	./configure --prefix=/usr \
+		--sbindir=/usr/bin \
+		--with-udev-rules-dir=/usr/lib/udev/rules.d \
+		--disable-alsaconf \
+		--disable-bat \
+		--disable-xmlto \
+		--with-curses=ncursesw
+	make
+}
+
+package_alsa-utils() {
+    # meta package
+    depends=('alsa-utils-bin')
+    arch=('any')
+}
+
+package_alsa-utils-vanilla() {
+	depends=('libalsa')
+	provides=('alsa-utils-bin')
+	conflicts=('alsa-utils-cromnix')
+	cd "${srcdir}/${pkgbase}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+	#alsa statedir
+	install -d "${pkgdir}/var/lib/alsa"
+}
+
+package_alsa-utils-cromnix() {
+	depends=('openrc' 'libalsa')
+	provides=('alsa-utils-bin')
+	conflicts=('alsa-utils-vanilla')
+	install=alsa-utils-service.install
+	cd "${srcdir}/${pkgbase}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+	#alsa statedir
+	install -d "${pkgdir}/var/lib/alsa"
+	
+	install -v -m755 -d ${pkgdir}/etc/openrc/{init.d,conf.d}
+	install -v -m755 ${srcdir}/alsasound.initd-r6 ${pkgdir}/etc/openrc/init.d/alsasound
+	install -v -m755 ${srcdir}/alsasound.confd-r4 ${pkgdir}/etc/openrc/conf.d/alsasound
+	
+	install -Dm644 ${srcdir}/alsa-utils-service.hook ${pkgdir}/usr/share/libalpm/hooks/alsa-utils-service.hook
+	install -Dm755 ${srcdir}/alsa-utils-service.script ${pkgdir}/usr/share/libalpm/scripts/alsa-utils-service
+}
+
+package_alsa-utils-openrc() {
+	pkgdesc="OpenRC init scripts for ${pkgbase}"
+	arch=('any')
+	depends=('openrc')
+	provides=('alsa-utils-init')
+	conflicts=('alsa-utils-cromnix')
+	install -v -m755 -d ${pkgdir}/etc/openrc/{init.d,conf.d}
+	install -v -m755 ${srcdir}/alsasound.initd-r6 ${pkgdir}/etc/openrc/init.d/alsasound
+	install -v -m755 ${srcdir}/alsasound.confd-r4 ${pkgdir}/etc/openrc/conf.d/alsasound
+}

@@ -1,0 +1,44 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgbase=bison
+pkgname=('bison' 'libbison' 'bison-doc')
+pkgver=3.0.4
+pkgrel=1
+pkgdesc='Parser generator'
+arch=('x86_64')
+url='http://www.gnu.org/software/bison/bison.html'
+license=('GPL3')
+source=("http://ftp.gnu.org/gnu/${pkgbase}/${pkgbase}-${pkgver}.tar.xz")
+md5sums=('c342201de104cc9ce0a21e0ad10d4021')
+
+build() {
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	./configure --prefix=/usr \
+		--docdir=/usr/share/doc/${pkgbase}-${pkgver}
+	make
+}
+
+package_bison() {
+	depends=('glibc' 'm4' 'sh' 'libbison')
+	optdepends=('bison-doc: documentation')
+	groups=('cromnix-dev')
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	make DESTDIR=${pkgdir} install
+
+	rm -rf ${pkgdir}/usr/lib
+	rm -rf ${pkgdir}/usr/share/doc
+}
+
+package_libbison() {
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	make DESTDIR=${pkgdir} install-libLIBRARIES
+}
+
+package_bison-doc() {
+	arch=('any')
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	make DESTDIR=${pkgdir} install
+
+	rm -rf ${pkgdir}/usr/{bin,lib}
+	rm -rf ${pkgdir}/usr/share/{aclocal,bison,info,locale,man}
+}

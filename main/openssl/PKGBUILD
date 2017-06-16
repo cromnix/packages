@@ -1,0 +1,40 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=openssl
+pkgver=1.1.0f
+pkgrel=1
+pkgdesc="The OpenSSL package contains management tools and libraries relating to cryptography. These are useful for providing cryptography functions to other packages, such as OpenSSH, email applications and web browsers (for accessing HTTPS sites)."
+arch=('x86_64')
+url="https://www.openssl.org/"
+license=('custom:BSD')
+depends=('perl')
+optdepends=('ca-certificates')
+backup=('etc/ssl/openssl.cnf')
+options=('!makeflags')
+source=("https://www.openssl.org/source/$pkgname-$pkgver.tar.gz")
+md5sums=('7b521dea79ab159e8ec879d2333369fa')
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    ./config --prefix=/usr \
+        --openssldir=/etc/ssl \
+        --libdir=lib \
+        shared \
+        zlib-dynamic
+
+    make depend
+    make
+}
+
+check() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make -j1 test
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make DESTDIR="$pkgdir" MANDIR=/usr/share/man MANSUFFIX=ssl install
+
+    install -dv -m755 ${pkgdir}/usr/share/doc/${pkgname}-${pkgver}
+    cp -vfr doc/* ${pkgdir}/usr/share/doc/${pkgname}-${pkgver}
+}

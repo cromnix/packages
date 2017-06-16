@@ -1,0 +1,30 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=xmlto
+pkgver=0.0.28
+pkgrel=1
+pkgdesc='The xmlto is a front-end to an XSL toolchain'
+arch=('x86_64')
+url='https://fedorahosted.org/xmlto/'
+license=('GPL')
+depends=('libxslt')
+makedepends=('docbook-xsl')
+source=("https://fedorahosted.org/releases/x/m/xmlto/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('93bab48d446c826399d130d959fe676f')
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	LINKS='/usr/bin/links'
+	./configure --prefix=/usr
+	make
+}
+
+check() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make check
+}
+
+package() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+}

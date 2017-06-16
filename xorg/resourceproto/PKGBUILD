@@ -1,0 +1,23 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=resourceproto
+pkgver=1.2.0
+pkgrel=1
+pkgdesc='X11 Resource extension wire protocol'
+arch=('any')
+url='https://www.x.org/wiki/'
+license=('custom')
+makedepends=('util-macros' 'xmlto' 'docbook-xml' 'asciidoc')
+source=("http://ftp.x.org/pub/individual/proto/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('cfdb57dae221b71b2703f8e2980eaaf4')
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	./configure --prefix=/usr
+	make
+}
+
+package() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+}

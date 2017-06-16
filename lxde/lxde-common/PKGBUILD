@@ -1,0 +1,45 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgbase=lxde-common
+pkgname=('lxde-common' 'lxde-session')
+pkgver=0.99.2
+pkgrel=1
+pkgdesc='The LXDE Common package provides a set of default configuration for LXDE'
+arch=('any')
+url='http://lxde.org/'
+license=('GPL2')
+groups=('lxde')
+makedepends=('intltool')
+optdepends=('gnome-themes-standard: default GTK+ theme'
+            'lxde-icon-theme: default icon theme')
+source=("http://downloads.sourceforge.net/lxde/${pkgbase}-${pkgver}.tar.xz"
+		'dbus.patch')
+md5sums=('14a9d19c4576dc15d985453ccb8ca9f6'
+         'dbbebea0cd847a3f8f7cf51aa8bf5cf9')
+
+prepare() {
+	cd "${srcdir}/${pkgbase}-${pkgver}"
+	patch -Np1 -i "${srcdir}"/dbus.patch
+}
+
+build() {
+	cd "${srcdir}/${pkgbase}-${pkgver}"
+	./configure --prefix=/usr \
+		--sysconfdir=/etc
+	make
+}
+
+package_lxde-session() {
+	optdepends=('lxde: to use lxde')
+	cd "${srcdir}/${pkgbase}-${pkgver}"
+	make DESTDIR="${pkgdir}" install-xsessionDATA
+}
+
+package_lxde-common() {
+	depends=('openbox' 'pcmanfm')
+	backup=('etc/xdg/lxsession/LXDE/desktop.conf'
+			'etc/xdg/lxsession/LXDE/autostart')
+	cd "${srcdir}/${pkgbase}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+	rm "${pkgdir}"/usr/share/xsessions/LXDE.desktop
+}

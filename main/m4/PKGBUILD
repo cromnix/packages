@@ -1,0 +1,29 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=m4
+pkgver=1.4.18
+pkgrel=1
+pkgdesc="The M4 package contains a macro processor."
+arch=('x86_64')
+url="http://www.gnu.org/software/m4"
+license=('GPL3')
+groups=('cromnix-dev')
+depends=('glibc' 'bash')
+source=("http://ftp.gnu.org/gnu/m4/$pkgname-$pkgver.tar.xz")
+md5sums=('730bb15d96fffe47e148d1e09235af82')
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    ./configure --prefix=/usr
+    make
+}
+
+check() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make check || true
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make DESTDIR="$pkgdir" install
+}

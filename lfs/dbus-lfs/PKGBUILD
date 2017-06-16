@@ -1,0 +1,17 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=dbus-lfs
+pkgver=20170127
+pkgrel=1
+pkgdesc='lfs init scripts for dbus'
+arch=('any')
+url='http://roy.marples.name/projects/dhcpcd/index'
+license=('BSD')
+depends=('sysvinit')
+provides=('dbus-init')
+makedepends=("blfs-bootscripts=${pkgver}")
+
+package() {
+	cd /usr/src/blfs-bootscripts
+	make DESTDIR="${pkgdir}" install-dbus
+}

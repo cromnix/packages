@@ -1,0 +1,27 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=xlsatoms
+pkgver=1.1.2
+pkgrel=1
+pkgdesc='List interned atoms defined on server'
+arch=('x86_64')
+url='https://xorg.freedesktop.org/'
+license=('custom')
+depends=('libxcb')
+makedepends=('util-macros')
+groups=('xorg-apps' 'xorg')
+source=("https://www.x.org/archive/individual/app/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('5dcb6e6c4b28c8d7aeb45257f5a72a7d')
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--localstatedir=/var
+	make
+}
+
+package() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+}

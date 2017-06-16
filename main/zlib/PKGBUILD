@@ -1,0 +1,30 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=zlib
+pkgver=1.2.11
+pkgrel=1
+pkgdesc="Compression library"
+arch=('x86_64')
+url="http://www.zlib.net/"
+license=('custom')
+depends=('glibc')
+options=('staticlibs')
+source=("http://zlib.net/zlib-${pkgver}.tar.xz")
+md5sums=('85adef240c5f370b308da8c938951a68')
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    ./configure --prefix=/usr
+    make
+}
+
+check() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make check
+
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make install DESTDIR=${pkgdir}
+}

@@ -1,0 +1,12 @@
+diff -Naur linux-4.7.2-orig/Makefile linux-4.7.2/Makefile
+--- linux-4.7.2-orig/Makefile	2016-08-20 13:11:18.000000000 -0300
++++ linux-4.7.2/Makefile	2016-10-02 13:01:22.752931035 -0300
+@@ -850,7 +850,7 @@
+ # makefile but the argument can be passed to make if needed.
+ #
+ 
+-MODLIB	= $(INSTALL_MOD_PATH)/lib/modules/$(KERNELRELEASE)
++MODLIB	= $(INSTALL_MOD_PATH)/usr/lib/modules/$(KERNELRELEASE)
+ export MODLIB
+ 
+ #

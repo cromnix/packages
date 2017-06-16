@@ -1,0 +1,48 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgbase=check
+pkgname=('check' 'libcheck' 'check-doc')
+pkgver=0.10.0
+pkgrel=1
+pkgdesc='Unit testing framework for C'
+arch=('x86_64')
+url='https://libcheck.github.io/check/'
+license=('LGPL')
+source=("http://downloads.sourceforge.net/check/${pkgbase}-${pkgver}.tar.gz")
+md5sums=('53c5e5c77d090e103a17f3ed7fd7d8b8')
+
+build() {
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	./configure --prefix=/usr
+	make
+}
+
+check() {
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	make check
+}
+
+package_check() {
+	depends=('awk' 'libcheck')
+	optdepends=('check-doc: documentation'
+				'check-dev: development headers')
+
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	make DESTDIR=${pkgdir} install
+	rm -rf ${pkgdir}/usr/{include,lib}
+	rm -rf ${pkgdir}/usr/share/doc
+}
+
+package_libcheck() {
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	make DESTDIR=${pkgdir} install
+
+	rm -rf ${pkgdir}/usr/{bin,share}
+}
+
+package_check-doc() {
+	arch=('any')
+
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	make DESTDIR=${pkgdir} docdir=/usr/share/doc/${pkgbase}-${pkgver} install-docDATA
+}

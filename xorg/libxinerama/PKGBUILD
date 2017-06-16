@@ -1,0 +1,28 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=libxinerama
+_pkgname=libXinerama
+pkgver=1.1.3
+pkgrel=1
+pkgdesc='X11 Xinerama extension library'
+arch=('x86_64')
+url='https://www.x.org/wiki/'
+license=('custom')
+depends=('libxext' 'xineramaproto')
+makedepends=('util-macros' 'xmlto' 'docbook-xml' 'asciidoc')
+source=("http://ftp.x.org/pub/individual/lib/${_pkgname}-${pkgver}.tar.bz2")
+md5sums=('9336dc46ae3bf5f81c247f7131461efd')
+
+build() {
+	cd ${srcdir}/${_pkgname}-${pkgver}
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--localstatedir=/var \
+		--disable-static
+	make
+}
+
+package() {
+	cd ${srcdir}/${_pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+}

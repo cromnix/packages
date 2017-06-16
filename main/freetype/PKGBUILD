@@ -1,0 +1,35 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=freetype
+pkgver=2.8
+pkgrel=1
+pkgdesc='The FreeType2 package contains a library which allows applications to properly render TrueType fonts'
+arch=('x86_64')
+url='http://www.freetype.org'
+license=('GPL')
+depends=('zlib' 'bzip2' 'sh' 'libpng' 'harfbuzz')
+makedepends=('zlib' 'bzip2' 'sh' 'libpng' 'harfbuzz')
+source=("http://downloads.sourceforge.net/freetype/${pkgname}-${pkgver}.tar.bz2"
+		"http://downloads.sourceforge.net/freetype/${pkgname}-doc-${pkgver}.tar.bz2")
+md5sums=('2413ac3eaf508ada019c63959ea81a92'
+         '961d5802bb6085ad91e0ab9fa99fbf39')
+
+prepare() {
+	cd "$srcdir/$pkgname-$pkgver"
+	sed -ri "s:.*(AUX_MODULES.*valid):\1:" modules.cfg
+	sed -r "s:.*(#.*SUBPIXEL_RENDERING) .*:\1:" -i include/freetype/config/ftoption.h
+}
+
+build() {
+	cd "$srcdir/$pkgname-$pkgver"
+	./configure --prefix=/usr \
+		--disable-static
+	make
+}
+
+package() {
+	cd "$srcdir/$pkgname-$pkgver"
+	make DESTDIR="$pkgdir" install
+	install -v -m755 -d ${pkgdir}/usr/share/doc/${pkgname}-${pkgver}
+	cp -v -R docs/* ${pkgdir}/usr/share/doc/${pkgname}-${pkgver}
+}

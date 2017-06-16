@@ -1,0 +1,28 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=wireless_tools
+pkgver=29
+pkgrel=1
+pkgdesc="The Wireless Extension (WE) is a generic API in the Linux kernel allowing a driver to expose configuration and statistics specific to common Wireless LANs to user space."
+arch=('x86_64')
+url="https://hewlettpackard.github.io/wireless-tools/"
+license=('GPL')
+source=("http://www.hpl.hp.com/personal/Jean_Tourrilhes/Linux/$pkgname.$pkgver.tar.gz"
+        "http://www.linuxfromscratch.org/patches/blfs/svn/$pkgname-$pkgver-fix_iwlist_scanning-1.patch")
+md5sums=('e06c222e186f7cc013fd272d023710cb'
+         '9db3a9451d8cb969e388e089be401408')
+
+prepare() {
+    cd "$srcdir/$pkgname.$pkgver"
+    patch -Np1 -i ${srcdir}/${pkgname}-${pkgver}-fix_iwlist_scanning-1.patch
+}
+
+build() {
+    cd "$srcdir/$pkgname.$pkgver"
+    make
+}
+
+package() {
+    cd "$srcdir/$pkgname.$pkgver"
+    make PREFIX=/usr INSTALL_MAN=${pkgdir}/usr/share/man INSTALL_DIR=${pkgdir}/usr/bin INSTALL_LIB=${pkgdir}/usr/lib INSTALL_INC=${pkgdir}/usr/include install
+}

@@ -1,0 +1,9 @@
+# Begin /etc/sysconfig/console
+
+#UNICODE="1"
+#KEYMAP="us"
+#KEYMAP_CORRECTIONS="euro2"
+#LEGACY_CHARSET="iso-8859-15"
+#FONT="lat2a-16 -m 8859-2"
+
+# End /etc/sysconfig/console

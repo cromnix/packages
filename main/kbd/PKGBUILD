@@ -1,0 +1,43 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=kbd
+pkgver=2.0.4
+pkgrel=1
+pkgdesc="The Kbd package contains key-table files, console fonts, and keyboard utilities."
+arch=('x86_64')
+url="http://www.kbd-project.org"
+license=('GPL')
+depends=('glibc')
+makedepends=('libcheck')
+source=("https://www.kernel.org/pub/linux/utils/kbd/$pkgname-$pkgver.tar.xz"
+        "http://www.linuxfromscratch.org/patches/lfs/7.10/$pkgname-2.0.3-backspace-1.patch")
+md5sums=('c1635a5a83b63aca7f97a3eab39ebaa6'
+         'f75cca16a38da6caa7d52151f7136895')
+
+prepare() {
+    cd "$srcdir/$pkgname-$pkgver"
+    patch -Np1 -i ${srcdir}/kbd-2.0.3-backspace-1.patch
+
+    sed -i 's/\(RESIZECONS_PROGS=\)yes/\1no/g' configure
+    sed -i 's/resizecons.8 //' docs/man/man8/Makefile.in
+}
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    ./configure --prefix=/usr \
+        --disable-vlock
+    make
+}
+
+check() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make check
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make DESTDIR="$pkgdir" install
+
+    mkdir -pv ${pkgdir}/usr/share/doc/${pkgname}-${pkgver}
+    cp -R -v docs/doc/* ${pkgdir}/usr/share/doc/${pkgname}-${pkgver}
+}

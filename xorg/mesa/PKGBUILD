@@ -1,0 +1,67 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=mesa
+pkgver=17.1.2
+pkgrel=1
+pkgdesc='Mesa is an OpenGL compatible 3D graphics library'
+arch=('x86_64')
+url='https://www.mesa3d.org/'
+license=('custom')
+#depends=('glibc')
+#depends=libelf
+depends=('glibc' 'libdrm' 'libxxf86vm' 'libxdamage' 'libxshmfence' 'libgcrypt' 'elfutils')
+makedepends=('python2' 'libxml2' 'libx11' 'glproto' 'libdrm' 'dri2proto' 'dri3proto' 'presentproto' 'libxshmfence' 'libxxf86vm' 'libxdamage' 'libgcrypt' 'elfutils')
+makedepends+=('mesa')
+provides=('libgl' 'libgles' 'libegl')
+source=("https://mesa.freedesktop.org/archive/${pkgname}-${pkgver}.tar.xz"
+		'http://www.linuxfromscratch.org/patches/blfs/8.0/mesa-13.0.4-add_xdemos-1.patch')
+md5sums=('4d2eaf5955740b044afd95ed167c906c'
+         '48cce4c6a8ae116c4e00ae128ba97603')
+
+# todo: A lot of changes are needed to support more graphics cards and settings
+# in the future remove the mesa-demos from this package and package it seperately
+
+prepare() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+
+	patch -Np1 -i "${srcdir}/mesa-13.0.4-add_xdemos-1.patch"
+
+	sed -i "/pthread_stubs_possible=/s/yes/no/" configure.ac
+	autoreconf -fiv
+}
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+
+	#"i915,r600,nouveau,radeonsi,svga,swrast"
+
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--enable-texture-float \
+		--enable-osmesa \
+		--enable-dri \
+		--enable-xa \
+		--enable-glx-tls \
+		--with-egl-platforms='drm,x11' \
+		--with-gallium-drivers='i915,r600,nouveau,svga,swrast' \
+		--with-dri-drivers='i915,i965,r200,nouveau,swrast'
+
+	make
+
+	make -C xdemos DEMOS_PREFIX=/usr DESTDIR={$pkgdir}
+}
+
+check() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make check
+}
+
+package() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+
+	make -C xdemos DEMOS_PREFIX=/usr DESTDIR=${pkgdir} install
+
+	install -v -dm755 ${pkgdir}/usr/share/doc/${pkgname}-${pkgver}
+	cp -rfv docs/* ${pkgdir}/usr/share/doc/${pkgname}-${pkgver}
+}

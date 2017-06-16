@@ -1,0 +1,1 @@
+rc-service start dhcpcd -D -q

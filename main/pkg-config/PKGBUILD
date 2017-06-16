@@ -1,0 +1,33 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=pkg-config
+pkgver=0.29.2
+pkgrel=1
+pkgdesc="The pkg-config package contains a tool for passing the include path and/or library paths to build tools during the configure and make file execution."
+arch=('x86_64')
+url="http://pkgconfig.freedesktop.org/wiki/"
+license=('GPL')
+groups=('cromnix-dev')
+depends=('glibc')
+source=("https://pkg-config.freedesktop.org/releases/$pkgname-$pkgver.tar.gz")
+md5sums=('f6e931e319531b736fadc017f470e68a')
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    ./configure --prefix=/usr \
+        --with-internal-glib \
+        --disable-compile-warnings \
+        --disable-host-tool \
+        --docdir=/usr/share/doc/pkg-config-0.29.1
+    make
+}
+
+check() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make check
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make DESTDIR="$pkgdir" install
+}

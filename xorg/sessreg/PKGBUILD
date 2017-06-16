@@ -1,0 +1,32 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=sessreg
+pkgver=1.1.1
+pkgrel=1
+pkgdesc='Register X sessions in system utmp/utmpx databases'
+arch=('x86_64')
+url='https://xorg.freedesktop.org/'
+license=('custom')
+depends=('glibc')
+makedepends=('util-macros' 'xproto')
+groups=('xorg-apps' 'xorg')
+source=("https://www.x.org/archive/individual/app/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('e475167a892b589da23edf8edf8c942d')
+
+prepare() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	sed -e 's/\$(CPP) \$(DEFS)/$(CPP) -P $(DEFS)/' -i man/Makefile.in
+}
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--localstatedir=/var
+	make
+}
+
+package() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+}

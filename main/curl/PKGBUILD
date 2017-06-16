@@ -1,0 +1,62 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgbase=curl
+pkgname=('curl' 'libcurl' 'curl-doc')
+pkgver=7.54.0
+pkgrel=1
+pkgdesc='Software used for transferring files with URL syntax'
+arch=('x86_64')
+url='http://curl.haxx.se'
+license=('MIT')
+options=('strip')
+source=("https://curl.haxx.se/download/${pkgbase}-${pkgver}.tar.lzma")
+md5sums=('3cf2de0ca4ac43e59067eb6b4f876982')
+
+build() {
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	./configure --prefix=/usr \
+		--disable-static \
+		--enable-threaded-resolver \
+		--with-ca-path=/etc/ssl/certs
+	make
+}
+
+check() {
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	make test
+}
+
+package_curl() {
+	depends=('libcurl' 'ca-certificates' 'openssl' 'gnutls' 'zlib')
+	optdepends=('curl-doc: documentation')
+
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	make DESTDIR=${pkgdir} install
+
+	rm -rf ${pkgdir}/usr/{include,lib}
+	rm -rf ${pkgdir}/usr/share/man/man3
+}
+
+package_libcurl() {
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	make DESTDIR=${pkgdir} install
+
+	rm -rf ${pkgdir}/usr/bin
+	rm -rf ${pkgdir}/usr/share/aclocal
+	rm -rf ${pkgdir}/usr/share/man/man1
+}
+
+package_curl-doc() {
+	arch=('any')
+
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	install -v -d -m755 ${pkgdir}/usr/share/doc/${pkgname}-${pkgver}
+	cp -v -R docs/* ${pkgdir}/usr/share/doc/${pkgname}-${pkgver}
+
+	rm -rf ${pkgdir}/usr/share/doc/${pkgname}-${pkgver}/examples/.deps
+
+	find ${pkgdir}/usr/share/doc/${pkgname}-${pkgver} \( -name Makefile\* \
+		-o -name \*.1 \
+		-o -name \*.3 \) \
+		-exec rm {} \;
+}

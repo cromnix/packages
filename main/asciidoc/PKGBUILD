@@ -1,0 +1,71 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgbase=asciidoc
+pkgname=('asciidoc' 'asciidoc-doc')
+pkgver=8.6.9
+pkgrel=1
+pkgdesc='Text document format for books, documents, and documentation'
+arch=('any')
+url='http://www.methods.co.nz/asciidoc/'
+license=('GPL')
+source=("http://sourceforge.net/projects/asciidoc/files/${pkgbase}/${pkgver}/${pkgname}-${pkgver}.tar.gz")
+md5sums=('c59018f105be8d022714b826b0be130a')
+
+prepare() {
+	cd "${srcdir}/${pkgbase}-${pkgver}"
+	# python2 fix
+	for file in asciidocapi.py a2x.py asciidoc.py filters/music/music2png.py filters/latex/latex2png.py filters/code/code-filter.py filters/graphviz/graphviz2png.py; do
+		sed -i 's_#!/usr/bin/env python_#!/usr/bin/env python2_' $file
+	done
+}
+
+build() {
+	cd "${srcdir}/${pkgbase}-${pkgver}"
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--docdir=/usr/share/doc/${pkgname}-${pkgver}
+	make
+}
+
+package_asciidoc() {
+	depends=('python2' 'libxslt' 'docbook-xsl')
+	optdepends=('asciidoc-doc: asciidoc documentation')
+	backup=('etc/asciidoc/asciidoc.conf'
+			'etc/asciidoc/docbook45.conf'
+			'etc/asciidoc/help.conf'
+			'etc/asciidoc/html4.conf'
+			'etc/asciidoc/html5.conf'
+			'etc/asciidoc/lang-cs.conf'
+			'etc/asciidoc/lang-de.conf'
+			'etc/asciidoc/lang-el.conf'
+			'etc/asciidoc/lang-en.conf'
+			'etc/asciidoc/lang-es.conf'
+			'etc/asciidoc/lang-fr.conf'
+			'etc/asciidoc/lang-hu.conf'
+			'etc/asciidoc/lang-it.conf'
+			'etc/asciidoc/lang-nl.conf'
+			'etc/asciidoc/lang-pt-BR.conf'
+			'etc/asciidoc/lang-ro.conf'
+			'etc/asciidoc/lang-ru.conf'
+			'etc/asciidoc/lang-uk.conf'
+			'etc/asciidoc/latex.conf'
+			'etc/asciidoc/slidy.conf'
+			'etc/asciidoc/text.conf'
+			'etc/asciidoc/xhtml11.conf'
+			'etc/asciidoc/xhtml11-quirks.conf'
+			'etc/asciidoc/help.conf'
+			'etc/asciidoc/filters/code/code-filter.conf'
+			'etc/asciidoc/filters/graphviz/graphviz-filter.conf'
+			'etc/asciidoc/filters/latex/latex-filter.conf'
+			'etc/asciidoc/filters/music/music-filter.conf'
+			'etc/asciidoc/filters/source/source-highlight-filter.conf'
+			)
+
+	cd "${srcdir}/${pkgbase}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}
+
+package_asciidoc-doc() {
+	cd "${srcdir}/${pkgbase}-${pkgver}"
+	make DESTDIR="${pkgdir}" docs
+}

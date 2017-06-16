@@ -1,0 +1,61 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=python
+_pkgname=Python
+pkgver=3.6.1
+_pkgver=${pkgver%.*}
+pkgrel=1
+pkgdesc="The Python 3 package contains the Python development environment. This is useful for object-oriented programming, writing scripts, prototyping large programs or developing entire applications."
+arch=('x86_64')
+url="http://www.python.org/"
+license=('custom')
+depends=('expat' 'bzip2' 'gdbm' 'openssl' 'libffi' 'zlib')
+optdepends=('xz: for lzma')
+provides=('python3')
+options=('!makeflags')
+source=("https://www.python.org/ftp/python/$pkgver/Python-$pkgver.tar.xz"
+        "https://docs.python.org/3.6/archives/python-$pkgver-docs-html.tar.bz2")
+md5sums=('692b4fc3a2ba0d54d1495d4ead5b0b5c'
+         'c61e0d4fc19fafd7297796d126995297')
+
+build() {
+    cd "$srcdir/$_pkgname-$pkgver"
+    CXX="/usr/bin/g++" \
+    ./configure --prefix=/usr \
+        --enable-shared \
+        --with-system-expat \
+        --with-system-ffi \
+        --with-ensurepip
+    make
+}
+
+#check() {
+#    cd "$srcdir/$_pkgname-$pkgver"
+#    make check
+#}
+
+package() {
+    cd "$srcdir/$_pkgname-$pkgver"
+
+    make DESTDIR="${pkgdir}" SCRIPTDIR="/usr/lib" EXTRA_CFLAGS="${CFLAGS}" install
+
+	ln -s python3 "${pkgdir}/usr/bin/python"
+	ln -s python3-config "${pkgdir}/usr/bin/python-config"
+	ln -s idle3 "${pkgdir}/usr/bin/idle"
+	ln -s pydoc3 "${pkgdir}/usr/bin/pydoc"
+	ln -s python${_pkgver}.1 "${pkgdir}/usr/share/man/man1/python.1"
+
+    chmod -v 755 ${pkgdir}/usr/lib/libpython3.6m.so
+    chmod -v 755 ${pkgdir}/usr/lib/libpython3.so
+
+    install -v -dm755 ${pkgdir}/usr/share/doc/python-${pkgver}/html
+    #tar --strip-components=1 \
+    #    --no-same-owner \
+    #    --no-same-permissions \
+    #    -C /usr/share/doc/python-3.5.2/html \
+    #    -xvf ../python-3.5.2-docs-html.tar.bz2
+
+    cp -vR ${srcdir}/python-${pkgver}-docs-html/* ${pkgdir}/usr/share/doc/python-${pkgver}/html/
+
+    ln -svfn python-${pkgver} ${pkgdir}/usr/share/doc/python-3
+}

@@ -1,0 +1,90 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgbase=gpm
+pkgname=('gpm' 'gpm-cromnix' 'gpm-vanilla' 'gpm-openrc')
+pkgver=1.20.7
+pkgrel=1
+pkgdesc="The GPM (General Purpose Mouse daemon) package contains a mouse server for the console and xterm."
+arch=('x86_64')
+url="http://www.nico.schottelius.org/software/gpm/"
+license=('GPL')
+source=("http://www.nico.schottelius.org/software/gpm/archives/$pkgbase-$pkgver.tar.bz2"
+		"https://gitweb.gentoo.org/repo/gentoo.git/plain/sys-libs/gpm/files/gpm.rc6-2"
+		"https://gitweb.gentoo.org/repo/gentoo.git/plain/sys-libs/gpm/files/gpm.conf.d"
+		'gpm-service.hook'
+		'gpm-service.script')
+md5sums=('bf84143905a6a903dbd4d4b911a2a2b8'
+         '9404f8eb54a47f4129e280a0c199093a'
+         '5968cb47e493e348cf289b0dd1990f4a'
+         'e8d134a037836ceb89d6bfed94c2fc1e'
+         '863b0c11649d4efeae7960110a889848')
+
+build() {
+	cd "$srcdir/$pkgbase-$pkgver"
+	./autogen.sh
+	./configure --prefix=/usr \
+		--sbindir=/usr/bin \
+		--sysconfdir=/etc
+	make
+}
+
+package_gpm() {
+	# meta package
+	depends=('gpm-bin')
+	arch=('any')
+}
+
+package_gpm-vanilla() {
+	provides=('gpm-bin')
+	conflicts=('gpm-cromnix')
+	depends=('gpm-init' 'glibc')
+	cd "$srcdir/$pkgbase-$pkgver"
+	make DESTDIR="$pkgdir" install
+
+	install-info --dir-file=${pkgdir}/usr/share/info/dir ${pkgdir}/usr/share/info/gpm.info
+
+	ln -sfv libgpm.so.2.1.0 ${pkgdir}/usr/lib/libgpm.so
+	install -v -m644 conf/gpm-root.conf ${pkgdir}/etc
+
+	install -v -m755 -d ${pkgdir}/usr/share/doc/${pkgname}-${pkgver}/support
+	install -v -m644 doc/support/* ${pkgdir}/usr/share/doc/${pkgname}-${pkgver}/support
+	install -v -m644 doc/{FAQ,HACK_GPM,README*} ${pkgdir}/usr/share/doc/${pkgname}-${pkgver}
+}
+
+package_gpm-cromnix() {
+	provides=('gpm-bin')
+	conflicts=('gpm-vanilla')
+	depends=('openrc' 'glibc')
+	install=gpm-service.install
+	cd "$srcdir/$pkgbase-$pkgver"
+	make DESTDIR="$pkgdir" install
+
+	install-info --dir-file=${pkgdir}/usr/share/info/dir ${pkgdir}/usr/share/info/gpm.info
+
+	ln -sfv libgpm.so.2.1.0 ${pkgdir}/usr/lib/libgpm.so
+	install -v -m644 conf/gpm-root.conf ${pkgdir}/etc
+
+	install -v -m755 -d ${pkgdir}/usr/share/doc/${pkgname}-${pkgver}/support
+	install -v -m644 doc/support/* ${pkgdir}/usr/share/doc/${pkgname}-${pkgver}/support
+	install -v -m644 doc/{FAQ,HACK_GPM,README*} ${pkgdir}/usr/share/doc/${pkgname}-${pkgver}
+
+	install -v -m755 -d ${pkgdir}/etc/openrc/init.d
+	install -v -m755 -d ${pkgdir}/etc/openrc/conf.d
+	install -v -m755 ${srcdir}/gpm.rc6-2 ${pkgdir}/etc/openrc/init.d/gpm
+	install -v -m644 ${srcdir}/gpm.conf.d ${pkgdir}/etc/openrc/conf.d/gpm
+
+	install -Dm644 ${srcdir}/gpm-service.hook ${pkgdir}/usr/share/libalpm/hooks/gpm-service.hook
+	install -Dm755 ${srcdir}/gpm-service.script ${pkgdir}/usr/share/libalpm/scripts/gpm-service
+}
+
+package_gpm-openrc() {
+	pkgdesc="OpenRC init scripts for gpm"
+	arch=('any')
+	depends=('openrc')
+	provides=('gpm-init')
+	conflicts=('gpm-cromnix')
+	install -v -m755 -d ${pkgdir}/etc/openrc/init.d
+	install -v -m755 -d ${pkgdir}/etc/openrc/conf.d
+	install -v -m755 ${srcdir}/gpm.rc6-2 ${pkgdir}/etc/openrc/init.d/gpm
+	install -v -m644 ${srcdir}/gpm.conf.d ${pkgdir}/etc/openrc/conf.d/gpm
+}

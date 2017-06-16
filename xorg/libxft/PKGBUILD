@@ -1,0 +1,28 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=libxft
+_pkgname=libXft
+pkgver=2.3.2
+pkgrel=1
+pkgdesc='FreeType-based font drawing library for X11'
+arch=('x86_64')
+url='https://www.x.org/wiki/'
+license=('custom')
+depends=('fontconfig' 'libxrender')
+makedepends=('util-macros' 'xmlto' 'docbook-xml' 'asciidoc' 'pkg-config')
+source=("http://ftp.x.org/pub/individual/lib/${_pkgname}-${pkgver}.tar.bz2")
+md5sums=('331b3a2a3a1a78b5b44cfbd43f86fcfe')
+
+build() {
+	cd ${srcdir}/${_pkgname}-${pkgver}
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--localstatedir=/var \
+		--disable-static
+	make
+}
+
+package() {
+	cd ${srcdir}/${_pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+}

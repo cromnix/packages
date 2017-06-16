@@ -1,0 +1,30 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=font-xfree86-type1
+pkgver=1.0.4
+pkgrel=1
+pkgdesc='X.org xfree86 Type1 fonts'
+arch=('any')
+url='https://xorg.freedesktop.org/'
+license=('custom')
+depends=('encodings' 'font-alias' 'font-util' 'fontconfig' 'mkfontdir')
+makedepends=('util-macros')
+install=font-xfree86-type1.install
+groups=('xorg-fonts' 'xorg')
+source=("https://www.x.org/archive/individual/font/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('3eeb3fb44690b477d510bbd8f86cf5aa')
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--localstatedir=/var \
+		--with-fontdir=/usr/share/fonts/Type1
+	make
+}
+
+package() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+	rm ${pkgdir}/usr/share/fonts/Type1/fonts.{dir,scale}
+}

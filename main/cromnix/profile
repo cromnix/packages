@@ -1,0 +1,22 @@
+# Begin /etc/profile
+
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+export PATH
+
+NORMAL='\[\e[0m\]'
+RED='\[\e[1;31m\]'
+BLUE='\[\e[1;34m\]'
+if [[ $EUID == 0 ]] ; then
+	PS1="$RED[\\u@\\h \\W]# $NORMAL"
+else
+	PS1="$BLUE[\\u@\\h \\W]\$ $NORMAL"
+fi
+
+if test -d /etc/profile.d/; then
+	for profile in /etc/profile.d/*.sh; do
+		test -r "$profile" && . "$profile"
+	done
+	unset profile
+fi
+
+# End /etc/profile

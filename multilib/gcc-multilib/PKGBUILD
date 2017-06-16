@@ -1,0 +1,77 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=('gcc-multilib')
+pkgver=7.1.0
+pkgrel=1
+pkgdesc="The GNU Compiler Collection"
+arch=('x86_64')
+url="http://gcc.gnu.org"
+license=('GPL' 'LGPL' 'FDL' 'custom')
+makedepends=('lib32-glibc' 'binutils>=2.28' 'mpc')
+checkdepends=('dejagnu' 'inetutils')
+options=('!emptydirs')
+source=("ftp://ftp.gnu.org/gnu/gcc/gcc-${pkgver}/gcc-${pkgver}.tar.bz2")
+md5sums=('6bf56a2bca9dac9dbbf8e8d1036964a8')
+CHOST=x86_64-pc-linux-gnu
+
+prepare() {
+    cd "$srcdir/gcc-$pkgver"
+    mkdir -pv "$srcdir/gcc-$pkgver/build"
+
+	sed -e '/m64=/s/lib64/lib/' -i.orig gcc/config/i386/t-linux64
+    sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" {libiberty,gcc}/configure
+}
+
+build() {
+    cd "$srcdir/gcc-$pkgver/build"
+
+    CFLAGS=${CFLAGS/-pipe/}
+    CXXFLAGS=${CXXFLAGS/-pipe/}
+
+	# bootstrapping is needed if the version or triplets are not the same
+	# if they are the same it is faster to disable bootstrapping for faster build time
+    if [ -d /usr/lib/gcc/${CHOST}/${pkgver} ]; then
+		#_bootstrap="--disable-bootstrap
+		_bootstrap=""
+	else
+		_bootstrap=""
+    fi
+
+    ../configure \
+        --prefix=/usr \
+        --libdir=/usr/lib \
+        --libexecdir=/usr/lib \
+        --enable-multilib \
+		${_bootstrap} \
+        --with-system-zlib \
+        --enable-languages=c,c++,fortran,go,objc,obj-c++
+    make bootstrap-lean
+}
+
+check() {
+    cd "$srcdir/gcc-$pkgver/build"
+    ulimit -s 32768
+    make -k check || true
+    ../contrib/test_summary
+}
+
+package_gcc-multilib() {
+    pkgdesc="GCC compiler"
+    depends=('binutils>=2.28' 'mpc')
+    options=('staticlibs' '!strip')
+    provides=("gcc=$pkgver-$pkgrel" "gcc-libs=$pkgver-$pkgrel")
+    conflicts=('gcc')
+
+    cd "$srcdir/gcc-$pkgver/build"
+
+    make DESTDIR="$pkgdir" install
+
+    ln -sv gcc ${pkgdir}/usr/bin/cc
+    install -v -dm755 ${pkgdir}/usr/lib/bfd-plugins
+    ln -sfv ../../lib/gcc/${CHOST}/${pkgver}/liblto_plugin.so ${pkgdir}/usr/lib/bfd-plugins/
+
+    mkdir -pv ${pkgdir}/usr/share/gdb/auto-load/usr/lib
+    mv -v ${pkgdir}/usr/lib/*gdb.py ${pkgdir}/usr/share/gdb/auto-load/usr/lib
+
+    chown -v -R root:root ${pkgdir}/usr/lib/gcc/${CHOST}/${pkgver}/include{,-fixed}
+}

@@ -1,0 +1,23 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=inputproto
+pkgver=2.3.2
+pkgrel=1
+pkgdesc='X11 Input extension wire protocol'
+arch=('any')
+url='https://www.x.org/wiki/'
+license=('custom')
+makedepends=('util-macros' 'xmlto' 'docbook-xml' 'asciidoc')
+source=("http://ftp.x.org/pub/individual/proto/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('b290a463af7def483e6e190de460f31a')
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	./configure --prefix=/usr
+	make
+}
+
+package() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+}

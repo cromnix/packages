@@ -1,0 +1,108 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgbase=openbox
+pkgname=('openbox' 'openbox-cromnix' 'openbox-vanilla' 'openbox-desktop' 'openbox-session' 'openbox-gnome-session' 'openbox-kde-session')
+pkgver=3.6.1
+pkgrel=1
+pkgdesc='Openbox is a highly configurable desktop window manager with extensive standards support'
+arch=('x86_64')
+url='http://openbox.org/'
+license=('GPL')
+makedepends=('glib' 'pango')
+source=("http://openbox.org/dist/${pkgbase}/${pkgbase}-${pkgver}.tar.gz"
+		'menu.xml'
+		'rc.xml'
+		'autostart'
+		'environment')
+md5sums=('b72794996c6a3ad94634727b95f9d204'
+         'c201a38068c7ec12aac2c8d431eedf70'
+         '70a3768dbb53edd511bb23e8507ce9e9'
+         '95e88d4ffffa119e003e6ba4c5327006'
+         '34bbf463555dbfb8f97fe957489d73b7')
+
+build() {
+	cd "${srcdir}/${pkgbase}-${pkgver}"
+	./configure --prefix=/usr \
+		--libdir=/usr/lib \
+		--libexecdir=/usr/lib \
+		--sysconfdir=/etc \
+		--disable-static \
+		--docdir=/usr/share/doc/${pkgbase}-${pkgver}
+	make
+}
+
+package_openbox() {
+	# meta package
+	groups=('wm')
+	depends=('openbox-bin')
+	arch=('any')
+}
+
+# todo: change openbox-desktop to openbox-de
+
+package_openbox-desktop() {
+	# meta package to install a complete desktop environment
+	arch=('any')
+	depends=('cromnix-wallpaper' 'firefox' 'tint2' 'feh' 'spacefm-ng' 'unzip' 'alsa-utils' 'openbox-session')
+	optdepends=('openbox: to use this desktop environment with openbox')
+	pkgdesc='A complete Openbox desktop environment'
+}
+
+package_openbox-session() {
+	arch=('any')
+	optdepends=('openbox: to use openbox')
+	cd "${srcdir}/${pkgbase}-${pkgver}"
+	make DESTDIR="${pkgdir}" install-nodist_xsessionsDATA
+	rm "${pkgdir}"/usr/share/xsessions/openbox-{gnome,kde}.desktop
+}
+
+package_openbox-gnome-session() {
+	arch=('any')
+	optdepends=('gnome: to use gnome')
+	cd "${srcdir}/${pkgbase}-${pkgver}"
+	make DESTDIR="${pkgdir}" install-nodist_xsessionsDATA
+	rm "${pkgdir}"/usr/share/xsessions/openbox{,-kde}.desktop
+}
+
+package_openbox-kde-session() {
+	arch=('any')
+	optdepends=('openbox: to use kde')
+	cd "${srcdir}/${pkgbase}-${pkgver}"
+	make DESTDIR="${pkgdir}" install-nodist_xsessionsDATA
+	rm "${pkgdir}"/usr/share/xsessions/openbox{,-gnome}.desktop
+}
+
+package_openbox-vanilla() {
+	depends=('libxml2' 'libxinerama' 'libxrandr' 'libxcursor' 'pango' 'libsm')
+	provides=('openbox-bin')
+	conflicts=('openbox-cromnix')
+	backup=('etc/xdg/openbox/menu.xml'
+			'etc/xdg/openbox/rc.xml'
+			'etc/xdg/openbox/autostart'
+			'etc/xdg/openbox/environment')
+
+	cd "${srcdir}/${pkgbase}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}
+
+package_openbox-cromnix() {
+	depends=('libxml2' 'libxinerama' 'libxrandr' 'libxcursor' 'pango' 'libsm')
+	optdepends=('tint2: panel'
+				'spacefm-ng: desktop'
+				'unzip: to open zip files'
+				'xbacklight'
+				'alsa-utils: sound')
+	provides=('openbox-bin')
+	conflicts=('openbox-vanilla')
+	backup=('etc/xdg/openbox/menu.xml'
+			'etc/xdg/openbox/rc.xml'
+			'etc/xdg/openbox/autostart'
+			'etc/xdg/openbox/environment')
+
+	cd "${srcdir}/${pkgbase}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+	install -v -m755 "${srcdir}/autostart" "${pkgdir}/etc/xdg/openbox/autostart"
+	install -v -m755 "${srcdir}/rc.xml" "${pkgdir}/etc/xdg/openbox/rc.xml"
+	
+	rm "${pkgdir}"/usr/share/xsessions/openbox{,-gnome,-kde}.desktop
+}

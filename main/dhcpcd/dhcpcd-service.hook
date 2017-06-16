@@ -1,0 +1,10 @@
+[Trigger]
+Operation = Install
+Type = Package
+Target = dhcpcd-cromnix
+
+[Action]
+Description = Autostart dhcpcd...
+When = PostTransaction
+Exec = /usr/share/libalpm/scripts/dhcpcd-service
+Depends = dhcpcd-cromnix

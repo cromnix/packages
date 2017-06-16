@@ -1,0 +1,53 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=grub
+pkgver=2.02
+pkgrel=1
+pkgdesc="A utility to apply patch files to original sources"
+arch=('x86_64')
+url="https://www.gnu.org/software/grub/"
+license=('GPL3')
+backup=('boot/grub/grub.cfg' 'etc/default/grub' 'etc/grub.d/40_custom')
+depends=('sh' 'xz' 'gettext')
+makedepends=('xz' 'python' 'texinfo' 'gettext')
+source=("http://ftp.gnu.org/gnu/$pkgname/$pkgname-$pkgver.tar.xz"
+		'grub'
+		'intel-ucode.patch'
+		'grub.hook')
+md5sums=('8a4a2a95aac551fb0fba860ceabfa1d3'
+         '7415d89464e00f9468394d6ebffaf9fc'
+         '34cca1ad2da6db58823f17e04e6cdef9'
+         '780405fe5d5fa9af82401f8c7d9d0d03')
+
+prepare() {
+	cd "$srcdir/$pkgname-$pkgver"
+	patch -Np1 -i "${srcdir}/intel-ucode.patch"
+}
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+
+	unset CFLAGS
+	unset CPPFLAGS
+	unset CXXFLAGS
+	unset LDFLAGS
+	unset MAKEFLAGS
+
+    ./configure --prefix=/usr \
+		--sbindir=/usr/bin \
+        --sysconfdir=/etc \
+        --disable-efiemu \
+        --disable-werror
+    make
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make bashcompletiondir="/usr/share/bash-completion/completions" DESTDIR="$pkgdir" install
+
+	install -m755 -d ${pkgdir}/etc/default
+    install -m644 ${srcdir}/grub ${pkgdir}/etc/default/grub
+    
+	install -m755 -d ${pkgdir}/usr/share/libalpm/hooks
+	install -m644 ${srcdir}/grub.hook "${pkgdir}/usr/share/libalpm/hooks/70-grub.hook"
+}

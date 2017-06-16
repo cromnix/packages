@@ -1,0 +1,60 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgbase=util-linux
+pkgname=('util-linux' 'libutil-linux')
+pkgver=2.29.2
+_basepkgver=2.29
+pkgrel=1
+pkgdesc="The Util-linux package contains miscellaneous utility programs. Among them are utilities for handling file systems, consoles, partitions, and messages."
+arch=('x86_64')
+url="https://www.kernel.org/pub/linux/utils/util-linux/"
+license=('GPL2')
+options=('strip')
+source=("https://www.kernel.org/pub/linux/utils/util-linux/v$_basepkgver/$pkgname-$pkgver.tar.xz")
+md5sums=('63c40c2068fcbb7e1d5c1d281115d973')
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    ./configure ADJTIME_PATH=/var/lib/hwclock/adjtime \
+		--prefix=/usr \
+		--bindir=/usr/bin \
+		--sbindir=/usr/bin \
+        --docdir=/usr/share/doc/$pkgname-$pkgver \
+        --disable-chfn-chsh \
+        --disable-login \
+        --disable-nologin \
+        --disable-su \
+        --disable-setpriv \
+        --disable-runuser \
+        --disable-pylibmount \
+        --disable-static \
+        --without-python \
+        --without-systemd \
+        --without-systemdsystemunitdir \
+        --libdir=/usr/lib
+    make
+}
+
+check() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make check
+}
+
+package_util-linux() {
+    depends=('shadow' 'coreutils' 'libutil-linux' 'readline')
+    groups=('cromnix-base' 'cromnix-dev')
+
+    cd "$srcdir/$pkgname-$pkgver"
+    mkdir -pv ${pkgdir}/var/lib/hwclock
+    make DESTDIR="$pkgdir" install
+    rm ${pkgdir}/usr/lib/lib*.so*
+
+	mv ${pkgdir}/usr/sbin/* ${pkgdir}/usr/bin
+	rm -rf ${pkgdir}/usr/sbin
+}
+
+package_libutil-linux() {
+    cd "$srcdir/$pkgbase-$pkgver"
+
+    make DESTDIR="$pkgdir" install-usrlib_execLTLIBRARIES
+}

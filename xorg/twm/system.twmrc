@@ -1,0 +1,191 @@
+#
+# Default twm configuration file for cromnix
+#
+
+NoGrabServer
+RestartPreviousState
+DecorateTransients
+SortIconManager
+ShowIconManager
+OpaqueMove
+WarpUnmapped
+IconifyByUnmapping
+
+#
+# Fonts
+#
+
+TitleFont "-adobe-helvetica-bold-r-normal--*-120-*-*-*-*-*-*"
+ResizeFont "-adobe-helvetica-bold-r-normal--*-120-*-*-*-*-*-*"
+MenuFont "-adobe-helvetica-bold-r-normal--*-120-*-*-*-*-*-*"
+IconFont "-adobe-helvetica-bold-r-normal--*-100-*-*-*-*-*-*"
+IconManagerFont "-adobe-helvetica-bold-r-normal--*-100-*-*-*"
+
+#
+# Settings effecting window borders etc
+#
+
+BorderWidth 2
+FramePadding 1
+TitleButtonBorderWidth 0
+TitlePadding 2
+ButtonIndent 0
+MenuBorderWidth 1
+NoMenuShadows
+
+#
+# Title bar buttons
+#
+
+IconDirectory "/usr/share/X11/twm/icons"
+RightTitleButton "minimize.xbm"=f.iconify
+RightTitleButton "maximize.xbm"=f.fullzoom
+RightTitleButton "close.xbm"=f.delete
+
+Color {
+	BorderColor			"#ACAAAD"
+	DefaultBackground	"#ACAAAD"
+	DefaultForeground	"Black"
+
+	TitleBackground		"#3072EC"
+	TitleForeground		"White"
+
+	MenuTitleBackground	"#3072EC"
+	MenuTitleForeground	"White"
+
+	MenuBackground		"#ACAAAD"
+	MenuForeground		"#322E2D"
+
+	MenuShadowColor		"#322E2D"
+	MenuBorderColor		"Black"
+
+	IconBackground		"rgb:2/a/9"
+	IconForeground		"gray85"
+	IconBorderColor		"gray85"
+	IconManagerBackground	"rgb:2/a/9"
+	IconManagerForeground	"gray85"
+}
+
+NoTitle {
+	"TWM Icon Manager"
+	"xclock"
+}
+
+Sticky {
+	"xclock"
+}
+
+IconManagerDontShow {
+	"xclock"
+}
+
+DontIconifyByUnmapping {
+	"xclock"
+}
+
+WindowRing {
+	"XTerm"
+	"xterm"
+}
+
+#
+# Mouse settings and Window beahviours
+#
+# Button1=left, Button2=middle, Button3=right, m=alt, c=ctrl, s=shift
+#
+
+#
+# The root window actions i.e. clicking on the backgound
+#
+
+Button1 = : root : f.menu "RightMenu"
+Button2 = : root : f.menu "RightMenu"
+Button3 = : root : f.menu "RightMenu"
+
+#
+# Left click the window title to lower / raise + gain focus or move
+#
+
+Movedelta 1
+Button1=	:title: f.function "raise-lower-move"
+Function "raise-lower-move" { f.move f.raiselower }
+
+#
+# Middle click the window title for options for individual windows
+#
+
+Button2 = : title|frame : f.menu "WindowMenu"
+
+#
+# Right click window title to resize the window by mousing beyond frame
+#
+
+Button3 = : title|frame : f.resize
+
+#
+# Hold alt key and left click to move entire window
+#
+
+Button1 = m : window : f.move
+
+#
+# Hold shift key and right click / move to resize. Best near edges than centre.
+#
+
+Button3 = s : window : f.resize
+
+#
+# Hold Alt and Tab cycles through windows bringing up focus
+#
+
+Function "winup" { f.circleup }
+"Tab" = m : root|window|frame|title : f.function "winup"
+
+#
+# Hold Alt plus left click window title to maximize window vertically
+#
+
+Button1 = m : title|frame : f.zoom
+
+#
+# Hold Alt plus right click window title to maximize window horizontally
+#
+
+Button3 = m : title|frame : f.horizoom
+
+DefaultFunction f.nop
+
+#
+# Define some useful functions for motion-based actions.
+#
+
+MoveDelta 3
+Function "move-or-lower" { f.move f.deltastop f.lower }
+Function "move-or-raise" { f.move f.deltastop f.raise }
+Function "move-or-iconify" { f.move f.deltastop f.iconify }
+
+#
+# And a menus with the usual things
+#
+
+menu "RightMenu" {
+	"Twm"		f.title
+	"Iconify"	f.iconify
+	"Resize"	f.resize
+	"Move"		f.move
+	"Raise"		f.raise
+	"Lower"		f.lower
+	""		f.nop
+	"Focus"		f.focus
+	"Unfocus"	f.unfocus
+	"Show Iconmgr"	f.showiconmgr
+	"Hide Iconmgr"	f.hideiconmgr
+	""		f.nop
+	"Xterm"		f.exec "exec xterm &"
+	""		f.nop
+	"Kill"		f.destroy
+	"Delete"	f.delete
+	""		f.nop
+	"Restart"	f.restart
+	"Exit"		f.quit
+}

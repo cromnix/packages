@@ -1,0 +1,34 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=mkfontdir
+pkgver=1.0.7
+pkgrel=1
+pkgdesc='Create an index of X font files in a directory'
+arch=('any')
+url='https://xorg.freedesktop.org/'
+license=('custom')
+depends=('bash' 'mkfontscale')
+makedepends=('util-macros')
+install=mkfontdir.install
+groups=('xorg-apps' 'xorg')
+source=("https://www.x.org/archive/individual/app/${pkgname}-${pkgver}.tar.bz2"
+        'mkfontdir.hook'
+        'mkfontdir.sh')
+md5sums=('18c429148c96c2079edda922a2b67632'
+         '00b8c501b26137f8673092eb48301bd0'
+         '6afe3d7881b8e2c2f5ad27f0c0c9bd06')
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--localstatedir=/var
+	make
+}
+
+package() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+	install -Dm644 ${srcdir}/mkfontdir.hook ${pkgdir}/usr/share/libalpm/hooks/mkfontdir.hook
+	install -D ${srcdir}/mkfontdir.sh ${pkgdir}/usr/share/libalpm/scripts/mkfontdir
+}

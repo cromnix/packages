@@ -1,0 +1,26 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=lxhotkey
+pkgver=0.1.0
+pkgrel=1
+pkgdesc='Keyboard shortcuts configurator'
+arch=('x86_64')
+url='https://www.lxde.org/'
+license=('GPL2')
+groups=('lxde')
+depends=('gtk2' 'libfm')
+makedepends=('intltool' 'atk-dev')
+source=("http://downloads.sourceforge.net/lxde/${pkgname}-${pkgver}.tar.xz")
+md5sums=('7851d4fc375a1dae8df4c87021eba455')
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr \
+		--with-gtk=2
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}

@@ -1,0 +1,28 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=pcmanfm
+pkgver=1.2.5
+pkgrel=1
+pkgdesc='The PCManFM package contains an extremely fast, lightweight, yet feature-rich file manager with tabbed browsing'
+arch=('x86_64')
+url='http://pcmanfm.sourceforge.net/'
+license=('GPL')
+groups=('lxde')
+depends=('libfm' 'lxmenu-data')
+makedepends=('intltool' 'atk-dev')
+source=("http://downloads.sourceforge.net/pcmanfm/pcmanfm-${pkgver}.tar.xz")
+md5sums=('b4d1f8ce08d87e4f27805a246fc51ac2')
+
+# todo: rebuild with deps
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr \
+		--sysconfdir=/etc
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}

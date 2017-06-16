@@ -1,0 +1,43 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=libnl
+pkgver=3.2.29
+_pkgver=${pkgver//./_}
+pkgrel=1
+pkgdesc="The libnl suite is a collection of libraries providing APIs to netlink protocol based Linux kernel interfaces."
+arch=('x86_64')
+url="http://www.infradead.org/~tgr/libnl/"
+license=('GPL')
+checkdepends=('check')
+source=("https://github.com/thom311/libnl/releases/download/libnl${_pkgver}/$pkgname-$pkgver.tar.gz"
+        "https://github.com/thom311/libnl/releases/download/libnl${_pkgver}/libnl-doc-$pkgver.tar.gz")
+        noextract=('libnl-doc-$pkgver.tar.gz')
+md5sums=('a8ba62a5c4f883f4e493a46d1f3733fe'
+         '92e97d8f5e810dbae937a42dd13c9731')
+
+prepare() {
+    cd "$srcdir/$pkgname-$pkgver"
+}
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    ./configure --prefix=/usr \
+        --sysconfdir=/etc \
+        --disable-static
+    make
+}
+
+check() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make check
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make DESTDIR="$pkgdir" install
+
+    mkdir -vp ${pkgdir}/usr/share/doc/libnl-${pkgver} &&
+    tar -xf ${srcdir}/libnl-doc-${pkgver}.tar.gz --strip-components=1 --no-same-owner \
+        -C ${pkgdir}/usr/share/doc/libnl-${pkgver}
+
+}

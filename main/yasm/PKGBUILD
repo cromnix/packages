@@ -1,0 +1,44 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgbase=yasm
+pkgname=('yasm' 'libyasm')
+pkgver=1.3.0
+pkgrel=1
+pkgdesc='Yasm is a complete rewrite of the NASM-2.12.02 assembler'
+arch=('x86_64')
+url='http://www.tortall.net/projects/yasm/'
+license=('BSD' 'GPL2' 'LGPL2.1' 'PerlArtistic')
+depends=('glibc')
+options=('staticlibs')
+source=("http://www.tortall.net/projects/yasm/releases/${pkgbase}-${pkgver}.tar.gz")
+md5sums=('fc9e586751ff789b34b1f21d572d96af')
+
+prepare() {
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	# don't compile vsyasm and ytasm since they are only usefull in windows
+	sed -i 's#) ytasm.*#)#' Makefile.in
+}
+
+build() {
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	./configure --prefix=/usr
+	make
+}
+
+check() {
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	make check
+}
+
+package_yasm() {
+	depends=('libyasm')
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	make DESTDIR=${pkgdir} install
+	rm -rf ${pkgdir}/usr/lib
+}
+
+package_libyasm() {
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	make DESTDIR=${pkgdir} install
+	rm -rf ${pkgdir}/usr/{bin,include,share}
+}

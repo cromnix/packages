@@ -1,0 +1,25 @@
+post_install() {
+    getent group wheel >/dev/null
+    if [ "$?" != "0" ]; then
+        echo "Adding wheel group..."
+        groupadd wheel
+    fi
+    getent group sudo >/dev/null
+    if [ "$?" != "0" ]; then
+        echo "Adding sudo group..."
+        groupadd sudo
+    fi
+}
+
+post_remove() {
+    getent group wheel >/dev/null
+    if [ "$?" = "0" ]; then
+        echo "Deleting wheel group..."
+        groupdel wheel
+    fi
+    getent group sudo >/dev/null
+    if [ "$?" = "0" ]; then
+        echo "Deleting sudo group..."
+        groupdel sudo
+    fi
+}

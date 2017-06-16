@@ -1,0 +1,7 @@
+# Begin /etc/sysconfig/mouse
+
+MDEVICE="/dev/input/mice"
+PROTOCOL="imps2"
+GPMOPTS=""
+
+# End /etc/sysconfig/mouse

@@ -1,0 +1,28 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=libxxf86vm
+_pkgname=libXxf86vm
+pkgver=1.1.4
+pkgrel=1
+pkgdesc='X11 XFree86 video mode extension library'
+arch=('x86_64')
+url='https://www.x.org/wiki/'
+license=('custom')
+depends=('libxext' 'xf86vidmodeproto')
+makedepends=('util-macros' 'xmlto' 'docbook-xml' 'asciidoc')
+source=("http://ftp.x.org/pub/individual/lib/${_pkgname}-${pkgver}.tar.bz2")
+md5sums=('298b8fff82df17304dfdb5fe4066fe3a')
+
+build() {
+	cd ${srcdir}/${_pkgname}-${pkgver}
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--localstatedir=/var \
+		--disable-static
+	make
+}
+
+package() {
+	cd ${srcdir}/${_pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+}

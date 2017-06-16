@@ -1,0 +1,27 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=imlib2
+pkgver=1.4.10
+pkgrel=1
+pkgdesc='Imlib2 is a graphics library for fast file loading, saving, rendering and manipulation'
+arch=('x86_64')
+url='http://sourceforge.net/projects/enlightenment/'
+license=('BSD')
+depends=('giflib' 'bzip2' 'freetype' 'libxext' 'libpng' 'libjpeg-turbo')
+source=("http://sourceforge.net/projects/enlightenment/files/imlib2-src/${pkgver}/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('a0de8524592bbd9f24fcc6cb8352137c')
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	./configure --prefix=/usr \
+		--disable-static
+	make
+}
+
+package() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+
+	install -v -m755 -d ${pkgdir}/usr/share/doc/${pkgname}-${pkgver}
+	install -v -m644 doc/{*.gif,index.html} ${pkgdir}/usr/share/doc/${pkgname}-${pkgver}
+}

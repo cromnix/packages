@@ -1,0 +1,69 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgbase=bash
+pkgname=('bash' 'libbash' 'bash-doc')
+pkgver=4.4
+pkgrel=1
+pkgdesc='The Bourne-Again SHell'
+arch=('x86_64')
+url='http://www.gnu.org/software/bash/bash.html'
+license=('GPL')
+source=("http://ftp.gnu.org/gnu/${pkgname}/${pkgbase}-${pkgver}.tar.gz"
+		'bashrc'
+		'bash_logout')
+md5sums=('148888a7c95ac23705559b6f477dfe25'
+         '2365c0bb795c4f81c2a50139d844aea2'
+         'ce8b85a173eb567c08420e0f8b982bc9')
+
+build() {
+	cd ${srcdir}/${pkgbase}-${pkgver}
+
+	_bashconfig=(-DSYS_BASHRC=\'\"/etc/bash/bashrc\"\'
+		     -DSYS_BASH_LOGOUT=\'\"/etc/bash/bash_logout\"\'
+		     -DNON_INTERACTIVE_LOGIN_SHELLS)
+	export CFLAGS="${CFLAGS} ${_bashconfig[@]}"
+
+	./configure --prefix=/usr \
+		--docdir=/usr/share/doc/${pkgbase}-${pkgver} \
+		--without-bash-malloc \
+		--with-installed-readline
+	make
+
+	sed -e "s#${srcdir}/${pkgbase}-${pkgver}#./#" -i examples/loadables/Makefile.inc
+}
+
+check() {
+	make -C ${pkgbase}-${pkgver} check
+}
+
+package_bash() {
+	groups=('cromnix-base')
+	provides=('sh')
+	depends=('libbash' 'readline' 'glibc' 'ncurses')
+	optdepends=('bash-doc: bash documentation')
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	make DESTDIR=${pkgdir} install
+
+	rm -rf ${pkgdir}/usr/{lib,include}
+	rm -rf ${pkgdir}/usr/share/{doc,locale}
+
+	install -Dm644 ${srcdir}/bashrc ${pkgdir}/etc/bash/bashrc
+	install -Dm644 ${srcdir}/bash_logout ${pkgdir}/etc/bash/bash_logout
+}
+
+package_libbash() {
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	make DESTDIR=${pkgdir} install
+
+	rm -rf ${pkgdir}/usr/bin
+	rm -rf ${pkgdir}/usr/share/{doc,man,info}
+}
+
+package_bash-doc() {
+	arch=('any')
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	make DESTDIR=${pkgdir} install
+
+	rm -rf ${pkgdir}/usr/{bin,include,lib}
+	rm -rf ${pkgdir}/usr/share/{info,locale,man}
+}

@@ -1,0 +1,33 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=libevdev
+pkgver=1.5.7
+pkgrel=1
+pkgdesc='The libevdev package contains common functions for Xorg input drivers'
+arch=('x86_64')
+url='https://xorg.freedesktop.org/'
+license=('custom:X11')
+depends=('glibc')
+makedepends=('python' 'check')
+source=("http://www.freedesktop.org/software/${pkgname}/${pkgname}-${pkgver}.tar.xz")
+md5sums=('4f1cfaee8d75ea3fbbfeb99a98730952')
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--localstatedir=/var \
+		--disable-static
+	make
+}
+
+check() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make check || /bin/true
+}
+
+package() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+	rm -f ${pkgdir}/usr/bin/xkeystone
+}

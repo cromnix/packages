@@ -1,0 +1,87 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgbase=acl
+pkgname=('acl' 'libacl' 'acl-doc')
+pkgver=2.2.52
+pkgrel=1
+pkgdesc='Access Control Lists'
+arch=('x86_64')
+url='http://savannah.nongnu.org/projects/acl'
+license=('LGPL')
+makedepends=('libattr')
+checkdepends=('coreutils')
+options=('!makeflags')
+source=("http://download.savannah.gnu.org/releases/${pkgbase}/${pkgbase}-${pkgver}.src.tar.gz")
+md5sums=('a61415312426e9c2212bd7dc7929abda')
+
+prepare() {
+	cd "${srcdir}/${pkgbase}-${pkgver}"
+	sed -i -e 's|/@pkg_name@|&-@pkg_version@|' include/builddefs.in
+	sed -i "s:| sed.*::g" test/{sbits-restore,cp,misc}.test
+	sed -i -e "/TABS-1;/a if (x > (TABS-1)) x = (TABS-1);" libacl/__acl_to_any_text.c
+
+	if [ -d "${srcdir}/install" ]; then
+		rm -rf "${srcdir}/install"
+	fi
+	mkdir -p "${srcdir}/install"
+}
+
+build() {
+	cd "${srcdir}/${pkgbase}-${pkgver}"
+	export INSTALL_USER=root INSTALL_GROUP=root
+	./configure --prefix=/usr \
+		--disable-static \
+		--libdir=/usr/lib \
+		--libexecdir=/usr/lib
+	make
+
+	# split package
+	make DIST_ROOT="${srcdir}/install" install install-dev install-lib
+}
+
+check() {
+	cd "${srcdir}/${pkgbase}-${pkgver}"
+	make tests
+}
+
+package_acl() {
+	depends=('libattr' 'libacl')
+	optdepends=('acl-doc: acl documentation')
+	optdepends=('acl-dev: acl development headers')
+
+	mkdir -p "${pkgdir}/usr/share/man"
+	cp -vr "${srcdir}/install/usr/bin" "${pkgdir}/usr/bin"
+	cp -vr "${srcdir}/install/usr/share/man/man1" "${pkgdir}/usr/share/man/man1"
+}
+
+package_libacl() {
+	depends=('libattr')
+
+	mkdir -p "${pkgdir}/usr/share/man"
+	cp -vr "${srcdir}/install/usr/lib" "${pkgdir}/usr/lib"
+	cp -vr "${srcdir}/install/usr/share/locale" "${pkgdir}/usr/share/locale"
+	cp -vr "${srcdir}/install/usr/share/man/man3" "${pkgdir}/usr/share/man/man3"
+	cp -vr "${srcdir}/install/usr/share/man/man5" "${pkgdir}/usr/share/man/man5"
+
+	provides=('acl-dev')
+	cp -vr "${srcdir}/install/usr/include" "${pkgdir}/usr/include"
+
+	chmod -v 755 "${pkgdir}/usr/lib/libacl.so"
+}
+
+# not currently implemented, packages need to be evauluated to see if they need this, this serverly broke fakeroot and nuked many packages that were built
+package_acl-dev() {
+	arch=('any')
+
+	mkdir -p "${pkgdir}/usr"
+	cp -vr "${srcdir}/install/usr/include" "${pkgdir}/usr/include"
+}
+
+package_acl-doc() {
+	arch=('any')
+
+	mkdir -p "${pkgdir}/usr/share"
+	cp -vr "${srcdir}/install/usr/share/doc" "${pkgdir}/usr/share/doc"
+
+	install -v -m644 "${srcdir}/${pkgbase}-${pkgver}"/doc/*.txt "${pkgdir}/usr/share/doc/${pkgbase}-${pkgver}"
+}

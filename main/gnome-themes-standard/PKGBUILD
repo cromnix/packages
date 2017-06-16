@@ -1,0 +1,25 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=gnome-themes-standard
+pkgver=3.22.3
+_pkgver=${pkgver%.*}
+pkgrel=1
+pkgdesc='The GNOME Themes Standard package contains various components of the default GNOME theme'
+arch=('x86_64')
+url='https://git.gnome.org/browse/gnome-themes-standard'
+license=('GPL2')
+depends=('librsvg')
+makedepends=('intltool' 'gtk2' 'gtk3' 'atk-dev')
+source=("http://ftp.gnome.org/pub/gnome/sources/${pkgname}/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
+md5sums=('b51c362b157b6407303d44f93c31ee11')
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}

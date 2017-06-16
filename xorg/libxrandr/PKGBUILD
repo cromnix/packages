@@ -1,0 +1,28 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=libxrandr
+_pkgname=libXrandr
+pkgver=1.5.1
+pkgrel=1
+pkgdesc='X11 RandR extension library'
+arch=('x86_64')
+url='https://www.x.org/wiki/'
+license=('custom')
+depends=('libxext' 'libxrender' 'randrproto')
+makedepends=('util-macros' 'xmlto' 'docbook-xml' 'asciidoc')
+source=("http://ftp.x.org/pub/individual/lib/${_pkgname}-${pkgver}.tar.bz2")
+md5sums=('28e486f1d491b757173dd85ba34ee884')
+
+build() {
+	cd ${srcdir}/${_pkgname}-${pkgver}
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--localstatedir=/var \
+		--disable-static
+	make
+}
+
+package() {
+	cd ${srcdir}/${_pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+}

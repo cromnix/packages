@@ -1,0 +1,27 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=xf86-video-amdgpu
+pkgver=1.3.0
+pkgrel=1
+pkgdesc='The Xorg AMDGPU Driver package contains the X.Org Video Driver for newer AMD Radeon video cards starting from Volcanic Islands'
+arch=('x86_64')
+url='https://xorg.freedesktop.org/'
+license=('custom')
+groups=('xorg-drivers')
+depends=('mesa')
+makedepends=('xorg-server' 'xproto' 'fontsproto' 'libdrm' 'randrproto' 'renderproto' 'videoproto' 'xextproto' 'dri2proto' 'inputproto' 'scrnsaverproto'
+			'resourceproto' 'xf86driproto' 'glproto' 'dri3proto' 'presentproto' 'xineramaproto')
+source=("http://ftp.x.org/pub/individual/driver/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('e2ee9e16ffbd45ebda68a7ff638a04f2')
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr \
+		--with-glamor
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}

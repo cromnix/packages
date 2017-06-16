@@ -1,0 +1,24 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=gpm-lfs
+pkgver=20170127
+pkgrel=1
+pkgdesc='lfs init scripts for gpm'
+arch=('any')
+url='http://www.nico.schottelius.org/software/gpm/'
+license=('GPL')
+depends=('sysvinit')
+provides=('gpm-init')
+makedepends=("blfs-bootscripts=${pkgver}")
+source=('mouse')
+md5sums=('fc5d4afe8749d9a590d6a888df07d1cd')
+
+package() {
+	cd /usr/src/blfs-bootscripts
+	make DESTDIR="${pkgdir}" install-gpm
+
+	# remove the symlinks
+	#rm -vrf ${pkgdir}/etc/rc.d/rc[0-9S].d
+
+	install -v -m644 "${srcdir}/mouse" "${pkgdir}/etc/sysconfig/mouse"
+}

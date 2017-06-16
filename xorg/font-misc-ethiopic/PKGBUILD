@@ -1,0 +1,29 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=font-misc-ethiopic
+pkgver=1.0.3
+pkgrel=1
+pkgdesc='X.org misc ethiopic fonts'
+arch=('any')
+url='https://xorg.freedesktop.org/'
+license=('custom')
+depends=('encodings' 'font-alias' 'font-util' 'fontconfig' 'mkfontdir')
+makedepends=('util-macros')
+install=font-misc-ethiopic.install
+groups=('xorg-fonts' 'xorg')
+source=("https://www.x.org/archive/individual/font/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('6306c808f7d7e7d660dfb3859f9091d2')
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--localstatedir=/var
+	make
+}
+
+package() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+	rm ${pkgdir}/usr/share/fonts/{OTF,TTF}/fonts.{dir,scale}
+}

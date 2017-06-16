@@ -1,0 +1,32 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=gpm-runit
+pkgver=1.20.7
+pkgrel=1
+pkgdesc='runit init scripts for gpm'
+arch=('any')
+url='http://www.nico.schottelius.org/software/gpm/'
+license=('GPL')
+depends=('runit-init')
+provides=('gpm-init')
+source=('run'
+		'finish'
+		'log'
+		'mouse')
+install='gpm-runit.install'
+md5sums=('2ee52b835ed122f8f1c0b6ded3ba0f43'
+         '3f475aea46f6c304c24e693254e498e4'
+         '0bb8bf64d21e3293667e29ff916d2c84'
+         'fc5d4afe8749d9a590d6a888df07d1cd')
+
+package() {
+	install -v -m755 -d "${pkgdir}/var/log/runit/gpm"
+	install -v -m755 -d "${pkgdir}/etc/runit/sysconfig"
+	install -v -m755 -d "${pkgdir}/etc/runit/sv/installed/gpm/log"
+	install -v -m755 "${srcdir}/run" "${pkgdir}/etc/runit/sv/installed/gpm/run"
+	install -v -m755 "${srcdir}/finish" "${pkgdir}/etc/runit/sv/installed/gpm/finish"
+	install -v -m755 "${srcdir}/log" "${pkgdir}/etc/runit/sv/installed/gpm/log/run"
+
+	# config
+	install -v -m644 "${srcdir}/mouse" "${pkgdir}/etc/runit/sysconfig/mouse"
+}

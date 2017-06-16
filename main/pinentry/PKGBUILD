@@ -1,0 +1,23 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=pinentry
+pkgver=1.0.0
+pkgrel=1
+pkgdesc="The PIN-Entry package contains a collection of simple PIN or pass-phrase entry dialogs which utilize the Assuan protocol as described by the Ägypten project. PIN-Entry programs are usually invoked by the gpg-agent daemon, but can be run from the command line as well. There are programs for various text-based and GUI environments, including interfaces designed for Ncurses (text-based), and for the common GTK and Qt toolkits."
+arch=('x86_64')
+url="https://www.gnupg.org/related_software/swlist.html#pinentry"
+license=('GPL2')
+depends=('ncurses' 'libcap' 'libassuan')
+source=("ftp://ftp.gnupg.org/gcrypt/pinentry/$pkgname-$pkgver.tar.bz2")
+md5sums=('4a3fad8b31f9b4c5526c8837495015dc')
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    ./configure --prefix=/usr
+    make
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make DESTDIR="$pkgdir" install
+}

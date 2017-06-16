@@ -1,0 +1,35 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=gawk
+pkgver=4.1.4
+pkgrel=1
+pkgdesc="The Gawk package contains programs for manipulating text files."
+arch=('x86_64')
+url="http://www.gnu.org/software/gawk/"
+license=('GPL')
+groups=('cromnix-base' 'cromnix-dev')
+depends=('sh' 'glibc' 'mpfr' 'readline')
+provides=('awk')
+source=("http://ftp.gnu.org/gnu/gawk/$pkgname-$pkgver.tar.xz")
+md5sums=('4e7dbc81163e60fd4f0b52496e7542c9')
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    ./configure --prefix=/usr \
+        --libdir=/usr/lib \
+        --libexecdir=/usr/lib
+    make
+}
+
+check() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make check
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make DESTDIR="$pkgdir" install
+
+    mkdir -pv ${pkgdir}/usr/share/doc/${pkgname}-${pkgver}
+    cp -v doc/{awkforai.txt,*.{eps,pdf,jpg}} ${pkgdir}/usr/share/doc/${pkgname}-${pkgver}
+}

@@ -1,0 +1,44 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=cromnix-buildtools
+pkgver=r11.736340f
+pkgrel=1
+pkgdesc='Tools used to help build cromnix packages'
+arch=('any')
+url='https://www.cromer.cl'
+license=('GPL')
+groups=('cromnix-dev')
+depends=('cromnix' 'pacman' 'pacman-contrib' 'rsync')
+makedepends=('git')
+#source=("git+https://github.com/cromnix/${pkgname}.git")
+source=("git+https://gitlab.com/cromnix/${pkgname}.git")
+md5sums=('SKIP')
+
+_repos=('main'
+		'cromnix'
+		'vanilla'
+		'multilib'
+		'openrc'
+		'lfs'
+		's6'
+		'runit')
+
+pkgver() {
+	cd ${pkgname}
+	#printf "r%s.%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)" "$(date +%Y%m%d)"
+	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+	cd ${pkgname}
+	make
+}
+
+package() {
+	cd ${pkgname}
+	make PREFIX=/usr DESTDIR="${pkgdir}" install
+	for _folder in ${_repos[@]}; do
+		mkdir -pv ${pkgdir}/var/lib/cromnix-repo/${_folder}/x86_64
+	done
+	install -m755 -d ${pkgdir}/var/lib/cromnix-sources
+}

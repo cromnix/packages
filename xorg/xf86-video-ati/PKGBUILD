@@ -1,0 +1,27 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=xf86-video-ati
+pkgver=7.9.0
+pkgrel=1
+pkgdesc='The Xorg ATI Driver package contains the X.Org Video Driver for ATI Radeon video cards including all chipsets ranging from R100 to the "Volcanic Islands" chipsets'
+arch=('x86_64')
+url='https://xorg.freedesktop.org/'
+license=('custom')
+groups=('xorg-drivers')
+depends=('mesa')
+makedepends=('xorg-server' 'xproto' 'fontsproto' 'libdrm' 'randrproto' 'renderproto' 'videoproto' 'xextproto' 'dri2proto' 'inputproto' 'scrnsaverproto'
+			'resourceproto' 'xf86driproto' 'glproto' 'dri3proto' 'presentproto' 'xineramaproto')
+source=("http://ftp.x.org/pub/individual/driver/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('bf3dfdae23879bdc0c8a7b955572ad90')
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr \
+		--with-glamor
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}

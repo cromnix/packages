@@ -1,0 +1,38 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=tar
+pkgver=1.29
+pkgrel=1
+pkgdesc="The Tar package contains an archiving program"
+arch=('x86_64')
+url="http://www.gnu.org/software/tar/tar.html"
+license=('GPL3')
+groups=('cromnix-base')
+depends=('glibc' 'libacl' 'libattr')
+makedepends=('acl-dev')
+options=('!emptydirs')
+source=("http://ftp.gnu.org/gnu/tar/$pkgname-$pkgver.tar.xz")
+md5sums=('a1802fec550baaeecff6c381629653ef')
+
+prepare() {
+    cd "$srcdir/$pkgname-$pkgver"
+}
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    ./configure --prefix=/usr \
+	--libexecdir=/usr/lib/tar
+    make
+}
+
+check() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make check
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make DESTDIR="$pkgdir" install
+
+    make -C doc install-html docdir=${pkgdir}/usr/share/doc/${pkgname}-${pkgver}
+}

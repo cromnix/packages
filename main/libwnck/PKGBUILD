@@ -1,0 +1,29 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=libwnck2
+pkgver=2.30.7
+_pkgver=${pkgver%.*}
+pkgrel=1
+pkgdesc='The libwnck package contains a Window Navigator Construction Kit'
+arch=('x86_64')
+url='http://www.gnome.org/'
+license=('LGPL')
+depends=('gtk2' 'startup-notification' 'libxres')
+makedepends=('intltool' 'atk-dev' 'libxt' 'python2')
+source=("http://ftp.gnome.org/pub/gnome/sources/libwnck/${_pkgver}/libwnck-${pkgver}.tar.xz")
+md5sums=('3d20f26105a2fd878899d6ecdbe9a082')
+
+# todo: gtk-doc
+
+build() {
+	cd "${srcdir}/libwnck-${pkgver}"
+	./configure --prefix=/usr \
+		--disable-static \
+		--program-suffix=-2
+	make GETTEXT_PACKAGE=libwnck-2
+}
+
+package() {
+	cd "${srcdir}/libwnck-${pkgver}"
+	make DESTDIR="${pkgdir}" GETTEXT_PACKAGE=libwnck-2 install
+}

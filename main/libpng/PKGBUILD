@@ -1,0 +1,38 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=libpng
+pkgver=1.6.29
+pkgrel=1
+pkgdesc='The libpng package contains libraries used by other programs for reading and writing PNG files'
+arch=('x86_64')
+url='http://www.libpng.org/pub/png/libpng.html'
+license=('custom')
+depends=('zlib' 'sh')
+source=("http://downloads.sourceforge.net/libpng/${pkgname}-${pkgver}.tar.xz"
+		"http://downloads.sourceforge.net/project/apng/libpng/libpng16/${pkgname}-${pkgver}-apng.patch.gz")
+md5sums=('3245dbd76ea91e1437507357b858ec97'
+         'ce2a80d9c6ec19747d971d43ab3c3b40')
+
+prepare() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	patch -Np0 -i ${srcdir}/${pkgname}-${pkgver}-apng.patch
+}
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	./configure --prefix=/usr \
+		--disable-static
+	make
+}
+
+check() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make check
+}
+
+package() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+	mkdir -pv ${pkgdir}/usr/share/doc/${pkgname}-${pkgver}
+	cp -v README libpng-manual.txt ${pkgdir}/usr/share/doc/${pkgname}-${pkgver}
+}

@@ -1,0 +1,1 @@
+rc-service start devfs -D -q

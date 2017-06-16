@@ -1,0 +1,37 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=libarchive
+pkgver=3.3.1
+pkgrel=1
+pkgdesc="The libarchive library provides a single interface for reading/writing various compression formats."
+arch=('x86_64')
+url="http://libarchive.org/"
+license=('BSD')
+depends=('acl' 'attr' 'bzip2' 'expat' 'openssl' 'xz' 'zlib')
+makedepends=('acl-dev')
+options=('strip' '!libtool')
+source=("http://www.libarchive.org/downloads/$pkgname-$pkgver.tar.gz")
+md5sums=('d2af45480aa5b0db5b5f3919cd0ea65e')
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+
+    autoreconf -fi
+    ./configure --prefix=/usr \
+        --disable-static \
+        --without-nettle \
+        --without-xml2
+    make
+}
+
+check() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make check
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make DESTDIR="$pkgdir" install
+
+    install -D -m644 COPYING "${pkgdir}/usr/share/licenses/libarchive/COPYING"
+}

@@ -1,0 +1,52 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=lfs-bootscripts
+pkgver=20170325
+pkgrel=1
+pkgdesc='The LFS-Bootscripts package contains a set of scripts to start/stop the LFS system at bootup/shutdown.'
+arch=('any')
+url='http://www.linuxfromscratch.org/lfs'
+license=('GPL')
+depends=('sysvinit' 'procps-ng')
+backup=('etc/sysconfig/clock'
+		'etc/sysconfig/console'
+		'etc/sysconfig/createfiles'
+		'etc/sysconfig/modules'
+		'etc/sysconfig/network'
+		'etc/sysconfig/rc.site'
+		'etc/sysconfig/udev_retry'
+		'etc/logrotate.d/boot')
+source=("http://www.linuxfromscratch.org/lfs/downloads/development/${pkgname}-${pkgver}.tar.bz2"
+		'path.patch'
+		'clock'
+		'console'
+		'network'
+		'rc.site'
+		'boot.logrotate')
+md5sums=('dbdb435b391e2300fad36bde67c2e9bd'
+         'bc70d748bf51679f0d0d94037e14cfa6'
+         '680723f0829e4b76845859f984dc878a'
+         'ab1eb4f041944eba15d5643e224369a3'
+         'd917420c6dfc752cce1c4c6252d952f6'
+         '70df2f5be76acc18b383dcdef7423c81'
+         'd5bfc91473f23152812de4fde98e7916')
+         
+# todo: update depends for runit or s6 if possible
+
+prepare() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	patch -Np1 -i "${srcdir}/path.patch"
+}
+
+package() {
+	groups=('rc')
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+
+	install -vd -m755 "${pkgdir}"/etc/{sysconfig,logrotate.d}
+	install -m644 "${srcdir}/clock" "${pkgdir}/etc/sysconfig/"
+	install -m644 "${srcdir}/console" "${pkgdir}/etc/sysconfig/"
+	install -m644 "${srcdir}/network" "${pkgdir}/etc/sysconfig/"
+	install -m644 "${srcdir}/rc.site" "${pkgdir}/etc/sysconfig/"
+	install -m644 "${srcdir}/boot.logrotate" "${pkgdir}/etc/logrotate.d/boot"
+}

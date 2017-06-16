@@ -1,0 +1,36 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=spacefm-ng
+pkgver=1.0.6
+pkgrel=1
+pkgdesc='Fork of SpaceFM, a multi-panel tabbed file manager'
+arch=('x86_64')
+url='https://github.com/Teklad/spacefm-ng'
+license=('GPL3')
+depends=('gtk3' 'startup-notification' 'libatk' 'which')
+makedepends=('intltool' 'atk-dev')
+optdepends=('util-linux: disk eject'
+			'wget: plugin download'
+			'unzip: open zip files')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/Teklad/${pkgname}/archive/${pkgver}.tar.gz")
+md5sums=('01f45b00f61ec346b53668bdeb08e1f1')
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./autogen.sh --disable-video-thumbnails
+	./configure --prefix=/usr \
+		--with-gtk3 \
+		--disable-pixmaps \
+		--disable-video-thumbnails
+	make
+}
+
+check() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make check
+}
+
+package_spacefm-ng() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}

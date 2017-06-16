@@ -1,0 +1,74 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=python2
+_pkgname=Python
+pkgver=2.7.13
+_pkgver=${pkgver%.*}
+pkgrel=1
+pkgdesc="The Python 2 package contains the Python development environment. It is useful for object-oriented programming, writing scripts, prototyping large programs or developing entire applications. This version is for backward compatibility with other dependent packages."
+arch=('x86_64')
+url="http://www.python.org/"
+license=('PSF')
+depends=('libbzip2' 'gdbm' 'openssl' 'zlib' 'expat' 'libffi')
+checkdepends=('file')
+source=("https://www.python.org/ftp/python/$pkgver/$_pkgname-$pkgver.tar.xz"
+        "https://docs.python.org/2.7/archives/python-$pkgver-docs-html.tar.bz2")
+md5sums=('53b43534153bb2a0363f08bae8b9d990'
+         '34cd0793f2944fc6ac47ae6205b4e09f')
+
+prepare() {
+    cd "$srcdir/$_pkgname-$pkgver"
+	rm -r Modules/expat
+	rm -r Modules/zlib
+	rm -r Modules/_ctypes/{darwin,libffi}*
+
+	find . -name '*.py' | xargs sed -i "s|#[ ]*![ ]*/usr/bin/env python$|#!/usr/bin/env python2|"
+	touch Include/Python-ast.h Python/Python-ast.c Python/opcode_targets.h
+}
+
+build() {
+    cd "$srcdir/$_pkgname-$pkgver"
+    ./configure --prefix=/usr \
+        --enable-shared \
+        --with-system-expat \
+        --with-system-ffi \
+        --enable-unicode=ucs4 \
+        --libdir=/usr/lib
+    make
+}
+
+check() {
+    cd "$srcdir/$_pkgname-$pkgver"
+    make -k test
+}
+
+package() {
+    cd "$srcdir/$_pkgname-$pkgver"
+    make DESTDIR="$pkgdir" SCRIPTDIR="/usr/lib" install
+
+    rm "${pkgdir}/usr/share/man/man1/python.1"
+    rm "${pkgdir}/usr/bin/python"
+    rm "${pkgdir}/usr/bin/python-config"
+
+	ln -sf python${_pkgver} "${pkgdir}/usr/bin/python2"
+	ln -sf python${_pkgver}-config "${pkgdir}/usr/bin/python2-config"
+	ln -sf python${_pkgver}.1 "${pkgdir}/usr/share/man/man1/python2.1"
+
+	mv "${pkgdir}"/usr/bin/idle{,2}
+	mv "${pkgdir}"/usr/bin/pydoc{,2}
+	mv "${pkgdir}"/usr/bin/2to3{,-2.7}
+
+    chmod -v 755 ${pkgdir}/usr/lib/libpython2.7.so.1.0
+
+    install -v -dm755 ${pkgdir}/usr/share/doc/python-${pkgver}/html
+
+    #tar --strip-components=1 \
+    #    --no-same-owner \
+    #    --directory /usr/share/doc/python-${pkgver} \
+    #    -xvf ../python-${pkgver}-docs-html.tar.bz2
+
+    cp -vR ${srcdir}/python-${pkgver}-docs-html/* ${pkgdir}/usr/share/doc/python-${pkgver}/html/
+
+    find ${pkgdir}/usr/share/doc/python-${pkgver} -type d -exec chmod 0755 {} \;
+    find ${pkgdir}/usr/share/doc/python-${pkgver} -type f -exec chmod 0644 {} \;
+}

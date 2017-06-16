@@ -1,0 +1,36 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=libassuan
+pkgver=2.4.3
+pkgrel=1
+pkgdesc="The libassuan package contains an inter process communication library used by some of the other GnuPG related packages. libassuan's primary use is to allow a client to interact with a non-persistent server. libassuan is not, however, limited to use with GnuPG servers and clients. It was designed to be flexible enough to meet the demands of many transaction based environments with non-persistent servers."
+arch=('x86_64')
+url="https://gnupg.org/related_software/libassuan/index.html"
+license=('GPL3')
+depends=('libgpg-error')
+source=("ftp://ftp.gnupg.org/gcrypt/libassuan/$pkgname-$pkgver.tar.bz2")
+md5sums=('8e01a7c72d3e5d154481230668e6eb5a')
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    ./configure --prefix=/usr
+    make
+
+    # make documention, requires texlive-20160523b
+    #make -C doc pdf ps
+}
+
+check() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make check
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make DESTDIR="$pkgdir" install
+
+    # install documentation
+    # install -v -dm755 /usr/share/doc/libassuan-2.4.3 &&
+    # install -v -m644  doc/assuan.{pdf,ps,dvi} \
+    #    /usr/share/doc/libassuan-2.4.3
+}

@@ -1,0 +1,39 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=librsvg
+pkgver=2.40.17
+_pkgver=${pkgver%.*}
+pkgrel=1
+pkgdesc='The librsvg package contains a library and tools used to manipulate, convert and view Scalable Vector Graphic (SVG) images'
+arch=('x86_64')
+url='https://wiki.gnome.org/Projects/LibRsvg'
+license=('LGPL')
+depends=('gdk-pixbuf' 'pango' 'libcroco' 'gtk3' 'libatk')
+makedepends=('intltool' 'python2' 'atk-dev')
+options=('!emptydirs')
+source=("http://ftp.gnome.org/pub/gnome/sources/${pkgname}/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
+md5sums=('d6fcedf86c5c271abb36da5acc7eb987')
+
+# todo: rebuild with vala and introspection
+
+prepare() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+}
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr \
+		--disable-static \
+		--disable-introspection
+	make
+}
+
+check() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make check
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}

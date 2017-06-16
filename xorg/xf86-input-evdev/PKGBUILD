@@ -1,0 +1,30 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=xf86-input-evdev
+pkgver=2.10.5
+pkgrel=1
+pkgdesc='X.org evdev input driver'
+arch=('x86_64')
+url='https://xorg.freedesktop.org/'
+license=('custom')
+depends=('mtdev' 'libevdev')
+makedepends=('util-macros' 'xorg-server' 'resourceproto' 'scrnsaverproto' 'randrproto' 'renderproto' 'inputproto' 'videoproto' 'xf86driproto' 'glproto'
+			 'dri2proto' 'dri3proto' 'presentproto' 'xineramaproto')
+groups=('xorg-drivers')
+options=('!makeflags')
+source=("https://www.x.org/archive/individual/driver/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('94c2c8354c74ab1cfbbb0a222078b9c6')
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--localstatedir=/var \
+		--disable-static
+	make
+}
+
+package() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+}

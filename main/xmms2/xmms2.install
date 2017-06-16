@@ -1,0 +1,26 @@
+post_install() {
+    getent group xmms2 >/dev/null
+    if [ "$?" != "0" ]; then
+        echo "Adding xmms2 group..."
+        groupadd -g 46 xmms2
+    fi
+    getent passwd xmms2 >/dev/null
+    if [ "$?" != "0" ]; then
+        echo "Adding xmms2 user..."
+        useradd -rc 'XMMS2 Daemon' -u 46 -g xmms2 -G audio -d '/var/lib/xmms2' -s /usr/bin/nologin xmms2
+		passwd -l xmms2 &>/dev/null
+    fi
+}
+
+post_remove() {
+    getent passwd xmms2 >/dev/null
+    if [ "$?" = "0" ]; then
+        echo "Deleting xmms2 user..."
+        userdel xmms2
+    fi
+    getent group xmms2 >/dev/null
+    if [ "$?" = "0" ]; then
+        echo "Deleting xmms2 group..."
+        groupdel xmms2
+    fi
+}

@@ -1,0 +1,6 @@
+# Begin /etc/bash/bash_logout
+
+# Don't leave stuff on the screen, that's a security risk
+clear
+
+# End /etc/bash_logout

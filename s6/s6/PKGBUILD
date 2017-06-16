@@ -1,0 +1,25 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=s6
+pkgver=2.4.0.0
+pkgrel=1
+pkgdesc="s6 is a small suite of programs for UNIX, designed to allow process supervision."
+arch=('x86_64')
+url="http://skarnet.org/software/s6-linux-init/"
+license=('ISC')
+depends=('skalibs' 'execline')
+source=("http://skarnet.org/software/s6/$pkgname-$pkgver.tar.gz")
+md5sums=('d43d82d23ba2f4a00435648298bccc28')
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    ./configure --prefix=/usr \
+		--libdir=/usr/lib \
+		--libexecdir=/usr/lib/s6
+    make
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make DESTDIR="$pkgdir" install
+}

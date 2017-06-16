@@ -1,0 +1,28 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=libsm
+_pkgname=libSM
+pkgver=1.2.2
+pkgrel=1
+pkgdesc='X11 Session Management library'
+arch=('x86_64')
+url='https://www.x.org/wiki/'
+license=('custom')
+depends=('libice' 'util-linux')
+makedepends=('util-macros' 'xmlto' 'docbook-xml' 'asciidoc' 'xtrans')
+source=("http://ftp.x.org/pub/individual/lib/${_pkgname}-${pkgver}.tar.bz2")
+md5sums=('499a7773c65aba513609fe651853c5f3')
+
+build() {
+	cd ${srcdir}/${_pkgname}-${pkgver}
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--localstatedir=/var \
+		--disable-static
+	make
+}
+
+package() {
+	cd ${srcdir}/${_pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+}

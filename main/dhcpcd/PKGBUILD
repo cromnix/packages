@@ -1,0 +1,71 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgbase=dhcpcd
+pkgname=('dhcpcd' 'dhcpcd-cromnix' 'dhcpcd-vanilla' 'dhcpcd-openrc')
+pkgver=6.11.5
+pkgrel=1
+pkgdesc='dhcpcd is an implementation of the DHCP client specified in RFC2131'
+arch=('x86_64')
+url='http://roy.marples.name/projects/dhcpcd/index'
+license=('BSD')
+source=("http://roy.marples.name/downloads/${pkgbase}/${pkgbase}-${pkgver}.tar.xz"
+		"https://gitweb.gentoo.org/repo/gentoo.git/plain/net-misc/${pkgbase}/files/${pkgbase}.initd"
+		'dhcpcd-service.hook'
+		'dhcpcd-service.script')
+md5sums=('2465624b62c1154f0e89dc69c42c849b'
+         '5cd5809d11b77b30f21df8418729d70b'
+         '771ea5c70f695d4a5131b21f008fd349'
+         '9967b2e466b199f3822edfde8923beb9')
+
+build() {
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	./configure \
+		--libdir=/usr/lib \
+		--libexecdir=/usr/lib/dhcpcd \
+		--prefix=/usr \
+		--sbindir=/usr/bin \
+		--sysconfdir=/etc \
+		--dbdir=/var/lib/dhcpcd
+	make
+}
+
+package_dhcpcd() {
+    # meta package
+    depends=('dhcpcd-bin')
+    arch=('any')
+}
+
+package_dhcpcd-vanilla() {
+	provides=('dhcpcd-bin')
+	conflicts=('dhcpcd-cromnix')
+	depends=('dhcpcd-init')
+	backup=('etc/dhcpcd.conf')
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	make DESTDIR=${pkgdir} install
+}
+
+package_dhcpcd-cromnix() {
+	depends=('openrc')
+	provides=('dhcpcd-bin')
+	conflicts=('dhcpcd-vanilla')
+	backup=('etc/dhcpcd.conf')
+	install=dhcpcd-service.install
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	make DESTDIR=${pkgdir} install
+
+	install -v -m755 -d ${pkgdir}/etc/openrc/init.d
+	install -v -m755 ${srcdir}/dhcpcd.initd ${pkgdir}/etc/openrc/init.d/dhcpcd
+
+	install -Dm644 ${srcdir}/dhcpcd-service.hook ${pkgdir}/usr/share/libalpm/hooks/dhcpcd-service.hook
+	install -Dm755 ${srcdir}/dhcpcd-service.script ${pkgdir}/usr/share/libalpm/scripts/dhcpcd-service
+}
+
+package_dhcpcd-openrc() {
+	pkgdesc="OpenRC init scripts for ${pkgbase}"
+	arch=('any')
+	depends=('openrc')
+	provides=('dhcpcd-init')
+	conflicts=('dhcpcd-cromnix')
+	install -v -m755 -d ${pkgdir}/etc/openrc/init.d
+	install -v -m755 ${srcdir}/dhcpcd.initd ${pkgdir}/etc/openrc/init.d/dhcpcd
+}

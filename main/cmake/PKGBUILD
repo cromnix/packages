@@ -1,0 +1,42 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=cmake
+pkgver=3.8.1
+_pkgver=${pkgver%.*}
+pkgrel=1
+pkgdesc='Contains a modern toolset used for generating Makefiles'
+arch=('x86_64')
+url='https://www.cmake.org/'
+license=('GPL')
+depends=('curl' 'libarchive')
+source=("http://www.cmake.org/files/v${_pkgver}/${pkgname}-${pkgver}.tar.gz")
+md5sums=('e8ef820ddf7a650845252bca846696e7')
+
+# todo: add optional dependencies
+
+prepare() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	sed -i '/CMAKE_USE_LIBUV 1/s/1/0/' CMakeLists.txt
+	sed -i '/"lib64"/s/64//' Modules/GNUInstallDirs.cmake
+}
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./bootstrap --prefix=/usr \
+		--system-libs \
+		--mandir=/share/man \
+		--no-system-jsoncpp \
+		--no-system-librhash \
+		--docdir=/share/doc/${pkgname}-${pkgver}
+	make
+}
+
+check() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make bin/ctest -j1 -o ${pkgname}-${pkgver}-test.log
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}

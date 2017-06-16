@@ -1,0 +1,38 @@
+diff -Naur ConsoleKit2-1.1.2-orig/tools/linux/ck-system-restart ConsoleKit2-1.1.2/tools/linux/ck-system-restart
+--- ConsoleKit2-1.1.2-orig/tools/linux/ck-system-restart	2017-05-14 09:19:03.000000000 -0400
++++ ConsoleKit2-1.1.2/tools/linux/ck-system-restart	2017-06-09 23:04:47.514000000 -0400
+@@ -1,11 +1,11 @@
+ #!/bin/sh
+ 
+ #Try for common tools
+-if [ -x "/sbin/shutdown" ] ; then
+-	/sbin/shutdown -r now
++if [ -x "/sbin/reboot" ] ; then
++	/sbin/reboot
+ 	exit $?
+-elif [ -x "/usr/sbin/shutdown" ] ; then
+-	/usr/sbin/shutdown -r now
++elif [ -x "/usr/sbin/reboot" ] ; then
++	/usr/sbin/reboot
+ 	exit $?
+ else
+ 	exit 1
+diff -Naur ConsoleKit2-1.1.2-orig/tools/linux/ck-system-stop ConsoleKit2-1.1.2/tools/linux/ck-system-stop
+--- ConsoleKit2-1.1.2-orig/tools/linux/ck-system-stop	2017-05-14 09:19:03.000000000 -0400
++++ ConsoleKit2-1.1.2/tools/linux/ck-system-stop	2017-06-09 23:08:37.805000000 -0400
+@@ -1,11 +1,11 @@
+ #!/bin/sh
+ 
+ #Try for common tools
+-if [ -x "/sbin/shutdown" ] ; then
+-	/sbin/shutdown -h now
++if [ -x "/sbin/poweroff" ] ; then
++	/sbin/poweroff
+ 	exit $?
+-elif [ -x "/usr/sbin/shutdown" ] ; then
+-	/usr/sbin/shutdown -h now
++elif [ -x "/usr/sbin/poweroff" ] ; then
++	/usr/sbin/poweroff
+ 	exit $?
+ else
+ 	exit 1

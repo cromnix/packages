@@ -1,0 +1,26 @@
+post_install() {
+    getent group dbus >/dev/null
+    if [ "$?" != "0" ]; then
+        echo "Adding dbus group..."
+        groupadd -g 81 dbus
+    fi
+    getent passwd dbus >/dev/null
+    if [ "$?" != "0" ]; then
+        echo "Adding dbus user..."
+        useradd -rc 'dbus Daemon' -u 81 -g dbus -d '/' -s /usr/bin/nologin dbus
+		passwd -l dbus &>/dev/null
+    fi
+}
+
+post_remove() {
+    getent passwd dbus >/dev/null
+    if [ "$?" = "0" ]; then
+        echo "Deleting dbus user..."
+        userdel dbus
+    fi
+    getent group dbus >/dev/null
+    if [ "$?" = "0" ]; then
+        echo "Deleting dbus group..."
+        groupdel dbus
+    fi
+}

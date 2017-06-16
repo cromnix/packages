@@ -1,0 +1,16 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=cromnix-wallpaper
+pkgver=17.03
+pkgrel=1
+pkgdesc='Default wallpapers for Cromnix'
+arch=('x86_64')
+url='https://www.cromer.cl'
+license=('GPL')
+source=('logo.png')
+md5sums=('041a3750d551731055bb7257c5551187')
+
+package() {
+	install -v -m755 -d "${pkgdir}/usr/share/backgrounds/cromnix"
+	install -v -m644 "${srcdir}/logo.png" "${pkgdir}/usr/share/backgrounds/cromnix/logo.png"
+}

@@ -1,0 +1,33 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=findutils
+pkgver=4.6.0
+pkgrel=1
+pkgdesc="The Findutils package contains programs to find files. These programs are provided to recursively search through a directory tree and to create, maintain, and search a database (often faster than the recursive find, but unreliable if the database has not been recently updated)."
+arch=('x86_64')
+url="http://www.gnu.org/software/findutils"
+license=('GPL3')
+groups=('cromnix-base' 'cromnix-dev')
+depends=('glibc' 'sh')
+source=("http://ftp.gnu.org/gnu/findutils/$pkgname-$pkgver.tar.gz")
+md5sums=('9936aa8009438ce185bea2694a997fc1')
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    ./configure --prefix=/usr \
+        --localstatedir=/var/lib/locate \
+        --libexecdir=/usr/lib/findutils
+    make
+}
+
+check() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make check
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make DESTDIR="$pkgdir" install
+
+    sed -i 's|find:=${BINDIR}|find:=/bin|' ${pkgdir}/usr/bin/updatedb
+}

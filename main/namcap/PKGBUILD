@@ -1,0 +1,31 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=namcap
+pkgver=3.2.7
+pkgrel=1
+pkgdesc='A pacman package analyzer'
+arch=('any')
+url='http://projects.archlinux.org/namcap.git/'
+license=('GPL')
+depends=('python' 'pyalpm' 'binutils' 'elfutils' 'licenses' 'pyelftools')
+#this is only needed when python modules are missing
+#makedepends=('python-setuptools')
+source=("https://sources.archlinux.org/other/${pkgname}/${pkgname}-${pkgver}.tar.gz")
+md5sums=('306e6da44f4c234e904765c40b51acda')
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	python3 setup.py build
+}
+
+check() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	env PARSE_PKGBUILD_PATH=${srcdir}/${pkgname}-${pkgver} \
+		PATH=${srcdir}/${pkgname}-${pkgver}:$PATH \
+		python3 setup.py test
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	python3 setup.py install --root=${pkgdir}
+}

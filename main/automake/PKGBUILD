@@ -1,0 +1,51 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgbase=automake
+pkgname=('automake' 'automake-doc')
+pkgver=1.15
+pkgrel=1
+pkgdesc='Programs for generating Makefiles for use with Autoconf'
+arch=('any')
+url='http://www.gnu.org/software/automake'
+license=('GPL')
+makedepends=('autoconf')
+checkdepends=('dejagnu')
+source=("http://ftp.gnu.org/gnu/${pkgname}/${pkgname}-${pkgver}.tar.xz")
+md5sums=('9a1ddb0e053474d9d1105cfe39b0c48d')
+
+prepare() {
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	sed -i 's:/\\\${:/\\\$\\{:' bin/automake.in
+}
+
+build() {
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	./configure --prefix=/usr \
+		--docdir=/usr/share/doc/${pkgbase}-${pkgver}
+	make
+}
+
+check() {
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	sed -i "s:./configure:LEXLIB=/usr/lib/libfl.a &:" t/lex-{clean,depend}-cxx.sh
+	make -j4 check || true
+}
+
+package_automake() {
+	depends=('perl' 'bash')
+	optdepends=('automake-doc: automake documentation')
+	groups=('cromnix-dev')
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	make DESTDIR=${pkgdir} install
+
+	rm -rf ${pkgdir}/usr/share/doc
+}
+
+package_automake-doc() {
+	pkgdesc='Programs for generating Makefiles for use with Autoconf documentation'
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	make DESTDIR=${pkgdir} install
+
+	rm -rf ${pkgdir}/usr/bin
+	rm -rf ${pkgdir}/usr/share/{aclocal,info,man,aclocal-${pkgver},${pkgbase}-${pkgver}}
+}

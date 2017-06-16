@@ -1,0 +1,4 @@
+#!/bin/sh
+# there is no log user only a log group
+#exec chpst -ulog svlogd -tt /var/log/runit/gpm
+exec svlogd -tt /var/log/runit/gpm

@@ -1,0 +1,32 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=s6-linux-init
+pkgver=0.2.0.0
+pkgrel=1
+pkgdesc="s6-linux-init is a set of minimalistic tools to create a s6-based init system."
+arch=('x86_64')
+url="http://skarnet.org/software/s6-linux-init/"
+license=('ISC')
+depends=('skalibs' 'execline' 's6-portable-utils' 's6-linux-utils' 's6')
+source=("http://skarnet.org/software/s6-linux-init/$pkgname-$pkgver.tar.gz"
+		"cromnix-s6-init.tar.gz")
+md5sums=('24b9b232a5bcbb6be1c592ae1c23eb6d'
+         '691ef3bb48dbef824531cb2dec1d9fb9')
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    ./configure --prefix=/usr
+    make
+}
+
+package() {
+	groups=('init')
+    cd "$srcdir/$pkgname-$pkgver"
+    make DESTDIR="$pkgdir" install
+
+	mkdir -pv ${pkgdir}/etc/s6
+	cp -rpv ${srcdir}/cromnix-s6-init ${pkgdir}/etc/s6/init
+
+    mkdir -pv ${pkgdir}/usr/bin
+	cp ${pkgdir}/etc/s6/init/init ${pkgdir}/usr/bin/init-s6
+}

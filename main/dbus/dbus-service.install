@@ -1,0 +1,38 @@
+post_install() {
+	rc-update add dbus default
+	
+    getent group dbus >/dev/null
+    if [ "$?" != "0" ]; then
+        echo "Adding dbus group..."
+        groupadd -g 81 dbus
+    fi
+    getent passwd dbus >/dev/null
+    if [ "$?" != "0" ]; then
+        echo "Adding dbus user..."
+        useradd -rc 'dbus Daemon' -u 81 -g dbus -d '/' -s /usr/bin/nologin dbus
+		passwd -l dbus &>/dev/null
+    fi
+}
+
+post_upgrade() {
+	if rc-status | grep -q "dbus"; then
+		echo "==> dbus needs to be restarted"
+	fi
+}
+
+post_remove() {
+	for _service in $(find /etc/openrc/runlevels/*/ -name 'dbus'); do
+		rm ${_service}
+	done
+	
+    getent passwd dbus >/dev/null
+    if [ "$?" = "0" ]; then
+        echo "Deleting dbus user..."
+        userdel dbus
+    fi
+    getent group dbus >/dev/null
+    if [ "$?" = "0" ]; then
+        echo "Deleting dbus group..."
+        groupdel dbus
+    fi
+}

@@ -1,0 +1,34 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=initramfs
+pkgver=8.0
+pkgrel=1
+pkgdesc='The only purpose of an initramfs is to mount the root filesystem'
+arch=('x86_64')
+url='http://www.linuxfromscratch.org/blfs/view/stable/postlfs/initramfs.html'
+license=('GPL')
+depends=('cpio' 'eudev')
+source=('mkinitramfs'
+		'init.in'
+		'initramfs.conf'
+		'initramfs.hook'
+		'geninitramfs.in')
+backup=('etc/initramfs.conf')
+install=initramfs.install
+md5sums=('6aad4b1098f86fdc5161a764370e2f00'
+         'b9f2df1e54e25ca003fb6a21f08f4352'
+         '8957787c1e90df8cbe404d2de5fcc716'
+         '788a70b2bb7c0c6fc68d2563f9d41009'
+         '81d04a6959b42b52f27fe5f4ba02b8d3')
+
+package() {
+	install -Dm755 ${srcdir}/init.in ${pkgdir}/usr/share/mkinitramfs/init.in
+	install -Dm755 ${srcdir}/mkinitramfs ${pkgdir}/usr/bin/mkinitramfs
+	install -Dm755 ${srcdir}/geninitramfs.in ${pkgdir}/usr/bin/geninitramfs
+
+	install -m755 -d ${pkgdir}/etc
+	install -m644 ${srcdir}/initramfs.conf "${pkgdir}/etc/initramfs.conf"
+
+	install -m755 -d ${pkgdir}/usr/share/libalpm/hooks
+	install -m644 ${srcdir}/initramfs.hook "${pkgdir}/usr/share/libalpm/hooks/50-initramfs.hook"
+}

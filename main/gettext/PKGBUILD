@@ -1,0 +1,34 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=gettext
+pkgver=0.19.8.1
+pkgrel=1
+pkgdesc="The Gettext package contains utilities for internationalization and localization."
+arch=('x86_64')
+url="http://www.gnu.org/software/gettext/"
+license=('GPL')
+groups=('cromnix-base' 'cromnix-dev')
+depends=('gcc-libs' 'libacl' 'sh')
+makedepends=('acl-dev')
+source=("http://ftp.gnu.org/gnu/$pkgname/$pkgname-$pkgver.tar.xz")
+md5sums=('df3f5690eaa30fd228537b00cb7b7590')
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    ./configure --prefix=/usr \
+        --disable-static \
+        --docdir=/usr/share/doc/${pkgname}-${pkgver}
+    make
+}
+
+check() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make check
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make DESTDIR="$pkgdir" install
+
+    chmod -v 0755 ${pkgdir}/usr/lib/preloadable_libintl.so
+}

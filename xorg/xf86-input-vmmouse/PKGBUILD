@@ -1,0 +1,31 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=xf86-input-vmmouse
+pkgver=13.1.0
+pkgrel=1
+pkgdesc='X.org VMWare Mouse input driver'
+arch=('x86_64')
+url='https://xorg.freedesktop.org/'
+license=('custom')
+makedepends=('util-macros' 'xorg-server' 'libxi' 'libx11' 'resourceproto' 'scrnsaverproto' 'randrproto' 'renderproto' 'inputproto' 'videoproto' 'xf86driproto'
+			 'glproto' 'dri2proto' 'dri3proto' 'presentproto' 'xineramaproto')
+groups=('xorg-drivers')
+source=("https://www.x.org/archive/individual/driver/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('85e2e464b7219c495ad3a16465c226ed')
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--localstatedir=/var \
+		--without-hal-fdi-dir \
+		--without-hal-callouts-dir \
+		--with-udev-rules-dir=/usr/lib/udev/rules.d \
+		--disable-static
+	make
+}
+
+package() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+}

@@ -1,0 +1,25 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=groff
+pkgver=1.22.3
+pkgrel=1
+pkgdesc="The Groff package contains programs for processing and formatting text."
+arch=('x86_64')
+url="http://www.gnu.org/software/groff/groff.html"
+license=('GPL')
+groups=('cromnix-dev')
+depends=('perl' 'gcc-libs')
+options=('!docs' '!emptydirs' '!makeflags')
+source=("http://ftp.gnu.org/gnu/groff/$pkgname-$pkgver.tar.gz")
+md5sums=('cc825fa64bc7306a885f2fb2268d3ec5')
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    ./configure --prefix=/usr
+    make
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make DESTDIR="$pkgdir" install
+}

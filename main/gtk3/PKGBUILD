@@ -1,0 +1,46 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=gtk3
+pkgver=3.22.15
+_pkgver=${pkgver%.*}
+pkgrel=1
+pkgdesc='The GTK+ 3 package contains libraries used for creating graphical user interfaces for applications'
+arch=('x86_64')
+url='http://www.gtk.org/'
+license=('LGPL')
+depends=('pango' 'libepoxy' 'gdk-pixbuf' 'libat-spi2-atk')
+makedepends=('python' 'at-spi2-atk-dev' 'atk-dev')
+source=("http://ftp.gnome.org/pub/gnome/sources/gtk+/${_pkgver}/gtk+-${pkgver}.tar.xz"
+		'gtk-query-immodules-3.0.hook'
+		'gtk-update-icon-cache.hook'
+		'gtk-update-icon-cache.script'
+		'settings.ini')
+install='gtk3.install'
+md5sums=('9a1177854c4c5609293e017c53bc8950'
+         '47d92cc1080c92e8a022334b620f0629'
+         'c792ef5bb74ceba564b4d8ad306a6592'
+         '57010c34ddf8d70c2870a81e0313bdf0'
+         'ed43a8d7b5c99796134e2db56eb61805')
+
+# todo: many recommeneded and optional dependencies need to be added once they are created
+
+build() {
+	cd "${srcdir}/gtk+-${pkgver}"
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--disable-schemas-compile \
+		--enable-broadway-backend \
+		--enable-x11-backend \
+		--disable-wayland-backend
+	make
+}
+
+package() {
+	cd "${srcdir}/gtk+-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+
+	install -Dm644 "${srcdir}/settings.ini" "${pkgdir}/usr/share/gtk-3.0/settings.ini"
+	install -Dm644 "${srcdir}/gtk-query-immodules-3.0.hook" "${pkgdir}/usr/share/libalpm/hooks/gtk-query-immodules-3.0.hook"
+    install -Dm644 "${srcdir}/gtk-update-icon-cache.hook" "${pkgdir}/usr/share/libalpm/hooks/gtk-update-icon-cache.hook"
+    install -D "${srcdir}/gtk-update-icon-cache.script" "${pkgdir}/usr/share/libalpm/scripts/gtk-update-icon-cache"
+}

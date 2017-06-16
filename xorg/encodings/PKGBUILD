@@ -1,0 +1,32 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=encodings
+pkgver=1.0.4
+pkgrel=1
+pkgdesc='X.org font encoding files'
+arch=('any')
+url='https://xorg.freedesktop.org/'
+license=('custom')
+makedepends=('util-macros' 'mkfontscale' 'font-util')
+groups=('xorg-fonts' 'xorg')
+options=('!makeflags')
+source=("https://www.x.org/archive/individual/font/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('0f2d6546d514c5cc4ecf78a60657a5c1')
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--localstatedir=/var
+	make
+}
+
+package() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+
+	cd ${pkgdir}/usr/share/fonts/encodings/large
+	mkfontscale -b -s -l -n -r -p /usr/share/fonts/encodings/large -e . .
+	cd ${pkgdir}/usr/share/fonts/encodings/
+	mkfontscale -b -s -l -n -r -p /usr/share/fonts/encodings -e . -e large .
+}

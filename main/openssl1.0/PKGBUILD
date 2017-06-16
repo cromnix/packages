@@ -1,0 +1,64 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=openssl1.0
+pkgver=1.0.2l
+pkgrel=1
+pkgdesc="The OpenSSL package contains management tools and libraries relating to cryptography. These are useful for providing cryptography functions to other packages, such as OpenSSH, email applications and web browsers (for accessing HTTPS sites)."
+arch=('x86_64')
+url="https://www.openssl.org/"
+license=('custom:BSD')
+depends=('perl')
+optdepends=('ca-certificates')
+backup=('etc/ssl/openssl.cnf')
+options=('!makeflags')
+source=("https://www.openssl.org/source/openssl-$pkgver.tar.gz"
+		'openssl-1.0-versioned-symbols.patch')
+md5sums=('f85123cd390e864dfbe517e7616e6566'
+         'efb99f08db38b87965d080f54c36a353')
+
+prepare() {
+	cd "$srcdir/openssl-$pkgver"
+    # add symbol versioning to prevent conflicts with openssl 1.1 symbols (Debian)
+	patch -p1 -i "$srcdir"/openssl-1.0-versioned-symbols.patch
+}
+
+build() {
+    cd "$srcdir/openssl-$pkgver"
+    ./config --prefix=/usr \
+        --openssldir=/etc/ssl \
+        --libdir=lib/openssl-1.0 \
+        shared \
+        zlib-dynamic
+
+    make depend
+    make
+}
+
+check() {
+    cd "$srcdir/openssl-$pkgver"
+    make -j1 test
+}
+
+package() {
+    cd "$srcdir/openssl-$pkgver"
+	make INSTALL_PREFIX="$pkgdir" MANDIR=/usr/share/man MANSUFFIX=ssl install_sw
+
+    # Move some files around
+	install -m755 -d "$pkgdir/usr/include/openssl-1.0"
+	mv "$pkgdir/usr/include/openssl" "$pkgdir/usr/include/openssl-1.0/"
+	mv "$pkgdir/usr/lib/openssl-1.0/libcrypto.so.1.0.0" "$pkgdir/usr/lib/"
+	mv "$pkgdir/usr/lib/openssl-1.0/libssl.so.1.0.0" "$pkgdir/usr/lib/"
+	ln -sf ../libssl.so.1.0.0 "$pkgdir/usr/lib/openssl-1.0/libssl.so"
+        ln -sf ../libcrypto.so.1.0.0 "$pkgdir/usr/lib/openssl-1.0/libcrypto.so"
+	mv "$pkgdir/usr/bin/openssl" "$pkgdir/usr/bin/openssl-1.0"
+
+	# Update includedir in .pc files
+	sed -e 's|/include$|/include/openssl-1.0|' -i "$pkgdir"/usr/lib/openssl-1.0/pkgconfig/*.pc
+
+	rm -rf "$pkgdir"/{etc,usr/bin/c_rehash}
+
+	install -D -m644 LICENSE $pkgdir/usr/share/licenses/${pkgname}/LICENSE
+
+    install -dv -m755 ${pkgdir}/usr/share/doc/openssl-${pkgver}
+    cp -vfr doc/* ${pkgdir}/usr/share/doc/openssl-${pkgver}
+}

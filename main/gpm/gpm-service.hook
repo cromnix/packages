@@ -1,0 +1,10 @@
+[Trigger]
+Operation = Install
+Type = Package
+Target = gpm-cromnix
+
+[Action]
+Description = Autostart gpm...
+When = PostTransaction
+Exec = /usr/share/libalpm/scripts/gpm-service
+Depends = gpm-cromnix

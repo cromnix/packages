@@ -1,0 +1,8 @@
+post_remove() {
+	# remove logdir if there are no logs
+	if [ -d /var/log/runit ]; then
+		if [[ $(ls -1 /var/log/runit/ | wc -l) -eq 0 ]]; then
+			rm -rf /var/log/runit
+		fi
+	fi
+}

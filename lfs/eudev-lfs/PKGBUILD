@@ -1,0 +1,26 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=eudev-lfs
+pkgver=20140408
+pkgrel=1
+pkgdesc='lfs init scripts for eudev'
+arch=('any')
+url='https://wiki.gentoo.org/wiki/Project:Eudev'
+license=('GPL')
+depends=('sysvinit')
+provides=('eudev-init')
+makedepends=('gperf')
+source=("http://anduin.linuxfromscratch.org/LFS/udev-lfs-${pkgver}.tar.bz2")
+md5sums=('c2d6b127f89261513b23b6d458484099')
+
+package() {
+	cd "${srcdir}"
+
+	mkdir -pv "${pkgdir}/usr/lib/udev/rules.d"
+	mkdir -pv "${pkgdir}/etc/udev/rules.d"
+
+	ln -sv "${pkgdir}/usr/lib" "${pkgdir}/lib"
+
+	make -f udev-lfs-${pkgver}/Makefile.lfs DESTDIR="${pkgdir}" install
+	rm -v "${pkgdir}/lib"
+}

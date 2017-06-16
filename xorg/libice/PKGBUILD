@@ -1,0 +1,28 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=libice
+_pkgname=libICE
+pkgver=1.0.9
+pkgrel=1
+pkgdesc='X11 Inter-Client Exchange library'
+arch=('x86_64')
+url='https://www.x.org/wiki/'
+license=('custom')
+depends=('glibc' 'xproto')
+makedepends=('util-macros' 'xmlto' 'docbook-xml' 'asciidoc' 'xtrans')
+source=("http://ftp.x.org/pub/individual/lib/${_pkgname}-${pkgver}.tar.bz2")
+md5sums=('addfb1e897ca8079531669c7c7711726')
+
+build() {
+	cd ${srcdir}/${_pkgname}-${pkgver}
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--localstatedir=/var \
+		--disable-static
+	make
+}
+
+package() {
+	cd ${srcdir}/${_pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+}

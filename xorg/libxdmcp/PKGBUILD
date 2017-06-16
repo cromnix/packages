@@ -1,0 +1,28 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=libxdmcp
+_pkgname=libXdmcp
+pkgver=1.1.2
+pkgrel=1
+pkgdesc='X11 Display Manager Control Protocol'
+arch=('x86_64')
+url='https://www.x.org/wiki/'
+license=('custom')
+depends=('glibc' 'xproto')
+makedepends=('util-macros')
+source=("http://ftp.x.org/pub/individual/lib/${_pkgname}-${pkgver}.tar.bz2")
+md5sums=('18aa5c1279b01f9d18e3299969665b2e')
+
+build() {
+	cd ${srcdir}/${_pkgname}-${pkgver}
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--localstatedir=/var \
+		--disable-static
+	make
+}
+
+package() {
+	cd ${srcdir}/${_pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+}

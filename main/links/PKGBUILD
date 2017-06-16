@@ -1,0 +1,37 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=links
+pkgver=2.14
+pkgrel=1
+pkgdesc='Links is a text and graphics mode WWW browser'
+arch=('x86_64')
+url='http://links.twibright.com/'
+license=('GPL')
+depends=('bzip2' 'xz' 'gpm')
+makedepends=('libpng' 'libxt')
+optdepends=('libx11: for using xlinks'
+	    'libtiff: for using xlinks'
+	    'libpng: for using xlinks'
+	    'librsvg: for using xlinks')
+source=("http://links.twibright.com/download/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('0d11b388de22ba280008a36a409a34c6')
+
+prepare() {
+	cd ${pkgname}-${pkgver}
+	sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" configure
+}
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	./configure --prefix=/usr \
+		--mandir=/usr/share/man \
+		--enable-graphics
+	make
+}
+
+package() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+	install -v -d -m755 ${pkgdir}/usr/share/doc/${pkgname}-${pkgver}
+	install -v -m644 doc/links_cal/* KEYS BRAILLE_HOWTO ${pkgdir}/usr/share/doc/${pkgname}-${pkgver}
+}

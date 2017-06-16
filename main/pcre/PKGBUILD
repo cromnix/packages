@@ -1,0 +1,36 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=pcre
+pkgver=8.40
+pkgrel=1
+pkgdesc='The PCRE package contains Perl Compatible Regular Expression libraries.'
+arch=('x86_64')
+url='http://www.pcre.org'
+license=('BSD')
+depends=('gcc-libs' 'readline' 'zlib' 'bzip2' 'bash')
+source=("ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('41a842bf7dcecd6634219336e2167d1d')
+
+build() {
+	cd "$srcdir/$pkgname-$pkgver"
+	./configure --prefix=/usr \
+		--docdir=/usr/share/doc/${pkgdir}-${pkgver} \
+		--enable-unicode-properties \
+		--enable-pcre16 \
+		--enable-pcre32 \
+		--enable-pcregrep-libz \
+		--enable-pcregrep-libbz2 \
+		--enable-pcretest-libreadline \
+		--disable-static
+	make
+}
+
+check() {
+	cd "$srcdir/$pkgname-$pkgver"
+	make check
+}
+
+package() {
+	cd "$srcdir/$pkgname-$pkgver"
+	make DESTDIR="$pkgdir" install
+}

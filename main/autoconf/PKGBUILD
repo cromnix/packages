@@ -1,0 +1,30 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=autoconf
+pkgver=2.69
+pkgrel=1
+pkgdesc='Programs for automatically configuring source code'
+arch=('any')
+url='http://www.gnu.org/software/autoconf'
+license=('GPL2' 'GPL3' 'custom')
+groups=('cromnix-dev')
+depends=('awk' 'm4' 'diffutils' 'sh')
+source=("http://ftp.gnu.org/gnu/${pkgname}/${pkgname}-${pkgver}.tar.xz")
+md5sums=('50f97f4159805e374639a73e2636f22e')
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	./configure --prefix=/usr
+	make
+}
+
+check() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make check || true
+}
+
+package() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+	install -Dm644 COPYING.EXCEPTION ${pkgdir}/usr/share/licenses/autoconf/COPYING.EXCEPTION
+}

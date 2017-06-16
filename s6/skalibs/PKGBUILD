@@ -1,0 +1,26 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=skalibs
+pkgver=2.4.0.0
+pkgrel=1
+pkgdesc="skalibs is a package centralizing the free software / open source C development files used for building all software at skarnet.org"
+arch=('x86_64')
+url="http://skarnet.org/software/skalibs/"
+license=('ISC')
+options=('staticlibs')
+source=("http://skarnet.org/software/skalibs/$pkgname-$pkgver.tar.gz")
+md5sums=('b953668521fae8669dc7089ca4e18974')
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    ./configure --prefix=/usr \
+		--libdir=/usr/lib \
+		--dynlibdir=/usr/lib \
+		--sysdepdir=/usr/lib/${pkgname}/sysdeps
+    make
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make DESTDIR="$pkgdir" install
+}

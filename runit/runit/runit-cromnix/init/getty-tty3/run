@@ -1,0 +1,2 @@
+#!/bin/sh
+exec setsid /usr/bin/agetty 38400 tty3 linux

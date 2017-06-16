@@ -1,0 +1,39 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=libxslt
+pkgver=1.1.29
+pkgrel=1
+pkgdesc="The libxslt package contains XSLT libraries used for extending libxml2 libraries to support XSLT files."
+arch=('x86_64')
+url="http://xmlsoft.org/XSLT/"
+license=('custom')
+depends=('libxml2' 'libgcrypt')
+makedepends=('python2')
+checkdepends=('docbook-xml' 'python')
+source=("http://xmlsoft.org/sources/$pkgname-$pkgver.tar.gz")
+md5sums=('a129d3c44c022de3b9dcf6d6f288d72e')
+
+prepare() {
+    cd "$srcdir/$pkgname-$pkgver"
+    sed -i "/seems to be moved/s/^/#/" ltmain.sh
+}
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    ./configure --prefix=/usr \
+        --disable-static
+    make
+}
+
+check() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make check
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make DESTDIR="$pkgdir" install
+
+    install -d ${pkgdir}/usr/share/licenses/${pkgname}
+    install -m644 COPYING ${pkgdir}/usr/share/licenses/${pkgname}/
+}

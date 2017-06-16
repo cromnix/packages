@@ -1,0 +1,46 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=man-db
+pkgver=2.7.6
+pkgrel=1
+pkgdesc="The Man-DB package contains programs for finding and viewing man pages."
+arch=('x86_64')
+url="http://www.nongnu.org/man-db/"
+license=('GPL' 'LGPL')
+groups=('cromnix-base')
+depends=( 'bash' 'gdbm' 'zlib' 'groff' 'libpipeline' 'less')
+optdepends=('gzip')
+backup=('etc/man_db.conf')
+source=("http://download.savannah.gnu.org/releases/man-db/$pkgname-$pkgver.tar.xz")
+md5sums=('e0aa460ab00b047f3784d70ae8ccfcab')
+
+prepare() {
+    cd "$srcdir/$pkgname-$pkgver"
+}
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    ./configure --prefix=/usr \
+		--libexecdir=/usr/lib \
+		--sbindir=/usr/bin \
+        --docdir=/usr/share/doc/$pkgname-$pkgver \
+        --sysconfdir=/etc \
+        --disable-setuid \
+        --with-browser=/usr/bin/lynx \
+        --with-vgrind=/usr/bin/vgrind \
+        --with-grap=/usr/bin/grap \
+        --libdir=/usr/lib \
+        --without-systemdtmpfilesdir \
+        --without-systemd
+    make
+}
+
+check() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make check
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make DESTDIR="$pkgdir" install
+}

@@ -1,0 +1,28 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=libxres
+_pkgname=libXres
+pkgver=1.0.7
+pkgrel=1
+pkgdesc='X11 Resource extension library'
+arch=('x86_64')
+url='https://www.x.org/wiki/'
+license=('custom')
+depends=('libxext')
+makedepends=('util-macros' 'xmlto' 'docbook-xml' 'asciidoc' 'resourceproto' 'damageproto' 'compositeproto' 'scrnsaverproto')
+source=("http://ftp.x.org/pub/individual/lib/${_pkgname}-${pkgver}.tar.bz2")
+md5sums=('45ef29206a6b58254c81bea28ec6c95f')
+
+build() {
+	cd ${srcdir}/${_pkgname}-${pkgver}
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--localstatedir=/var \
+		--disable-static
+	make
+}
+
+package() {
+	cd ${srcdir}/${_pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+}

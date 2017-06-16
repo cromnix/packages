@@ -1,0 +1,29 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=gpgme
+pkgver=1.9.0
+pkgrel=1
+pkgdesc="The GPGME package is a C library that allows cryptography support to be added to a program. It is designed to make access to public key crypto engines like GnuPG or GpgSM easier for applications. GPGME provides a high-level crypto API for encryption, decryption, signing, signature verification and key management."
+arch=('x86_64')
+url="https://gnupg.org/related_software/gpgme/index.html"
+license=('GPL2')
+depends=('libgpg-error' 'gnupg')
+options=('!emptydirs')
+source=("ftp://ftp.gnupg.org/gcrypt/gpgme/$pkgname-$pkgver.tar.bz2")
+md5sums=('1e00bb8ef04d1d05d5a0f19e143854c3')
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    ./configure --prefix=/usr
+    make
+}
+
+check() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make check
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make DESTDIR="$pkgdir" install
+}

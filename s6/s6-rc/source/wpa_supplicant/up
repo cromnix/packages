@@ -1,0 +1,1 @@
+rc-service start wpa_supplicant -D -q

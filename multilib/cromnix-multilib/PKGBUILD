@@ -1,0 +1,29 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=cromnix-multilib
+pkgver=17.06
+pkgrel=1
+pkgdesc='cromnix multilib base system'
+arch=('any')
+license=('GPL')
+url='https://cromer.cl'
+depends=('cromnix' 'gcc-multilib' 'lib32-glibc')
+backup=('etc/ld.so.conf.d/multilib-ld.so.conf')
+source=('multilib-ld.so.conf')
+md5sums=('bea6162fc00f9d0474c0de458e380e5a')
+
+pkgver() {
+	date +%y.%m
+}
+
+package() {
+	cd ${pkgdir}
+
+	install -vd -m755 etc/ld.so.conf.d
+	install -vd -m755 usr/lib32
+	install -vd -m755 usr/local/lib32
+
+	ln -sv usr/lib32 ${pkgdir}/lib32
+
+	install -v -m644 ${srcdir}/multilib-ld.so.conf etc/ld.so.conf.d/
+}

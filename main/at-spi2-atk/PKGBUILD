@@ -1,0 +1,49 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgbase=at-spi2-atk
+pkgname=('libat-spi2-atk' 'at-spi2-atk-dev')
+pkgver=2.24.1
+_pkgver=${pkgver%.*}
+pkgrel=1
+pkgdesc='The At-Spi2 Atk package contains a library that bridges ATK to At-Spi2 D-Bus service'
+arch=('x86_64')
+url='https://wiki.gnome.org/Accessibility'
+license=('GPL2')
+depends=('at-spi2-core' 'libx11' 'libatk')
+makedepends=('atk-dev')
+source=("http://ftp.gnome.org/pub/gnome/sources/${pkgbase}/${_pkgver}/${pkgbase}-${pkgver}.tar.xz")
+md5sums=('79388fbc4dc7f27394556dd389aeb594')
+
+prepare() {
+	if [ -d "${srcdir}/install" ]; then
+		rm -rf "${srcdir}/install"
+	fi
+	mkdir -p "${srcdir}/install"
+}
+
+build() {
+	cd "${srcdir}/${pkgbase}-${pkgver}"
+	./configure --prefix=/usr
+	make
+
+	# split package
+	make DESTDIR="${srcdir}/install" install
+}
+
+check() {
+	cd "${srcdir}/${pkgbase}-${pkgver}"
+	# will fail if outside of a graphical session without dbus
+	make check || true
+}
+
+package_libat-spi2-atk() {
+	mkdir -p "${pkgdir}/usr"
+	cp -vr "${srcdir}/install/usr/lib" "${pkgdir}/usr/lib"
+}
+
+package_at-spi2-atk-dev() {
+	arch=('any')
+
+	mkdir -p "${pkgdir}/usr"
+	cp -vr "${srcdir}/install/usr/include" "${pkgdir}/usr/include"
+}

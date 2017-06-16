@@ -1,0 +1,45 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=cpio
+pkgver=2.12
+pkgrel=1
+pkgdesc='The cpio package contains tools for archiving'
+arch=('x86_64')
+url='http://www.gnu.org/software/cpio'
+license=('GPL')
+depends=('glibc')
+source=("http://ftp.gnu.org/pub/gnu/${pkgname}/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('93eea9f07c0058c097891c73e4955456')
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	./configure --prefix=/usr \
+		--bindir=/usr/bin \
+		--enable-mt \
+		--with-rmt=/usr/libexec/rmt
+	make
+	makeinfo --html -o doc/html doc/cpio.texi
+	makeinfo --html --no-split -o doc/cpio.html doc/cpio.texi
+	makeinfo --plaintext -o doc/cpio.txt doc/cpio.texi
+
+	# need texalive
+	#make -C doc pdf &&
+	#make -C doc ps
+}
+
+check() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make check
+}
+
+package() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+
+	install -v -m755 -d ${pkgdir}/usr/share/doc/${pkgname}-${pkgver}/html
+	install -v -m644 doc/html/* ${pkgdir}/usr/share/doc/${pkgname}-${pkgver}/html
+	install -v -m644 doc/cpio.{html,txt} ${pkgdir}/usr/share/doc/${pkgname}-${pkgver}
+
+	# need texalive
+	#install -v -m644 doc/cpio.{pdf,ps,dvi} ${pkgdir}/usr/share/doc/${pkgname}-${pkgver}
+}

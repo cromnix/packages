@@ -1,0 +1,12 @@
+diff -Naur blfs-bootscripts-20160902-orig/Makefile blfs-bootscripts-20160902/Makefile
+--- blfs-bootscripts-20160902-orig/Makefile	2016-04-15 23:50:53.000000000 -0300
++++ blfs-bootscripts-20160902/Makefile	2017-02-23 20:11:00.243357549 -0300
+@@ -1,7 +1,7 @@
+ SHELL=/bin/bash
+ 
+ ETCDIR=/etc
+-LIBDIR=${DESTDIR}/lib/services
++LIBDIR=${DESTDIR}/usr/lib/services
+ EXTDIR=${DESTDIR}${ETCDIR}
+ MODE=754
+ DIRMODE=755

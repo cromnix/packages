@@ -1,0 +1,33 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=mpfr
+pkgver=3.1.5
+pkgrel=1
+pkgdesc="The MPFR package contains functions for multiple precision math"
+arch=('x86_64')
+url="http://www.mpfr.org/"
+license=('LGPL')
+depends=('gmp>=5.0')
+source=(http://www.mpfr.org/mpfr-current/${pkgname}-${pkgver}.tar.xz)
+md5sums=('c4ac246cf9795a4491e7766002cd528f')
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    ./configure --prefix=/usr \
+        --disable-static \
+        --enable-thread-safe \
+        --docdir=/usr/share/doc/${pkgname}-${pkgver}
+    make
+    make html
+}
+
+check() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make check
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make DESTDIR="$pkgdir" install
+    make DESTDIR="$pkgdir" install-html
+}

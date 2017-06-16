@@ -1,0 +1,35 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=xf86-input-wacom
+pkgver=0.34.0
+pkgrel=1
+pkgdesc='X.Org Wacom tablet driver'
+arch=('x86_64')
+url='http://linuxwacom.sourceforge.net/'
+license=(GPL)
+depends=('libxi' 'libxinerama' 'libxrandr')
+makedepends=('util-macros' 'xorg-server' 'libxi' 'libx11' 'resourceproto' 'scrnsaverproto' 'randrproto' 'renderproto' 'inputproto' 'videoproto' 'xf86driproto'
+			 'glproto' 'dri2proto' 'dri3proto' 'presentproto' 'xineramaproto')
+groups=('xorg-drivers')
+source=("http://downloads.sourceforge.net/linuxwacom/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('066a0b5fc0f33379b6cee429a616b7b4')
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--localstatedir=/var \
+		--with-systemd-unit-dir=no \
+		--disable-static
+	make
+}
+
+check() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make check
+}
+
+package() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+}

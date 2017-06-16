@@ -1,0 +1,1 @@
+rc-service stop swap -D -q

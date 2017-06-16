@@ -1,0 +1,38 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=libmad
+pkgver=0.15.1b
+pkgrel=1
+pkgdesc='libmad is a high-quality MPEG audio decoder capable of 24-bit output'
+arch=('x86_64')
+url='http://www.underbit.com/products/mad/'
+license=('GPL')
+depends=('glibc')
+source=("http://downloads.sourceforge.net/mad/${pkgname}-${pkgver}.tar.gz"
+		"http://www.linuxfromscratch.org/patches/blfs/svn/${pkgname}-${pkgver}-fixes-1.patch"
+		'mad.pc')
+md5sums=('1be543bc30c56fb6bea1d7bf6a64e66c'
+         'd66a99860fd79066515671a511bd8f4f'
+         '55dda2ba9623e9c80a509d17b868e9fb')
+
+prepare() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	patch -Np1 -i "${srcdir}"/${pkgname}-${pkgver}-fixes-1.patch
+	sed "s@AM_CONFIG_HEADER@AC_CONFIG_HEADERS@g" -i configure.ac
+	touch NEWS AUTHORS ChangeLog
+	autoreconf -fi
+}
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr \
+		--disable-static
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+	mkdir -pv "${pkgdir}"/usr/lib/pkgconfig
+	install -v -m0644 "${srcdir}"/mad.pc "${pkgdir}"/usr/lib/pkgconfig
+}

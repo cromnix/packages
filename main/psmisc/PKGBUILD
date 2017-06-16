@@ -1,0 +1,29 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=psmisc
+pkgver=22.21
+pkgrel=1
+pkgdesc="The Psmisc package contains programs for displaying information about running processes."
+arch=('x86_64')
+url="http://psmisc.sourceforge.net/index.html"
+license=('GPL')
+groups=('cromnix-base')
+depends=('ncurses')
+source=("http://downloads.sourceforge.net/project/psmisc/psmisc/$pkgname-$pkgver.tar.gz")
+md5sums=('935c0fd6eb208288262b385fa656f1bf')
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    ./configure --prefix=/usr
+    make
+}
+
+check() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make check
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make DESTDIR="$pkgdir" install
+}

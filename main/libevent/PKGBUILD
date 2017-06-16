@@ -1,0 +1,32 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=libevent
+pkgver=2.1.8
+pkgrel=1
+pkgdesc='libevent is an asynchronous event notification software library'
+arch=('x86_64')
+url='http://libevent.org/'
+license=('BSD')
+depends=('openssl')
+optdepends=('python2: to use event_rpcgen.py')
+source=("https://github.com/${pkgname}/${pkgname}/releases/download/release-${pkgver}-stable/${pkgname}-${pkgver}-stable.tar.gz")
+md5sums=('f3eeaed018542963b7d2416ef1135ecc')
+
+# todo: rebuild with doxygen
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}-stable"
+	./configure --prefix=/usr \
+		--disable-static
+	make
+}
+
+check() {
+	cd "${srcdir}/${pkgname}-${pkgver}-stable"
+	make verify
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}-stable"
+	make DESTDIR="${pkgdir}" install
+}

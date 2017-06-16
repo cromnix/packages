@@ -1,0 +1,15 @@
+post_install() {
+	rc-update add gpm default
+}
+
+post_upgrade() {
+	if rc-status | grep -q "gpm"; then
+		echo "==> gpm needs to be restarted"
+	fi
+}
+
+post_remove() {
+	for _service in $(find /etc/openrc/runlevels/*/ -name 'gpm'); do
+		rm ${_service}
+	done
+}

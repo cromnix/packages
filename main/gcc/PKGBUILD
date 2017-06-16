@@ -1,0 +1,81 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgbase=gcc
+pkgname=('gcc')
+pkgver=7.1.0
+pkgrel=1
+pkgdesc='The GNU Compiler Collection'
+arch=('x86_64')
+url='http://gcc.gnu.org'
+license=('GPL' 'LGPL' 'FDL' 'custom')
+makedepends=('binutils>=2.28' 'mpc')
+checkdepends=('dejagnu' 'inetutils')
+options=('staticlibs' '!emptydirs' '!strip')
+source=("https://ftp.gnu.org/gnu/${pkgname}/${pkgname}-${pkgver}/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('6bf56a2bca9dac9dbbf8e8d1036964a8')
+CHOST=x86_64-pc-linux-gnu
+
+# todo: cleanup
+
+prepare() {
+    cd ${srcdir}/${pkgname}-${pkgver}
+    mkdir -pv ${srcdir}/${pkgname}-${pkgver}/build
+
+	sed -e '/m64=/s/lib64/lib/' -i.orig gcc/config/i386/t-linux64
+    sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" {libiberty,gcc}/configure
+}
+
+build() {
+    cd ${srcdir}/${pkgname}-${pkgver}/build
+
+    CFLAGS=${CFLAGS/-pipe/}
+    CXXFLAGS=${CXXFLAGS/-pipe/}
+
+	# bootstrapping is needed if the version or triplets are not the same
+	# if they are the same it is faster to disable bootstrapping for faster build time
+    if [ -d /usr/lib/gcc/${CHOST}/${pkgver} ]; then
+		#_bootstrap="--disable-bootstrap
+		_bootstrap=""
+	else
+		_bootstrap=""
+    fi
+
+    ../configure --prefix=/usr \
+        --libdir=/usr/lib \
+        --libexecdir=/usr/lib \
+		${_bootstrap} \
+        --disable-multilib \
+        --with-system-zlib \
+        --enable-languages=c,c++,fortran,go,objc,obj-c++
+    #make
+    make bootstrap-lean
+}
+
+check() {
+    cd ${srcdir}/${pkgname}-${pkgver}/build
+    ulimit -s 32768
+    make -k check || true
+    ../contrib/test_summary
+}
+
+package_gcc() {
+    pkgdesc="GCC compiler"
+    depends=('binutils>=2.28' 'mpc')
+    groups=('cromnix-base' 'cromnix-dev')
+    options=('staticlibs')
+	provides=("gcc-libs=$pkgver-$pkgrel")
+
+    cd ${srcdir}/${pkgname}-${pkgver}/build
+
+    make DESTDIR=${pkgdir} install
+
+    ln -sv gcc ${pkgdir}/usr/bin/cc
+    ln -sv /usr/bin/cpp ${pkgdir}/usr/lib/cpp
+    install -v -dm755 ${pkgdir}/usr/lib/bfd-plugins
+    ln -sfv ../../lib/gcc/${CHOST}/${pkgver}/liblto_plugin.so ${pkgdir}/usr/lib/bfd-plugins/
+
+    mkdir -pv ${pkgdir}/usr/share/gdb/auto-load/usr/lib
+    mv -v ${pkgdir}/usr/lib/*gdb.py ${pkgdir}/usr/share/gdb/auto-load/usr/lib
+
+    chown -v -R root:root ${pkgdir}/usr/lib/gcc/${CHOST}/${pkgver}/include{,-fixed}
+}

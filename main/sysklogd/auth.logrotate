@@ -1,0 +1,4 @@
+/var/log/auth.log {
+	rotate 4
+	weekly
+}

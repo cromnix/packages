@@ -1,0 +1,38 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgbase=fluxbox
+pkgname=('fluxbox' 'fluxbox-session')
+pkgver=1.3.7
+pkgrel=1
+pkgdesc='The Fluxbox package contains a window manager'
+arch=('x86_64')
+url='http://www.fluxbox.org'
+license=('MIT')
+makedepends=('libxft' 'libxpm' 'libxinerama' 'libxrandr')
+options=('!makeflags')
+source=("http://downloads.sourceforge.net/${pkgbase}/${pkgbase}-${pkgver}.tar.xz"
+		'fluxbox.desktop')
+md5sums=('b44afd10ee1e64624c23115aa51dcd55'
+         'b7779f973db7e397a472b10a1d2af63c')
+
+# todo: fluxbox config
+
+build() {
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	./configure --prefix=/usr
+	make
+}
+
+package_fluxbox-session() {
+	arch=('any')
+	optdepends=('fluxbox: to use fluxbox')
+	mkdir -p "${pkgdir}"/usr/share/xsessions
+	cp "${srcdir}"/fluxbox.desktop "${pkgdir}"/usr/share/xsessions/fluxbox.desktop
+}
+
+package_fluxbox() {
+	groups=('wm')
+	depends=('libxft' 'libxpm' 'libxinerama' 'libxrandr')
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	make DESTDIR=${pkgdir} install
+}

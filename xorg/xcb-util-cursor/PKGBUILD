@@ -1,0 +1,29 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=xcb-util-cursor
+pkgver=0.1.3
+pkgrel=1
+pkgdesc='XCB cursor library'
+arch=('x86_64')
+url='https://xcb.freedesktop.org'
+license=('custom:MIT')
+depends=('libxcb' 'xcb-util-renderutil' 'xcb-util-image')
+makedepends=('util-macros')
+#makedepends=('doxygen' 'xorg-util-macros' 'graphviz')
+source=("http://xcb.freedesktop.org/dist/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('6ac3b17cba51aaaa36ba035a53527214')
+
+# todo doxygen docs
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--localstatedir=/var
+	make
+}
+
+package() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+}

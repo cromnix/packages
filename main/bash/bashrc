@@ -1,0 +1,29 @@
+# Begin /etc/bash/bashrc
+
+# System wide aliases and functions.
+
+# System wide environment variables and startup programs should go into
+# /etc/profile.  Personal environment variables and startup programs
+# should go into ~/.bash_profile.  Personal aliases and functions should
+# go into ~/.bashrc
+
+alias ls='ls --color=auto'
+alias grep='grep --color=auto'
+
+# Provides prompt for non-login shells, specifically shells started
+# in the X environment.
+
+NORMAL='\[\e[0m\]'
+RED='\[\e[1;31m\]'
+BLUE='\[\e[1;34m\]'
+if [[ $EUID == 0 ]] ; then
+	PS1="$RED[\\u@\\h \\W]# $NORMAL"
+else
+	PS1="$BLUE[\\u@\\h \\W]\$ $NORMAL"
+fi
+
+unset RED BLUE NORMAL
+
+[ -r /usr/share/bash-completion/bash_completion   ] && . /usr/share/bash-completion/bash_completion
+
+# End /etc/bash/bashrc

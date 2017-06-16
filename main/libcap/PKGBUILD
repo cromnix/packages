@@ -1,0 +1,31 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=libcap
+pkgver=2.25
+pkgrel=1
+pkgdesc="The Libcap package implements the user-space interfaces to the POSIX 1003.1e capabilities available in Linux kernels. These capabilities are a partitioning of the all powerful root privilege into a set of distinct privileges."
+arch=('x86_64')
+url='http://sites.google.com/site/fullycapable/'
+license=('GPL2')
+depends=('glibc' 'libattr')
+makedepends=('linux-api-headers')
+source=("https://www.kernel.org/pub/linux/libs/security/linux-privs/libcap2/$pkgname-$pkgver.tar.xz")
+md5sums=('6666b839e5d46c2ad33fc8aa2ceb5f77')
+
+prepare() {
+    cd "$srcdir/$pkgname-$pkgver"
+    sed -i '/install.*STALIBNAME/d' libcap/Makefile
+    sed -i "/SBINDIR/s#sbin#bin#" Make.Rules
+}
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make KERNEL_HEADERS=/usr/include
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make RAISE_SETFCAP=no prefix=/usr lib=/lib DESTDIR="$pkgdir" install
+
+    chmod -v 755 ${pkgdir}/usr/lib/libcap.so
+}

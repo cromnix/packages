@@ -1,0 +1,68 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=js
+pkgver=38.2.1
+_pkgver=38.0.0
+pkgrel=1
+pkgdesc='JS is Mozilla''s JavaScript engine written in C'
+arch=('x86_64')
+url='https://developer.mozilla.org/en-US/docs/Mozilla/Projects/SpiderMonkey/Releases/38'
+license=('MPL')
+depends=('nspr' 'gcc-libs' 'readline' 'zlib')
+makedepends=('python2' 'zip' 'libffi' 'autoconf2.13' 'icu')
+options=('!staticlibs')
+source=("https://people.mozilla.org/~sstangl/mozjs-38.2.1.rc0.tar.bz2"
+		'js38-38.2.1-upstream_fixes-2.patch')
+md5sums=('cb602e21f5fc798b88163a3aa4e03e0a'
+         '326f826bb1c367baf981205800c26ac9')
+
+#todo: this package is ugly and hacky
+
+prepare() {
+	cd "${srcdir}/moz${pkgname}-${_pkgver}"
+	patch -Np1 -i "${srcdir}"/js38-38.2.1-upstream_fixes-2.patch
+
+	cd "${srcdir}/moz${pkgname}-${_pkgver}/js/src"
+	rm -r editline
+	rm -r ctypes/libffi
+}
+
+build() {
+	cd "${srcdir}/moz${pkgname}-${_pkgver}/js/src"
+
+	unset CPPFLAGS
+	CXXFLAGS+=' -fno-delete-null-pointer-checks'	
+
+	autoconf-2.13
+
+	./configure --prefix=/usr \
+		--with-intl-api \
+		--with-system-zlib \
+		--with-system-ffi \
+		--with-system-nspr \
+		--with-system-icu \
+		--enable-threadsafe \
+		--enable-readline
+	make
+}
+
+check() {
+	cd "${srcdir}/moz${pkgname}-${_pkgver}/js/src"
+	make check
+}
+
+package() {
+	cd "${srcdir}/moz${pkgname}-${_pkgver}/js/src"
+	make DESTDIR="${pkgdir}" install
+
+	pushd "${pkgdir}"/usr/include/mozjs-38
+	for link in `find . -type l`; do
+		header=`readlink $link`
+		rm -f $link
+		cp -pv $header $link
+		chmod 644 $link
+	done
+	popd
+	
+	find "${pkgdir}"/usr/{lib/pkgconfig,include} -type f -exec chmod -x {} +
+}

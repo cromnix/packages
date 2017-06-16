@@ -1,0 +1,29 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=tzdata
+pkgver=2017b
+pkgrel=1
+pkgdesc='Time zone information'
+arch=('any')
+url='http://www.iana.org/time-zones'
+license=('GPL')
+options=('!emptydirs')
+source=("http://www.iana.org/time-zones/repository/releases/$pkgname$pkgver.tar.gz")
+md5sums=('50dc0dc50c68644c1f70804f2e7a1625')
+
+package() {
+    cd "$srcdir"
+
+    ZONEINFO=${pkgdir}/usr/share/zoneinfo
+    mkdir -pv $ZONEINFO/{posix,right}
+
+    for tz in etcetera southamerica northamerica europe africa antarctica asia australasia backward pacificnew systemv; do
+        /usr/bin/zic -L /dev/null -d $ZONEINFO -y "sh yearistype.sh" ${tz}
+        /usr/bin/zic -L /dev/null -d $ZONEINFO/posix -y "sh yearistype.sh" ${tz}
+        /usr/bin/zic -L leapseconds -d $ZONEINFO/right -y "sh yearistype.sh" ${tz}
+    done
+
+    cp -v zone.tab zone1970.tab iso3166.tab $ZONEINFO
+    /usr/bin/zic -d $ZONEINFO -p America/New_York
+    unset ZONEINFO
+}

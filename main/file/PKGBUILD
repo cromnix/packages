@@ -1,0 +1,30 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=file
+pkgver=5.31
+pkgrel=1
+pkgdesc="File type identification"
+arch=('x86_64')
+url="http://www.darwinsys.com/file/"
+license=('custom')
+groups=('cromnix-base' 'cromnix-dev')
+depends=('glibc' 'zlib')
+source=("ftp://ftp.astron.com/pub/$pkgname/$pkgname-$pkgver.tar.gz")
+md5sums=('319627d20c9658eae85b056115b8c90a')
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    ./configure --prefix=/usr
+    make
+}
+
+check() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make check
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make DESTDIR="$pkgdir" install
+    install -Dm644 COPYING ${pkgdir}/usr/share/licenses/${pkgname}/COPYING
+}

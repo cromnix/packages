@@ -1,0 +1,52 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgbase=dejagnu
+pkgname=('dejagnu' 'libdejagnu' 'dejagnu-doc')
+pkgver=1.6
+pkgrel=1
+pkgdesc='Framework for running test suites on GNU tools'
+arch=('any')
+url='http://www.gnu.org/software/dejagnu/'
+license=('GPL')
+makedepends=('expect')
+source=("https://ftp.gnu.org/pub/gnu/${pkgbase}/${pkgbase}-${pkgver}.tar.gz")
+md5sums=('1fdc2eb0d592c4f89d82d24dfdf02f0b')
+
+build() {
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	./configure --prefix=/usr
+	makeinfo --html --no-split -o doc/dejagnu.html doc/dejagnu.texi
+	makeinfo --plaintext -o doc/dejagnu.txt doc/dejagnu.texi
+}
+
+check() {
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	make check
+}
+
+package_dejagnu() {
+	depends=('expect' 'sh')
+	optdepends=('dejagnu-doc: documentation'
+				'dejagnu-dev: development headers')
+
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	make DESTDIR=${pkgdir} install
+
+	rm -rf ${pkgdir}/usr/include
+}
+
+package_libdejagnu() {
+	depends=('dejagnu')
+
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	make DESTDIR=${pkgdir} install
+
+	rm -rf ${pkgdir}/usr/{bin,share}
+}
+
+
+package_dejagnu-doc() {
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	install -v -m755 -d ${pkgdir}/usr/share/doc/${pkgbase}-${pkgver}
+	install -v -m644 doc/dejagnu.{html,txt} ${pkgdir}/usr/share/doc/${pkgbase}-${pkgver}
+}

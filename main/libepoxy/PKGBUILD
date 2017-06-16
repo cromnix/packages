@@ -1,0 +1,36 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=libepoxy
+pkgver=1.4.3
+pkgrel=1
+pkgdesc='Library for handling OpenGL function pointer management'
+arch=('x86_64')
+url='https://github.com/anholt/libepoxy'
+license=('MIT')
+depends=('glibc')
+# change to mesa-libgl
+makedepends=('util-macros' 'python' 'mesa' 'meson')
+options=('!libtool')
+source=("https://github.com/anholt/libepoxy/releases/download/${pkgver}/${pkgname}-${pkgver}.tar.xz")
+md5sums=('af4c3ce0fb1143bdc4e43f85695a9bed')
+
+prepare() {
+	mkdir -pv "${srcdir}/_build"
+	cd "${srcdir}/_build"
+}
+
+build() {
+	cd "${srcdir}/_build"
+	meson --prefix=/usr --buildtype=release "${srcdir}/${pkgname}-${pkgver}" -Denable-docs=true
+	ninja
+}
+
+check() {
+	cd "${srcdir}/_build"
+	ninja test
+}
+
+package() {
+	cd "${srcdir}/_build"
+	DESTDIR="${pkgdir}" ninja install
+}

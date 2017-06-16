@@ -1,0 +1,29 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=xf86-input-synaptics
+pkgver=1.9.0
+pkgrel=1
+pkgdesc='Synaptics driver for notebook touchpads'
+arch=('x86_64')
+url='https://xorg.freedesktop.org/'
+license=('MIT')
+depends=('libxtst' 'libevdev')
+makedepends=('util-macros' 'xorg-server' 'libxi' 'libx11' 'resourceproto' 'scrnsaverproto' 'randrproto' 'renderproto' 'inputproto' 'videoproto' 'xf86driproto'
+			 'glproto' 'dri2proto' 'dri3proto' 'presentproto' 'xineramaproto')
+groups=('xorg-drivers')
+source=("https://www.x.org/archive/individual/driver/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('58e5b7722a402114093bf193962d1e3a')
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--localstatedir=/var \
+		--disable-static
+	make
+}
+
+package() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+}

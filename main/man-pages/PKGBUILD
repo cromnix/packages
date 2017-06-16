@@ -1,0 +1,17 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=man-pages
+pkgver=4.11
+pkgrel=1
+pkgdesc="Linux manual pages"
+arch=('any')
+url="http://man7.org/linux/man-pages/index.html"
+license=('GPL' 'custom')
+groups=('cromnix-base')
+source=("https://www.kernel.org/pub/linux/docs/man-pages/${pkgname}-${pkgver}.tar.xz")
+md5sums=('c2f25e2367fc12267bb85abe7b39f173')
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make DESTDIR="$pkgdir" install
+}

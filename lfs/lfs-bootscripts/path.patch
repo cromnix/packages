@@ -1,0 +1,14 @@
+diff -Naur lfs-bootscripts-20150222-orig/Makefile lfs-bootscripts-20150222/Makefile
+--- lfs-bootscripts-20150222-orig/Makefile	2016-09-06 02:25:46.000000000 -0300
++++ lfs-bootscripts-20150222/Makefile	2017-02-23 20:02:55.213351181 -0300
+@@ -1,8 +1,8 @@
+ ETCDIR=${DESTDIR}/etc
+-LIBDIR=${DESTDIR}/lib
++LIBDIR=${DESTDIR}/usr/lib
+ SERVICEDIR=${LIBDIR}/services
+ MAN8=${DESTDIR}/usr/share/man/man8
+-SBIN=${DESTDIR}/sbin
++SBIN=${DESTDIR}/usr/bin
+ MODE=754
+ DIRMODE=755
+ CONFMODE=644

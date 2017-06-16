@@ -1,0 +1,29 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=icu
+pkgver=59.1
+pkgrel=1
+pkgdesc='The International Components for Unicode (ICU) package is a mature, widely used set of C/C++ libraries providing Unicode and Globalization support for software applications'
+arch=('x86_64')
+url='http://site.icu-project.org/'
+license=('custom:icu')
+depends=('gcc-libs' 'sh')
+source=("http://download.icu-project.org/files/${pkgname}4c/${pkgver}/${pkgname}4c-${pkgver//./_}-src.tgz")
+md5sums=('54923fa9fab5b2b83f235fb72523de37')
+
+build() {
+	cd ${srcdir}/icu/source
+	./configure --prefix=/usr \
+		--sbindir=/usr/bin
+	make
+}
+
+check() {
+	cd ${srcdir}/icu/source
+	make check
+}
+
+package() {
+	cd ${srcdir}/icu/source
+	make DESTDIR=${pkgdir} install
+}

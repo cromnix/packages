@@ -1,0 +1,30 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=font-bh-ttf
+pkgver=1.0.3
+pkgrel=1
+pkgdesc='X.org Luxi Truetype fonts'
+arch=('any')
+url='https://xorg.freedesktop.org/'
+license=('custom')
+depends=('encodings' 'font-alias' 'font-util' 'fontconfig' 'mkfontdir')
+makedepends=('util-macros')
+install=font-bh-ttf.install
+groups=('xorg-fonts' 'xorg')
+source=("https://www.x.org/archive/individual/font/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('e8ca58ea0d3726b94fe9f2c17344be60')
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--localstatedir=/var \
+		--with-fontdir=/usr/share/fonts/TTF
+	make
+}
+
+package() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+	rm ${pkgdir}/usr/share/fonts/TTF/fonts.{dir,scale}
+}

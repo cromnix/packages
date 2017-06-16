@@ -1,0 +1,34 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=nspr
+pkgver=4.15
+pkgrel=1
+pkgdesc='Netscape Portable Runtime (NSPR) provides a platform-neutral API for system level and libc like functions'
+arch=('x86_64')
+url='http://www.mozilla.org/projects/nspr/'
+license=('MPL' 'GPL')
+depends=('glibc')
+makedepends=('zip')
+options=('!emptydirs')
+source=("https://ftp.mozilla.org/pub/mozilla.org/${pkgname}/releases/v${pkgver}/src/${pkgname}-${pkgver}.tar.gz")
+md5sums=('c6c652d4f805be2daa344ac372d7bc59')
+
+prepare() {
+	cd "${srcdir}/${pkgname}-${pkgver}/${pkgname}"
+	sed -ri 's#^(RELEASE_BINS =).*#\1#' pr/src/misc/Makefile.in
+	sed -i 's#$(LIBRARY) ##' config/rules.mk
+}
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}/${pkgname}"
+	./configure --prefix=/usr \
+		--with-mozilla \
+		--with-pthreads \
+		--enable-64bit
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}/${pkgname}"
+	make DESTDIR="${pkgdir}" install
+}

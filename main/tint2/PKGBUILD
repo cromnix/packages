@@ -1,0 +1,31 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=tint2
+pkgver=0.14.1
+pkgrel=1
+pkgdesc='A basic task manager for WMs'
+arch=('x86_64')
+url='https://gitlab.com/o9000/tint2'
+license=('GPL2')
+depends=('gtk2' 'imlib2' 'startup-notification' 'librsvg')
+makedepends=('cmake' 'atk-dev')
+source=("${pkgname}-${pkgver}.tar.gz::https://gitlab.com/o9000/tint2/repository/archive.tar.gz?ref=${pkgver}")
+md5sums=('6d3b8c42d216e494350ab3e09ea6ffdd')
+
+prepare() {
+	mv "${srcdir}"/${pkgname}-${pkgver}-* "${srcdir}/${pkgname}"
+	mkdir -p "${srcdir}/${pkgname}/build"
+}
+
+build() {
+	cd "${srcdir}/${pkgname}/build"
+	cmake .. \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DENABLE_TINT2CONF=1
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}/build"
+	make DESTDIR="${pkgdir}" install
+}

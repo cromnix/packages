@@ -1,0 +1,43 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgbase=nasm
+pkgname=('nasm' 'nasm-doc')
+pkgver=2.12.02
+pkgrel=1
+pkgdesc='NASM (Netwide Assembler) is an 80x86 assembler designed for portability and modularity. It includes a disassembler as well'
+arch=('x86_64')
+url='http://www.nasm.us/'
+license=('BSD')
+depends=('glibc')
+source=("http://www.nasm.us/pub/${pkgbase}/releasebuilds/${pkgver}/${pkgbase}-${pkgver}.tar.xz"
+		"http://www.nasm.us/pub/${pkgbase}/releasebuilds/${pkgver}/${pkgbase}-${pkgver}-xdoc.tar.xz")
+noextract=("${pkgbase}-${pkgver}-xdoc.tar.xz")
+md5sums=('b90a3d85b93e51a7fa5a67e2a8fccfef'
+         '8dfcf5540e782a9c4d4df0bbfbc9c242')
+
+prepare() {
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	tar -xf ${srcdir}/${pkgbase}-${pkgver}-xdoc.tar.xz --strip-components=1
+}
+
+build() {
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	./configure --prefix=/usr
+	make
+}
+
+package_nasm() {
+	optdepends=('nasm-doc: documentation')
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	make INSTALLROOT=${pkgdir} install install_rdf
+	install -m755 -d ${pkgdir}/usr/share/info
+	cp -v doc/info/* ${pkgdir}/usr/share/info
+	install-info ${pkgdir}/usr/share/info/nasm.info ${pkgdir}/usr/share/info/dir
+}
+
+package_nasm-doc() {
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	install -m755 -d ${pkgdir}/usr/share/doc/${pkgbase}-${pkgver}/html
+	cp -v doc/html/*.html ${pkgdir}/usr/share/doc/${pkgbase}-${pkgver}/html
+	cp -v doc/*.{txt,ps,pdf} ${pkgdir}/usr/share/doc/${pkgbase}-${pkgver}
+}

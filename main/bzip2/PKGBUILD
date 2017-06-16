@@ -1,0 +1,68 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgbase=bzip2
+pkgname=('bzip2' 'libbzip2' 'bzip2-doc')
+pkgver=1.0.6
+pkgrel=1
+pkgdesc="Programs for compressing and decompressing files"
+arch=('x86_64')
+url='http://www.bzip.org'
+license=('custom')
+source=("http://www.bzip.org/${pkgver}/${pkgbase}-${pkgver}.tar.gz"
+		"http://www.linuxfromscratch.org/patches/lfs/7.10/${pkgbase}-${pkgver}-install_docs-1.patch")
+md5sums=('00b516f4704d4a7cb50a1d97e6e8e15b'
+		 '6a5ac7e89b791aae556de0f745916f7f')
+
+prepare() {
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	patch -Np1 -i ${srcdir}/bzip2-${pkgver}-install_docs-1.patch
+
+	sed -i 's@\(ln -s -f \)$(PREFIX)/bin/@\1@' Makefile
+
+	sed -i "s@(PREFIX)/man@(PREFIX)/share/man@g" Makefile
+
+	make -f Makefile-libbz2_so
+	make clean
+}
+
+build() {
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	make
+}
+
+package_bzip2() {
+	groups=('cromnix-dev')
+	depends=('glibc' 'libbzip2')
+	optdepends=('bzip2-doc: documentation')
+
+	cd ${srcdir}/${pkgbase}-${pkgver}
+
+	make PREFIX=${pkgdir}/usr install
+
+	cp -v bzip2-shared ${pkgdir}/usr/bin/bzip2
+
+	rm -rf ${pkgdir}/usr/{lib,include}
+	rm -rf ${pkgdir}/usr/share/doc
+}
+
+package_libbzip2() {
+	cd ${srcdir}/${pkgbase}-${pkgver}
+
+	make PREFIX=${pkgdir}/usr install
+
+	cp -av libbz2.so* ${pkgdir}/usr/lib
+	ln -sv libbz2.so.1.0 ${pkgdir}/usr/lib/libbz2.so
+
+	rm -rf ${pkgdir}/usr/{bin,share}
+}
+
+package_bzip2-doc() {
+	arch=('any')
+
+	cd ${srcdir}/${pkgbase}-${pkgver}
+
+	make PREFIX=${pkgdir}/usr install
+
+	rm -rf ${pkgdir}/usr/{bin,lib,include}
+	rm -rf ${pkgdir}/usr/share/man
+}

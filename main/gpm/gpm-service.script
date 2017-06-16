@@ -1,0 +1,5 @@
+#!/bin/bash
+
+if test -r /run/openrc/softlevel; then
+	rc-service gpm start
+fi

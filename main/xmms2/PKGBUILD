@@ -1,0 +1,61 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=xmms2
+pkgver=r7390.1bdccd0d
+pkgrel=1
+pkgdesc='X-platform Music Multiplexing System 2'
+arch=('x86_64')
+url='https://www.xmms2.org'
+license=('GPL' 'LGPL')
+depends=('glib' 'readline' 'sqlite')
+makedepends=('git' 'python2' 'curl' 'libmad' 'alsa-lib' 'alsa-lib-dev' 'libxml2' 'perl')
+optdepends=('alsa-lib: ALSA output'
+			'curl: play HTTP streams'
+			'libmad: MP3 support'
+			'libxml2: XSPF and podcast support'
+			'perl: Perl bindings')
+install=xmms2.install
+source=("git+https://github.com/xmms2/xmms2-devel")
+md5sums=('SKIP')
+
+# todo: xmms2 can be run as a service, so a openrc script should be made
+
+pkgver() {
+	cd "${srcdir}/${pkgname}-devel"
+	#printf "r%s.%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)" "$(date +%Y%m%d)"
+	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+	cd "${srcdir}/${pkgname}-devel"
+	git submodule update --init
+	sed -i '$a#define AVCODEC_MAX_AUDIO_FRAME_SIZE 192000 /* 1 second of 48kHz 32bit audio */' src/plugins/avcodec/avcodec_compat.h
+	sed -i 's,#include <cdio/cdda.h>,#include <cdio/paranoia/cdda.h>,' src/plugins/cdda/cdda.c
+	sed -i 's,libsmbclient.h,samba-4.0/libsmbclient.h,' src/plugins/samba/{samba.c,wscript}
+	sed -i 's|Werror|Wno-error|g' waftools/*.py
+	sed -e "s/python/python2/" -i waf
+}
+
+build() {
+	cd "${srcdir}/${pkgname}-devel"
+	CXXFLAGS="-Wall" CFLAGS="-Wall" ./waf configure --prefix=/usr \
+		--without-ldconfig \
+		--sbindir=/usr/bin \
+		--with-perl-archdir=`perl -V:installvendorarch | cut -f2 -d\'` \
+		--with-optionals=launcher,xmmsclient++-glib,perl,nycli,pixmaps,et,medialib-updater,sqlite2s4 \
+		--without-optionals=python
+	./waf build
+}
+
+check() {
+	cd "${srcdir}/${pkgname}-devel"
+	./waf --alltests
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-devel"
+	mkdir -pv "${pkgdir}"/usr/lib
+	ln -sv "${pkgdir}"/usr/lib "${pkgdir}"/usr/lib64
+	./waf --without-ldconfig --destdir="${pkgdir}" install
+	rm "${pkgdir}"/usr/lib64
+}

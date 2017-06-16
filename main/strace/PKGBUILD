@@ -1,0 +1,28 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=strace
+pkgver=4.17
+pkgrel=1
+pkgdesc="The Strace package contains a system call tracer, used for debugging. "
+arch=('x86_64')
+url="http://sourceforge.net/projects/strace/"
+license=('custom')
+depends=('perl')
+source=("http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.xz")
+md5sums=('8d7eb10eba68bad83a269197e634b626')
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    ./configure --prefix=/usr
+    make
+}
+
+check() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make check
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make DESTDIR="$pkgdir" install
+}

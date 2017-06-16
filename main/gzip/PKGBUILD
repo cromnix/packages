@@ -1,0 +1,33 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=gzip
+pkgver=1.8
+pkgrel=1
+pkgdesc="The Gzip package contains programs for compressing and decompressing files."
+arch=('x86_64')
+url="http://www.gnu.org/software/gzip/"
+license=('GPL3')
+groups=('cromnix-base' 'cromnix-dev')
+depends=('glibc' 'bash' 'less')
+source=("http://ftp.gnu.org/gnu/gzip/$pkgname-$pkgver.tar.xz")
+md5sums=('f7caabb65cddc1a4165b398009bd05b9')
+
+prepare() {
+    cd "$srcdir/$pkgname-$pkgver"
+}
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    ./configure --prefix=/usr
+    make
+}
+
+check() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make check
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make prefix="$pkgdir/usr" install
+}

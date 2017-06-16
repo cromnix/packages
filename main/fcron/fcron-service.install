@@ -1,0 +1,38 @@
+post_install() {
+	rc-update add fcron default
+	
+    getent group fcron >/dev/null
+    if [ "$?" != "0" ]; then
+        echo "Adding fcron group..."
+        groupadd -g 22 fcron
+    fi
+    getent passwd fcron >/dev/null
+    if [ "$?" != "0" ]; then
+        echo "Adding fcron user..."
+        useradd -rmc 'Fcron User' -u 22 -g fcron -d /var/spool/fcron -s /usr/bin/nologin fcron &>/dev/null
+		passwd -l fcron &>/dev/null
+    fi
+}
+
+post_upgrade() {
+	if rc-status | grep -q "fcron"; then
+		echo "==> fcron needs to be restarted"
+	fi
+}
+
+post_remove() {
+	for _service in $(find /etc/openrc/runlevels/*/ -name 'fcron'); do
+		rm ${_service}
+	done
+	
+    getent passwd fcron >/dev/null
+    if [ "$?" = "0" ]; then
+        echo "Deleting fcron user..."
+        userdel -r fcron &>/dev/null
+    fi
+    getent group fcron >/dev/null
+    if [ "$?" = "0" ]; then
+        echo "Deleting fcron group..."
+        groupdel fcron
+    fi
+}

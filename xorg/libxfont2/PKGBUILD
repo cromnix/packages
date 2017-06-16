@@ -1,0 +1,28 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=libxfont2
+_pkgname=libXfont2
+pkgver=2.0.1
+pkgrel=1
+pkgdesc='X11 font rasterisation library'
+arch=('x86_64')
+url='https://www.x.org/wiki/'
+license=('custom')
+depends=('freetype' 'libfontenc' 'xproto' 'fontsproto')
+makedepends=('util-macros' 'xmlto' 'docbook-xml' 'asciidoc' 'xtrans')
+source=("http://ftp.x.org/pub/individual/lib/${_pkgname}-${pkgver}.tar.bz2")
+md5sums=('0d9f6dd9c23bf4bcbfb00504b566baf5')
+
+build() {
+	cd ${srcdir}/${_pkgname}-${pkgver}
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--localstatedir=/var \
+		--disable-static
+	make
+}
+
+package() {
+	cd ${srcdir}/${_pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+}

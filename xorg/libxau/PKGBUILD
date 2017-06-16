@@ -1,0 +1,33 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=libxau
+_pkgname=libXau
+pkgver=1.0.8
+pkgrel=1
+pkgdesc='X11 authorization library'
+arch=('x86_64')
+url='https://www.x.org/wiki/'
+license=('custom')
+depends=('glibc' 'xproto')
+makedepends=('pkg-config')
+source=("http://ftp.x.org/pub/individual/lib/${_pkgname}-${pkgver}.tar.bz2")
+md5sums=('685f8abbffa6d145c0f930f00703b21b')
+
+build() {
+	cd ${srcdir}/${_pkgname}-${pkgver}
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--localstatedir=/var \
+		--disable-static
+	make
+}
+
+check() {
+	cd ${srcdir}/${_pkgname}-${pkgver}
+	make check
+}
+
+package() {
+	cd ${srcdir}/${_pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+}

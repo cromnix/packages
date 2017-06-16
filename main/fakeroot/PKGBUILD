@@ -1,0 +1,52 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=fakeroot
+pkgver=1.21
+pkgrel=1
+pkgdesc="Tool for simulating superuser privileges."
+arch=('x86_64')
+url="https://alioth.debian.org/projects/fakeroot/"
+license=('GPL3')
+groups=('cromnix-dev')
+depends=('glibc' 'cromnix' 'sed' 'util-linux' 'sh' 'libacl' 'libattr')
+makedepends=('po4a' 'acl-dev')
+install=fakeroot.install
+source=("http://ftp.debian.org/debian/pool/main/f/$pkgname/${pkgname}_${pkgver}.orig.tar.gz"
+        "silence-dlerror.patch")
+md5sums=('be5c9a0e516869fca4a6758105968e5a'
+         '5fba0b541b5af39d804265223fda525c')
+
+# todo: backup
+
+prepare() {
+    cd "$srcdir/$pkgname-$pkgver"
+    patch -p1 -i ${srcdir}/silence-dlerror.patch
+}
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    ./bootstrap
+    ./configure --prefix=/usr \
+        --libdir=/usr/lib/libfakeroot \
+        --disable-static \
+        --with-ipc=sysv
+    make
+
+    cd doc
+    po4a -k 0 --rm-backups --variable "srcdir=../doc/" po4a/po4a.cfg
+}
+
+check() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make check
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make DESTDIR="$pkgdir" install
+
+    install -dm755 ${pkgdir}/etc/ld.so.conf.d/
+    echo '/usr/lib/libfakeroot' > ${pkgdir}/etc/ld.so.conf.d/fakeroot.conf
+
+    install -Dm644 README ${pkgdir}/usr/share/doc/${pkgname}/README
+}

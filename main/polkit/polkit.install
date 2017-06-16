@@ -1,0 +1,26 @@
+post_install() {
+    getent group polkitd >/dev/null
+    if [ "$?" != "0" ]; then
+        echo "Adding polkitd group..."
+        groupadd -g 27 polkitd
+    fi
+    getent passwd polkitd >/dev/null
+    if [ "$?" != "0" ]; then
+        echo "Adding polkitd user..."
+        useradd -rc 'Policy Kit Daemon' -u 27 -g polkitd -G proc -d '/' -s /usr/bin/nologin polkitd
+		passwd -l polkitd &>/dev/null
+    fi
+}
+
+post_remove() {
+    getent passwd polkitd >/dev/null
+    if [ "$?" = "0" ]; then
+        echo "Deleting polkitd user..."
+        userdel polkitd
+    fi
+    getent group polkitd >/dev/null
+    if [ "$?" = "0" ]; then
+        echo "Deleting polkitd group..."
+        groupdel polkitd
+    fi
+}

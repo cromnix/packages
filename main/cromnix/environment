@@ -1,0 +1,13 @@
+# Begin /etc/environment
+
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+export PATH
+
+if test -d /etc/env.d/; then
+	for environment in /etc/env.d/*.sh; do
+		test -r "$environment" && . "$environment"
+	done
+	unset environment
+fi
+
+# End /etc/environment

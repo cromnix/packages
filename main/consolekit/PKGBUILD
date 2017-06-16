@@ -1,0 +1,98 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgbase=consolekit
+pkgname=('consolekit' 'consolekit-cromnix' 'consolekit-vanilla' 'consolekit-openrc')
+pkgver=1.1.2
+pkgrel=1
+pkgdesc="The ConsoleKit package is a framework for keeping track of the various users, sessions, and seats present on a system"
+arch=('x86_64')
+url="https://github.com/ConsoleKit2/ConsoleKit2"
+license=('GPL')
+makedepends=('dbus' 'glib' 'libx11' 'eudev' 'zlib' 'xmlto' 'docbook-xsl' 'python')
+options=('!libtool')
+source=("https://github.com/Consolekit2/ConsoleKit2/releases/download/${pkgver}/ConsoleKit2-${pkgver}.tar.bz2"
+		"https://gitweb.gentoo.org/repo/gentoo.git/plain/sys-auth/consolekit/files/consolekit-1.0.0.initd"
+		'consolekit-service.hook'
+		'consolekit-service.script'
+		'openrc-shutdown.patch')
+md5sums=('6ae77a545eb72d31c2f91e7439f98dff'
+         '63704264bd6fca3e0d9eb9605e06dbfb'
+         '98c5d3cc73868a9a2d695309a414db73'
+         'fd2c920e0ba5b2eda8912bfbd44491cd'
+         '99c001b89af45fd1ad44c4284ab8e597')
+
+# todo: review this package, I beleive it could use some fine tuning
+
+prepare() {
+	cd "$srcdir/ConsoleKit2-$pkgver"
+	patch -Np1 -i "${srcdir}"/openrc-shutdown.patch
+}
+
+build() {
+	cd "$srcdir/ConsoleKit2-$pkgver"
+	./configure --prefix=/usr \
+		--libexecdir=/usr/lib/ConsoleKit \
+		--sbindir=/usr/bin \
+		--with-rundir=/run \
+		--sysconfdir=/etc \
+		--localstatedir=/var \
+		--enable-udev-acl \
+		--enable-polkit \
+		--with-xinitrc-dir=/etc/X11/xinit/xinitrc.d \
+		--enable-docbook-docs \
+		--docdir=/usr/share/doc/${pkgname}-${pkgver} \
+		--with-systemdsystemunitdir=no
+	make
+}
+
+package_consolekit() {
+	# meta package
+	depends=('consolekit-bin')
+	arch=('any')
+}
+
+package_consolekit-vanilla() {
+	provides=('consolekit-bin')
+	conflicts=('consolekit-cromnix')
+	depends=('consolekit-init' 'dbus' 'glib' 'libx11' 'eudev' 'zlib')
+	optdepends=('pm-utils: suspend and hibernate power management')
+	# depends cgmanager polkit-consolekit change eudev to libeudev
+	cd "$srcdir/ConsoleKit2-$pkgver"
+	make DESTDIR="$pkgdir" install
+
+	mv -v ${pkgdir}/etc/X11/xinit/xinitrc.d/90-consolekit{,.sh}
+	sed -e "s/STARTUP/command/g" -i "${pkgdir}"/etc/X11/xinit/xinitrc.d/90-consolekit.sh
+	
+	rm -rf "${pkgdir}"/run
+}
+
+package_consolekit-cromnix() {
+	provides=('consolekit-bin')
+	conflicts=('consolekit-vanilla')
+	depends=('openrc' 'dbus' 'glib' 'libx11' 'eudev' 'zlib')
+	optdepends=('pm-utils: suspend and hibernate power management')
+	install=consolekit-service.install
+	cd "$srcdir/ConsoleKit2-$pkgver"
+	make DESTDIR="$pkgdir" install
+
+	mv -v "${pkgdir}"/etc/X11/xinit/xinitrc.d/90-consolekit{,.sh}
+	sed -e "s/STARTUP/command/g" -i "${pkgdir}"/etc/X11/xinit/xinitrc.d/90-consolekit.sh
+	
+	rm -rf "${pkgdir}"/run
+
+	install -v -m755 -d ${pkgdir}/etc/openrc/init.d
+	install -v -m755 ${srcdir}/consolekit-1.0.0.initd ${pkgdir}/etc/openrc/init.d/consolekit
+
+	install -Dm644 ${srcdir}/consolekit-service.hook ${pkgdir}/usr/share/libalpm/hooks/consolekit-service.hook
+	install -Dm755 ${srcdir}/consolekit-service.script ${pkgdir}/usr/share/libalpm/scripts/consolekit-service
+}
+
+package_consolekit-openrc() {
+	pkgdesc="OpenRC init scripts for consolekit"
+	arch=('any')
+	depends=('openrc')
+	provides=('consolekit-init')
+	conflicts=('consolekit-cromnix')
+	install -v -m755 -d ${pkgdir}/etc/openrc/init.d
+	install -v -m755 ${srcdir}/consolekit-1.0.0.initd ${pkgdir}/etc/openrc/init.d/consolekit
+}

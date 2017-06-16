@@ -1,0 +1,33 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=libx11
+_pkgname=libX11
+pkgver=1.6.5
+pkgrel=1
+pkgdesc='X11 client-side library'
+arch=('x86_64')
+url='https://www.x.org/wiki/'
+license=('custom')
+depends=('libxcb' 'xproto' 'kbproto')
+makedepends=('util-macros' 'xextproto' 'xtrans' 'inputproto' 'xmlto' 'docbook-xml' 'asciidoc')
+source=("http://ftp.x.org/pub/individual/lib/${_pkgname}-${pkgver}.tar.bz2")
+md5sums=('0f618db70c4054ca67cee0cc156a4255')
+
+build() {
+	cd ${srcdir}/${_pkgname}-${pkgver}
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--localstatedir=/var \
+		--disable-static
+	make
+}
+
+check() {
+	cd ${srcdir}/${_pkgname}-${pkgver}
+	make check
+}
+
+package() {
+	cd ${srcdir}/${_pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+}

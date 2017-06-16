@@ -1,0 +1,4 @@
+/var/log/user.log {
+	rotate 4
+	weekly
+}

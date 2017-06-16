@@ -1,0 +1,39 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=texinfo
+pkgver=6.3
+pkgrel=1
+pkgdesc="The Texinfo package contains programs for reading, writing, and converting info pages."
+arch=('x86_64')
+url="http://www.gnu.org/software/texinfo/"
+license=('GPL3')
+groups=('cromnix-dev')
+depends=('ncurses' 'gzip' 'perl' 'sh')
+source=("http://ftp.gnu.org/gnu/texinfo/$pkgname-$pkgver.tar.xz")
+md5sums=('32baefe5c7080dfb512a4eac5ce67b2a')
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    ./configure --prefix=/usr \
+        --disable-static
+    make
+}
+
+check() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make check
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make DESTDIR="$pkgdir" install
+
+    make DESTDIR="$pkgdir" TEXMF=/usr/share/texmf install-tex
+
+    pushd ${pkgdir}/usr/share/info
+    rm -v dir
+    for f in *
+        do install-info $f dir 2>/dev/null
+    done
+    popd
+}

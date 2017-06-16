@@ -1,0 +1,34 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=wget
+pkgver=1.19.1
+pkgrel=1
+pkgdesc="The Wget package contains a utility useful for non-interactive downloading of files from the Web."
+arch=('x86_64')
+url="http://www.gnu.org/software/wget/wget.html"
+license=('GPL3')
+depends=('openssl' 'libutil-linux')
+optdepends=('ca-certificates')
+checkdepends=('python')
+backup=('etc/wgetrc')
+source=("http://ftp.gnu.org/gnu/wget/$pkgname-$pkgver.tar.xz")
+md5sums=('d30d82186b93fcabb4116ff513bfa9bd')
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    ./configure --prefix=/usr \
+        --sysconfdir=/etc
+    make
+}
+
+check() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make check || true
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make DESTDIR="$pkgdir" install
+
+    echo ca-directory=/etc/ssl/certs >> ${pkgdir}/etc/wgetrc
+}

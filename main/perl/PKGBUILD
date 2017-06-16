@@ -1,0 +1,43 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=perl
+pkgver=5.26.0
+pkgrel=1
+pkgdesc="The Perl package contains the Practical Extraction and Report Language."
+arch=('x86_64')
+url="http://www.perl.org"
+license=('GPL' 'PerlArtistic')
+groups=('cromnix-base')
+depends=('gdbm' 'glibc')
+makedepends=('sh')
+options=('makeflags' '!purge' 'emptydirs')
+source=("http://www.cpan.org/src/5.0/$pkgname-$pkgver.tar.bz2")
+md5sums=('8d34cb5a4eccd66e7a6a80e62b7b4aec')
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    export BUILD_ZLIB=False
+    export BUILD_BZIP2=0
+    sh Configure -des \
+        -Dprefix=/usr \
+        -Dvendorprefix=/usr \
+        -Dman1dir=/usr/share/man/man1 \
+        -Dman3dir=/usr/share/man/man3 \
+        -Dpager="/usr/bin/less -isR" \
+        -Duseshrplib \
+        -Dusethreads
+    make
+
+}
+
+check() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make -k test
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+
+    make DESTDIR="$pkgdir" install
+    unset BUILD_ZLIB BUILD_BZIP2
+}

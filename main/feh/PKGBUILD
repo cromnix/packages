@@ -1,0 +1,37 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=feh
+pkgver=2.18.2
+pkgrel=1
+pkgdesc='feh is a fast, lightweight image viewer which uses Imlib2'
+arch=('x86_64')
+url='https://feh.finalrewind.org/'
+license=('custom:MIT')
+depends=('imlib2' 'curl' 'libxinerama')
+# 'libexif'
+makedepends=('libxt')
+optdepends=('imagemagick: support more file formats')
+source=("http://feh.finalrewind.org/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('02c1892de5fae14e19a8c6be6afc421f')
+
+prepare() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	sed -i "s:doc/feh:&-${pkgver}:" config.mk
+}
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	# add exif
+	make PREFIX=/usr help=1 stat64=1
+}
+
+# fix check later http://www.linuxfromscratch.org/blfs/view/svn/general/perl-modules.html#perl-test-command
+#check() {
+#	cd ${srcdir}/${pkgname}-${pkgver}
+#	make check
+#}
+
+package() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make PREFIX=/usr DESTDIR=${pkgdir} install
+}

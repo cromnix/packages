@@ -1,0 +1,35 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=flex
+pkgver=2.6.4
+pkgrel=1
+pkgdesc="The Flex package contains a utility for generating programs that recognize patterns in text."
+arch=('x86_64')
+url="https://github.com/westes/flex"
+license=('custom')
+groups=('cromnix-dev')
+depends=('glibc' 'm4' 'sh')
+makedepends=('help2man')
+source=("https://github.com/westes/flex/releases/download/v$pkgver/$pkgname-$pkgver.tar.gz")
+md5sums=('2882e3179748cc9f9c23ec593d6adc8d')
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    ./configure --prefix=/usr \
+        --docdir=/usr/share/doc/${pkgname}-${pkgver}
+    make
+}
+
+check() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make check
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make DESTDIR="$pkgdir" install
+    mkdir -pv ${pkgdir}/usr/bin
+    ln -sv flex ${pkgdir}/usr/bin/lex
+
+    install -Dm644 COPYING ${pkgdir}/usr/share/licenses/${pkgname}/license.txt
+}

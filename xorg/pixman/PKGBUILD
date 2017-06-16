@@ -1,0 +1,29 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=pixman
+pkgver=0.34.0
+pkgrel=1
+pkgdesc='Contains a library that provides low-level pixel manipulation features'
+arch=('x86_64')
+url='http://xorg.freedesktop.org'
+license=('custom')
+depends=('glibc')
+source=("https://xorg.freedesktop.org/releases/individual/lib/${pkgname}-${pkgver}.tar.gz")
+md5sums=('e80ebae4da01e77f68744319f01d52a3')
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	./configure --prefix=/usr \
+		--disable-static
+	make
+}
+
+check() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make check
+}
+
+package() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+}

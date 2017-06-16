@@ -1,0 +1,33 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=iana-etc
+pkgver=20170515
+pkgrel=1
+pkgdesc="The Iana-Etc package provides data for network services and protocols."
+arch=('any')
+url="http://www.iana.org/protocols"
+license=('custom:none')
+makedepends=('gawk')
+backup=('etc/protocols'
+        'etc/services')
+source=('https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xml'
+        'https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xml'
+        'protocols.gawk'
+        'services.gawk')
+md5sums=('b95018631d52d12433c96b3cc5a14fc3'
+         '6156b2f0e304424e081d82464bbc64b1'
+         '944c5f0a33ba6d88093e923b2468251f'
+         '55c6d305473fabb1ec9da9fb6fad9626')
+
+pkgver() {
+    printf "%s" "$(date +%Y%m%d)"
+}
+
+package() {
+    cd "$srcdir"
+
+    install -v -m755 -d ${pkgdir}/etc
+    
+    gawk -f protocols.gawk protocol-numbers.xml > ${pkgdir}/etc/protocols
+    gawk -f services.gawk service-names-port-numbers.xml > ${pkgdir}/etc/services
+}

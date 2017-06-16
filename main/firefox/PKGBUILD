@@ -1,0 +1,65 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=firefox
+pkgver=53.0.3
+pkgrel=1
+pkgdesc='A modern, fast, and secure web browser'
+arch=('x86_64')
+url='https://www.mozilla.org/firefox/'
+license=('MPL' 'GPL' 'LGPL')
+depends=('libxt' 'libpng' 'alsa-lib' 'gtk2' 'gtk3' 'nss' 'icu' 'libvpx' 'libevent' 'sqlite' 'libatk' 'dbus-glib')
+makedepends=('python2' 'which' 'unzip' 'zip' 'autoconf2.13' 'yasm' 'diffutils' 'mesa' 'inetutils' 'xorg-server' 'alsa-lib-dev' 'atk-dev' 'startup-notification')
+source=("https://ftp.mozilla.org/pub/mozilla.org/${pkgname}/releases/${pkgver}/source/${pkgname}-${pkgver}.source.tar.xz"
+		'mozconfig'
+		'firefox.desktop'
+		'install-dir.patch')
+md5sums=('16be3d9774f1e3bf74e2c4e198652d19'
+         '522c2c36efcb312a4b24c5202000097d'
+         'c828db7c566f26ed3d60cab7dfd55ea2'
+         'dbf14588e85812ee769bd735823a0146')
+
+prepare() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	cp ${srcdir}/mozconfig .mozconfig
+	
+	patch -Np1 -i ${srcdir}/install-dir.patch
+
+	# this is needed if using system libevent
+	sed -e s/_EVENT_SIZEOF/EVENT__SIZEOF/ -i ipc/chromium/src/base/message_pump_libevent.cc
+
+	mkdir "${srcdir}/path"
+	ln -s /usr/bin/python2 "${srcdir}/path/python"
+}
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+
+	# _FORTIFY_SOURCE causes configure failures
+	CPPFLAGS+=" -O2"
+
+	# Hardening
+	LDFLAGS+=" -Wl,-z,now"
+
+	# GCC 6
+	#CXXFLAGS+=" -fno-delete-null-pointer-checks -fno-schedule-insns2"
+
+	export PATH="${srcdir}/path:${PATH}"
+
+	make -f client.mk
+}
+
+package() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make -f client.mk DESTDIR="${pkgdir}" INSTALL_SDK= install
+	chown -R 0:0 ${pkgdir}/usr/lib/${pkgname}
+
+	mkdir -pv ${pkgdir}/usr/lib/mozilla/plugins
+	ln -sfv ../../mozilla/plugins ${pkgdir}/usr/lib/${pkgname}/browser
+
+	mkdir -pv ${pkgdir}/usr/share/applications
+	mkdir -pv ${pkgdir}/usr/share/pixmaps
+
+	install -Dm644 ${srcdir}/firefox.desktop ${pkgdir}/usr/share/applications/firefox.desktop
+
+	ln -sfv /usr/lib/${pkgname}/browser/icons/mozicon128.png ${pkgdir}/usr/share/pixmaps/firefox.png
+}

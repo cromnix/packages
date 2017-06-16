@@ -1,0 +1,47 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=polkit
+pkgver=r916.766a2ea
+pkgrel=1
+pkgdesc='Polkit is a toolkit for defining and handling authorizations. It is used for allowing unprivileged processes to communicate with privileged processes'
+arch=('x86_64')
+url='https://www.freedesktop.org/wiki/Software/polkit/'
+license=('LGPL')
+depends=('glib' 'expat' 'js')
+makedepends=('git' 'intltool' 'icu')
+install=polkit.install
+source=("http://anduin.linuxfromscratch.org/BLFS/polkit/polkit-0.113+git_2919920+js38.tar.xz")
+md5sums=('11ec10c04899651e40ef66766932254d')
+
+#todo: make this more like sudo's .install file
+#todo: add gtk-doc
+#todo: build official once able to
+
+#pkgver() {
+#	cd "$pkgbase"
+	#printf "r%s.%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)" "$(date +%Y%m%d)"
+#	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+#}
+
+build() {
+	cd "${srcdir}/${pkgname}-0.113+git_2919920+js38"
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--localstatedir=/var \
+		--disable-static \
+		--disable-gtk-doc \
+		--enable-libsystemd-login=no \
+		--with-authfw=shadow \
+		--with-os-type=gentoo
+	make
+}
+
+check() {
+	cd "${srcdir}/${pkgname}-0.113+git_2919920+js38"
+	make check
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-0.113+git_2919920+js38"
+	make DESTDIR="${pkgdir}" install
+}

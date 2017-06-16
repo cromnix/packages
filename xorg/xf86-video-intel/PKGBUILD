@@ -1,0 +1,46 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=xf86-video-intel
+pkgver=r9451.6babcf15
+_pkgver=2.99.917
+pkgrel=1
+pkgdesc='The Xorg Intel Driver package contains the X.Org Video Driver for Intel integrated video cards including 8xx, 9xx, Gxx, Qxx and HD graphics processors (SandyBridge, IvyBridge and Haswell)'
+arch=('x86_64')
+url='https://01.org/linuxgraphics/'
+license=('custom')
+groups=('xorg-drivers')
+#mesa-dri
+depends=('mesa' 'libxvmc' 'pixman' 'xcb-util')
+#libxss
+makedepends=('xorg-server' 'libx11' 'libxrender' 'libxrandr' 'libxcursor' 'libxtst' 'xproto' 'fontsproto' 'damageproto' 'randrproto' 'renderproto' 'xextproto'
+			 'scrnsaverproto' 'resourceproto' 'xf86driproto' 'glproto' 'dri2proto' 'dri3proto' 'presentproto' 'xineramaproto' 'util-macros' 'git')
+source=("git://anongit.freedesktop.org/xorg/driver/xf86-video-intel")
+md5sums=('SKIP')
+
+# todo: depends and cleanup
+
+pkgver() {
+	cd "${srcdir}/${pkgname}"
+	#printf "r%s.%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)" "$(date +%Y%m%d)"
+	#printf "%s.r%s.%s" "${_pkgver}" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+	cd "${srcdir}/${pkgname}"
+	./autogen.sh
+	./configure --prefix=/usr \
+		--enable-kms-only \
+		--enable-uxa \
+		--libexecdir=/usr/lib/xf86-video-intel \
+		--sysconfdir=/etc \
+		--localstatedir=/var \
+		--disable-static \
+		--with-default-dri=3		
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}"
+	make DESTDIR="${pkgdir}" install
+}

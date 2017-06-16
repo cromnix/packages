@@ -1,0 +1,65 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgbase=attr
+pkgname=('attr' 'libattr' 'attr-doc')
+pkgver=2.4.47
+pkgrel=1
+pkgdesc='Extended attribute support for ACL'
+arch=('x86_64')
+url='http://savannah.nongnu.org/projects/attr'
+license=('LGPL')
+makedepends=('gettext')
+options=('!makeflags')
+source=("http://download.savannah.gnu.org/releases/${pkgbase}/${pkgbase}-${pkgver}.src.tar.gz")
+md5sums=('84f58dec00b60f2dc8fd1c9709291cc7')
+
+prepare() {
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	sed -i -e 's|/@pkg_name@|&-@pkg_version@|' include/builddefs.in
+	sed -i -e "/SUBDIRS/s|man[25]||g" man/Makefile
+}
+
+build() {
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	export INSTALL_USER=root INSTALL_GROUP=root
+	./configure --prefix=/usr \
+		--libdir=/usr/lib \
+		--libexecdir=/usr/lib \
+		--disable-static
+	make
+}
+
+check() {
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	make -j1 tests
+}
+
+package_attr() {
+	depends=('libattr' 'glibc')
+	optdepends=('attr-doc: documentation')
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	make DIST_ROOT=${pkgdir} install
+
+	rm -rf ${pkgdir}/usr/share/{doc,locale}
+}
+
+package_libattr() {
+	depends=('glibc')
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	make DIST_ROOT=${pkgdir} install-lib install-dev
+
+	rm -rf ${pkgdir}/usr/bin
+	rm -rf ${pkgdir}/usr/share/doc
+	rm -rf ${pkgdir}/usr/share/man/man1
+
+	chmod -v 0755 "$pkgdir"/usr/lib/libattr.so.*.*.*
+}
+
+package_attr-doc() {
+	arch=('any')
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	make DIST_ROOT=${pkgdir} install-lib
+
+	rm -rf ${pkgdir}/usr/{bin,lib}
+	rm -rf ${pkgdir}/usr/share/{locale,man}
+}

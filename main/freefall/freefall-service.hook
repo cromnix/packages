@@ -1,0 +1,10 @@
+[Trigger]
+Operation = Install
+Type = Package
+Target = freefall-cromnix
+
+[Action]
+Description = Autostart freefall...
+When = PostTransaction
+Exec = /usr/share/libalpm/scripts/freefall-service
+Depends = freefall-cromnix

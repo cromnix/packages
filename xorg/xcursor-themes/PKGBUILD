@@ -1,0 +1,27 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=xcursor-themes
+pkgver=1.0.4
+pkgrel=1
+pkgdesc='X.org Cursor themes'
+arch=('any')
+url='https://xorg.freedesktop.org/'
+license=('MIT')
+depends=('libx11')
+makedepends=('util-macros' 'xcursorgen' 'pkg-config')
+groups=('xorg-apps' 'xorg')
+source=("https://www.x.org/archive/individual/data/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('fdfb0ad9cfceed60e3bfe9f18765aa0d')
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--localstatedir=/var
+	make
+}
+
+package() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+}

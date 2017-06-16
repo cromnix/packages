@@ -1,0 +1,34 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=libfm
+pkgver=1.2.5
+pkgrel=1
+pkgdesc='The libfm package contains a library used to develop file managers providing some file management utilities'
+arch=('x86_64')
+url='http://pcmanfm.sourceforge.net/'
+license=('GPL')
+depends=('menu-cache' 'gtk2' 'libfm-extra')
+makedepends=('intltool' 'atk-dev')
+source=("http://downloads.sourceforge.net/pcmanfm/libfm-${pkgver}.tar.xz")
+md5sums=('a1ba9ae5e920f38b647dd511edd6c807')
+
+# todo: rebuild with deps
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--disable-static
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+	
+	# These are in libfm-extra
+	rm "${pkgdir}"/usr/include/libfm
+	rm "${pkgdir}"/usr/include/libfm-1.0/{fm-extra.h,fm-version.h,fm-xml-file.h}
+	rm "${pkgdir}"/usr/lib/libfm-extra*
+	rm "${pkgdir}"/usr/lib/pkgconfig/libfm-extra.pc
+}

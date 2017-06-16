@@ -1,0 +1,55 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgbase=atk
+pkgname=('libatk' 'atk-dev' 'atk-doc')
+pkgver=2.24.0
+_pkgver=${pkgver%.*}
+pkgrel=1
+pkgdesc='ATK provides the set of accessibility interfaces that are implemented by other toolkits and applications'
+arch=('x86_64')
+url='https://developer.gnome.org/atk/'
+license=('LGPL')
+makedepends=('glib')
+source=("http://ftp.gnome.org/pub/gnome/sources/${pkgbase}/${_pkgver}/${pkgbase}-${pkgver}.tar.xz")
+md5sums=('3747a80089dfa3c0bbcf21adfff9968b')
+
+# todo: rebuild with gtk-doc
+# split the packages
+
+prepare() {
+	if [ -d "${srcdir}/install" ]; then
+		rm -rf "${srcdir}/install"
+	fi
+	mkdir -p "${srcdir}/install"
+}
+
+build() {
+	cd "${srcdir}/${pkgbase}-${pkgver}"
+	./configure --prefix=/usr
+	make
+
+	# split package
+	make DESTDIR="${srcdir}/install" install
+}
+
+package_libatk() {
+	depends=('glib')
+
+	mkdir -p "${pkgdir}/usr/share"
+	cp -vr "${srcdir}/install/usr/lib" "${pkgdir}/usr/lib"
+	cp -vr "${srcdir}/install/usr/share/locale" "${pkgdir}/usr/share/locale"
+}
+
+package_atk-dev() {
+	arch=('any')
+
+	mkdir -p "${pkgdir}/usr"
+	cp -vr "${srcdir}/install/usr/include" "${pkgdir}/usr/include"
+}
+
+package_atk-doc() {
+	arch=('any')
+
+	mkdir -p "${pkgdir}/usr/share"
+	cp -vr "${srcdir}/install/usr/share/gtk-doc" "${pkgdir}/usr/share/gtk-doc"
+}

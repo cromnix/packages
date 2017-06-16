@@ -1,0 +1,34 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=intel-ucode
+pkgver=20170511
+pkgrel=1
+pkgdesc="Intel Microcode"
+arch=('any')
+url="https://downloadcenter.intel.com/SearchResult.aspx?lang=eng&keyword=%22microcode%22"
+license=('custom')
+source=("https://downloadmirror.intel.com/26798/eng/microcode-${pkgver}.tgz"
+		'intel-microcode2ucode.c'
+		'LICENSE')
+
+md5sums=('167e6e1ff234567291f067f48e11d740'
+         '580276790cfc62dfd82b76085bd1e743'
+         'b0f489ae4b3e36dc8827dc53a76047aa')
+
+build() {
+    cd "$srcdir"
+    gcc -Wall ${CFLAGS} -o intel-microcode2ucode intel-microcode2ucode.c
+    ./intel-microcode2ucode ./microcode.dat
+}
+
+package() {
+    cd "$srcdir"
+    
+	install -d -m755 "${pkgdir}"/boot
+
+	mkdir -p kernel/x86/microcode
+	mv microcode.bin kernel/x86/microcode/GenuineIntel.bin
+	echo kernel/x86/microcode/GenuineIntel.bin | bsdcpio -o -H newc -R 0:0 > "${pkgdir}/boot/intel-ucode.img"
+
+	install -D -m644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}

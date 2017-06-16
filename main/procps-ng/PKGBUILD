@@ -1,0 +1,40 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=procps-ng
+pkgver=3.3.12
+pkgrel=1
+pkgdesc="The Procps-ng package contains programs for monitoring processes."
+arch=('x86_64')
+url="https://gitlab.com/procps-ng/procps"
+license=('GPL' 'LGPL')
+depends=('ncurses')
+source=("http://sourceforge.net/projects/procps-ng/files/Production/$pkgname-$pkgver.tar.xz")
+md5sums=('957e42e8b193490b2111252e4a2b443c')
+
+prepare() {
+    cd "$srcdir/$pkgname-$pkgver"
+}
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    ./configure --prefix=/usr \
+        --exec-prefix=/usr \
+        --sbindir=/usr/bin \
+        --docdir=/usr/share/doc/${pkgname}-${pkgver} \
+        --disable-static \
+        --disable-kill
+    make
+}
+
+check() {
+    cd "$srcdir/$pkgname-$pkgver"
+    sed -i -r 's|(pmap_initname)\\\$|\1|' testsuite/pmap.test/pmap.exp
+    make check
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make DESTDIR="$pkgdir" install
+
+    ln -sfv $(readlink ${pkgdir}/usr/lib/libprocps.so) ${pkgdir}/usr/lib/libprocps.so
+}

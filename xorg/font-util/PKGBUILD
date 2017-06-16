@@ -1,0 +1,29 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=font-util
+pkgver=1.3.1
+pkgrel=1
+pkgdesc='X.Org font utilities'
+arch=('x86_64')
+url='https://xorg.freedesktop.org/'
+license=('custom')
+makedepends=('util-macros')
+groups=('xorg-fonts' 'xorg')
+source=("https://www.x.org/archive/individual/font/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('23756dab809f9ec5011bb27fb2c3c7d6')
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--localstatedir=/var \
+		--mandir=/usr/share/man \
+		--with-mapdir=/usr/share/fonts/util \
+		--with-fontrootdir=/usr/share/fonts
+	make
+}
+
+package() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+}
