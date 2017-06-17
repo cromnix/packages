@@ -9,7 +9,7 @@ url='https://www.cromnix.org'
 license=('BSD3')
 groups=('cromnix-base')
 source=('mirrorlist')
-md5sums=('310303777bf26622150bbaf17483dcc0')
+md5sums=('3d6ac36bd8899430781739204e93f310')
 
 pkgver() {
 	date +%Y%m%d

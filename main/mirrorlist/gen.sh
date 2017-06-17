@@ -5,5 +5,5 @@ target_dir='repos/$repo/$arch'
 
 echo "https://downloads.sourceforge.net/project/${project}/${target_dir}"
 for mirror in ${mirrors[@]};do
-        echo "https://${mirror}.dl.${host}/project/${project}/${target_dir}"
+        echo "Server = https://${mirror}.dl.${host}/project/${project}/${target_dir}"
 done
