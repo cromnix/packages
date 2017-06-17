@@ -3,7 +3,7 @@
 pkgbase=bash
 pkgname=('bash' 'libbash' 'bash-doc')
 pkgver=4.4
-pkgrel=1
+pkgrel=2
 pkgdesc='The Bourne-Again SHell'
 arch=('x86_64')
 url='http://www.gnu.org/software/bash/bash.html'
@@ -12,7 +12,7 @@ source=("http://ftp.gnu.org/gnu/${pkgname}/${pkgbase}-${pkgver}.tar.gz"
 		'bashrc'
 		'bash_logout')
 md5sums=('148888a7c95ac23705559b6f477dfe25'
-         '2365c0bb795c4f81c2a50139d844aea2'
+         '50b4f0a6480454bb127365a89860098d'
          'ce8b85a173eb567c08420e0f8b982bc9')
 
 build() {
@@ -47,6 +47,7 @@ package_bash() {
 	rm -rf ${pkgdir}/usr/{lib,include}
 	rm -rf ${pkgdir}/usr/share/{doc,locale}
 
+	install -dm755 ${pkgdir}/etc/bash/bashrc.d
 	install -Dm644 ${srcdir}/bashrc ${pkgdir}/etc/bash/bashrc
 	install -Dm644 ${srcdir}/bash_logout ${pkgdir}/etc/bash/bash_logout
 }

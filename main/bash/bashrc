@@ -24,6 +24,10 @@ fi
 
 unset RED BLUE NORMAL
 
-[ -r /usr/share/bash-completion/bash_completion   ] && . /usr/share/bash-completion/bash_completion
+[ -r /usr/share/bash-completion/bash_completion ] && . /usr/share/bash-completion/bash_completion
+
+for script in /etc/bash/bashrc.d/*; do
+	[[ -r {$script} ]] && . "${script}"
+done
 
 # End /etc/bash/bashrc
