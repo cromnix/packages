@@ -1,0 +1,20 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+
+pkgname=mirrorlist
+pkgver=20170617
+pkgrel=1
+pkgdesc='List of mirrors for pacman'
+arch=('any')
+url='https://www.cromnix.org'
+license=('BSD3')
+groups=('cromnix-base')
+source=('mirrorlist')
+md5sums=('310303777bf26622150bbaf17483dcc0')
+
+pkgver() {
+	date +%Y%m%d
+}
+
+package() {
+	install -Dm0644 "${srcdir}"/mirrorlist "${pkgdir}"/etc/pacman.d/mirrorlist
+}
