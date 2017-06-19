@@ -2,7 +2,7 @@
 
 pkgbase=linux
 pkgname=('linux' 'linux-doc')
-pkgver=4.9.31
+pkgver=4.9.33
 pkgrel=1
 pkgdesc="This package contain the long term linux kernel"
 arch=('x86_64')
@@ -14,8 +14,8 @@ source=("https://www.kernel.org/pub/linux/kernel/v4.x/linux-$pkgver.tar.xz"
         "config"
         "usb.conf"
         "linux-lib-path.patch")
-md5sums=('6f58df83cfb2f0db2bdce3f132870516'
-         'dbbb15ac2d03579f4c0eb408d653e87a'
+md5sums=('7ed29fecc9775ecb5cf3ede79d6ed844'
+         '4335a99b7b58198082845246296df6f6'
          '30994cd9cba3aa218b3afa33d34eb649'
          '9d34da065c7c15ab5aa73fa4b44f4c21')
 
