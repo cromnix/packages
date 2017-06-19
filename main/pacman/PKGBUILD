@@ -2,7 +2,7 @@
 
 pkgbase=pacman
 pkgname=('pacman' 'pacman-contrib')
-pkgver=5.0.1
+pkgver=5.0.2
 pkgrel=1
 pkgdesc="A library-based package manager with dependency support"
 arch=('x86_64')
@@ -12,20 +12,13 @@ makedepends=('asciidoc' 'python2')
 #checkdepends=('python2' 'fakechroot')
 options=('strip')
 source=("https://sources.archlinux.org/other/pacman/$pkgname-$pkgver.tar.gz"
-        "pacman-5.0.1-roundup.patch"
         "pacman.conf"
         "makepkg.conf"
         'pacman.logrotate')
-md5sums=('377a2664d6007d72d6d8a126add83bcf'
-         '1a6573187531068d38cb4478cd20368c'
+md5sums=('f36f5e7e95a89436febe1bcca874fc33'
          '5f479d685403db1471ff9b6b6e5158a1'
          '5f978a84b691754a7a1588b8a5414b46'
          'bfed0ae8b6ec38fe6f5a1a6b1fcec871')
-
-prepare() {
-    cd "$srcdir/$pkgname-$pkgver"
-    patch -p1 -i ${srcdir}/pacman-5.0.1-roundup.patch
-}
 
 build() {
     cd "$srcdir/$pkgname-$pkgver"
@@ -67,7 +60,8 @@ package_pacman() {
     install -m644 ${srcdir}/pacman.logrotate ${pkgdir}/etc/logrotate.d/pacman
 
     install -dm755 "$pkgdir/usr/share/bash-completion/completions"
-    cp contrib/bash_completion "$pkgdir/usr/share/bash-completion/completions/pacman"
+    mv "${pkgdir}"/etc/bash_completion.d/pacman "${pkgdir}"/usr/share/bash-completion/completions
+    rm -rf "${pkgdir}"/etc/bash_completion.d
 
     for f in makepkg pacman-key; do
         ln -s pacman "$pkgdir/usr/share/bash-completion/completions/$f"
