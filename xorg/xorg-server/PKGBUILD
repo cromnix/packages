@@ -2,7 +2,7 @@
 
 pkgname=xorg-server
 pkgver=1.19.3
-pkgrel=1
+pkgrel=2
 pkgdesc='The Xorg Server is the core of the X Window system'
 arch=('x86_64')
 url='http://xorg.freedesktop.org'
@@ -17,9 +17,19 @@ makedepends=('pixman' 'libx11' 'mesa' 'xf86driproto' 'xcmiscproto' 'xtrans' 'big
 			 'xcb-util' 'xcb-util-image' 'xcb-util-renderutil' 'xcb-util-wm' 'xcb-util-keysyms' 'dri3proto'
 			 'libxshmfence' 'xmlto' 'docbook-xml' 'asciidoc')
 source=("https://xorg.freedesktop.org/releases/individual/xserver/${pkgname}-${pkgver}.tar.gz"
-		'add-prime-support.patch')
+		'add-prime-support.patch'
+		'startDM.sh'
+		'xdm.initd'
+		'xdm-setup.initd'
+		'xdm.confd')
 md5sums=('a7a51420874af84d90720b60de7936be'
-         '45563dbf8f46e54267a13d2a9289ed94')
+         '45563dbf8f46e54267a13d2a9289ed94'
+         '4cebe0ea241e9f7988068c7568945ab7'
+         '361d8f948f2943af0ada1b7a5e13a8fc'
+         '232b3988e0028306ad1e80080424c99d'
+         'd4fb606e98a5fe795687bd3e0c8971e0')
+
+# todo: make split package and change around xdm support
 
 prepare() {
 	cd ${srcdir}/${pkgname}-${pkgver}
@@ -53,6 +63,13 @@ package() {
 	cd ${srcdir}/${pkgname}-${pkgver}
 	make DESTDIR=${pkgdir} install
 	mkdir -pv ${pkgdir}/etc/X11/xorg.conf.d
+	
+	install -m0755 -d "${pkgdir}"/etc/openrc/{init.d,conf.d}
+	install -m0755 "${srcdir}"/xdm.initd "${pkgdir}"/etc/openrc/init.d/xdm
+	install -m0755 "${srcdir}"/xdm-setup.initd "${pkgdir}"/etc/openrc/init.d/xdm-setup
+	install -m0755 "${srcdir}"/xdm.confd "${pkgdir}"/etc/openrc/conf.d/xdm
+	
+	install -m0755 "${srcdir}"/startDM.sh "${pkgdir}"/etc/X11/startDM.sh
 
 #cat >> /etc/sysconfig/createfiles << "EOF"
 #/tmp/.ICE-unix dir 1777 root root
