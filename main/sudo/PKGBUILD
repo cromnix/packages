@@ -3,11 +3,12 @@
 pkgname=sudo
 pkgver=1.8.20.p2
 _pkgver=1.8.20p2
-pkgrel=1
+pkgrel=2
 pkgdesc="The Sudo package allows a system administrator to give certain users (or groups of users) the ability to run some (or all) commands as root or another user while logging the commands and arguments."
 arch=('x86_64')
 url="http://www.sudo.ws"
 license=('custom')
+groups=('cromnix-dev')
 depends=('glibc')
 backup=('etc/sudoers')
 install=sudo.install

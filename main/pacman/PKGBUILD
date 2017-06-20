@@ -3,7 +3,7 @@
 pkgbase=pacman
 pkgname=('pacman' 'pacman-contrib')
 pkgver=5.0.2
-pkgrel=1
+pkgrel=2
 pkgdesc="A library-based package manager with dependency support"
 arch=('x86_64')
 url="http://www.archlinux.org/pacman/"
@@ -39,7 +39,7 @@ check() {
 
 package_pacman() {
 	groups=('cromnix-base')
-	depends=('perl' 'bash' 'glibc' 'libarchive' 'curl' 'gpgme' 'libxml2' 'xdelta3')
+	depends=('perl' 'bash' 'glibc' 'libarchive' 'curl' 'gpgme' 'libxml2' 'xdelta3' 'mirrorlist' 'cromnix-keyring')
 	optdepends=('pacman-contrib: extra scripts for use with pacman'
 				'bzip2: uncrompess bz2 source files')
 	backup=('etc/pacman.conf'
@@ -56,7 +56,7 @@ package_pacman() {
         -e "s|@CARCH[@]|x86_64|g" \
         -e "s|@CHOST[@]|x86_64-pc-linux-gnu|g" \
         -e "s|@CARCHFLAGS[@]|-march=x86-64|g"
-        
+
     install -m644 ${srcdir}/pacman.logrotate ${pkgdir}/etc/logrotate.d/pacman
 
     install -dm755 "$pkgdir/usr/share/bash-completion/completions"
