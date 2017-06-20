@@ -1,0 +1,50 @@
+# Maintainer: Alexey D. <lq07829icatm@rambler.ru>
+# Contributor: Felix Yan <felixonmars@archlinux.org>
+# Contributor: Ionut Biru <ibiru@archlinux.org>
+
+pkgname=udisks2-elogind
+pkgver=2.6.5
+pkgrel=1
+pkgdesc="Disk Management Service, version 2"
+arch=('i686' 'x86_64')
+url="http://www.freedesktop.org/wiki/Software/udisks"
+license=('GPL2')
+# groups=('')
+depends=('glib2' 'polkit-elogind' 'libatasmart' 'libgudev' 'eudev')
+makedepends=('intltool' 'docbook-xsl' 'gobject-introspection' 'gnome-common')
+optdepends=('parted: partition management'
+            'gptfdisk: GUID partition table support'
+            'ntfs-3g: NTFS filesystem management support'
+            'dosfstools: VFAT filesystem management support')
+provides=("udisks2=${pkgver}")
+conflicts=('udisks2')
+source=("udisks2-${pkgver}::https://github.com/storaged-project/udisks/archive/udisks-${pkgver}.tar.gz")
+sha256sums=('817e2de4efab458a98b24b15066933692e6ee3777430211b4e7aeddd0b9045f2')
+
+prepare(){
+    cd "udisks-udisks-$pkgver"
+#     sed -i "s:udisksprivdir:udisksdprivdir:" data/Makefile.am
+}
+
+build() {
+  cd "udisks-udisks-$pkgver"
+  ./autogen.sh \
+      --prefix=/usr \
+      --sysconfdir=/etc \
+      --localstatedir=/var \
+      --disable-static \
+      --sbindir=/usr/bin \
+      --libexecdir=/usr/lib
+  make
+}
+
+check() {
+  cd udisks-udisks-$pkgver
+  make check
+}
+
+package() {
+  cd "udisks-udisks-$pkgver"
+  make DESTDIR="$pkgdir" install \
+    bash_completiondir=/usr/share/bash-completion/completions
+}
