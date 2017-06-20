@@ -16,7 +16,7 @@ source=("https://sources.archlinux.org/other/pacman/$pkgname-$pkgver.tar.gz"
         "makepkg.conf"
         'pacman.logrotate')
 md5sums=('f36f5e7e95a89436febe1bcca874fc33'
-         '5f479d685403db1471ff9b6b6e5158a1'
+         '0567a36cacd1a47ffa2e03ed7864cbb6'
          '5f978a84b691754a7a1588b8a5414b46'
          'bfed0ae8b6ec38fe6f5a1a6b1fcec871')
 
