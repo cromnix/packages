@@ -1,0 +1,5 @@
+post_install() {
+	local datadir="/var/lib/data"
+	echo "	==> requires datadir $datadir"
+	echo "	==> run as user postgres: 'initdb -D $datadir'"
+}
