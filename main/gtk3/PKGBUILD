@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <chris@cromer.cl>
 
 pkgname=gtk3
-pkgver=3.22.15
+pkgver=3.22.16
 _pkgver=${pkgver%.*}
 pkgrel=1
 pkgdesc='The GTK+ 3 package contains libraries used for creating graphical user interfaces for applications'
@@ -16,7 +16,7 @@ source=("http://ftp.gnome.org/pub/gnome/sources/gtk+/${_pkgver}/gtk+-${pkgver}.t
 		'gtk-update-icon-cache.script'
 		'settings.ini')
 install='gtk3.install'
-md5sums=('9a1177854c4c5609293e017c53bc8950'
+md5sums=('71820863d5479e2c4a5b78f3164d5f15'
          '47d92cc1080c92e8a022334b620f0629'
          'c792ef5bb74ceba564b4d8ad306a6592'
          '57010c34ddf8d70c2870a81e0313bdf0'
