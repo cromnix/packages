@@ -13,17 +13,17 @@ source=("http://www.cpan.org/authors/id/P/PE/PERIGRIN/XML-NamespaceSupport-${pkg
 md5sums=('a8916c6d095bcf073e1108af02e78c97')
 
 build() {
-  cd  "${srcdir}"/XML-NamespaceSupport-${pkgver}
+	cd  "${srcdir}"/XML-NamespaceSupport-${pkgver}
 
-  PERL_MM_USE_DEFAULT=1 perl Makefile.PL INSTALLDIRS=vendor
-  make
+	PERL_MM_USE_DEFAULT=1 perl Makefile.PL INSTALLDIRS=vendor
+	make
 }
 
 package() {
-  cd  "${srcdir}"/XML-NamespaceSupport-${pkgver}
+	cd  "${srcdir}"/XML-NamespaceSupport-${pkgver}
 
-  make install DESTDIR="${pkgdir}"
+	make install DESTDIR="${pkgdir}"
 
-  find "${pkgdir}" -name '.packlist' -delete
-  find "${pkgdir}" -name '*.pod' -delete
+	find "${pkgdir}" -name '.packlist' -delete
+	find "${pkgdir}" -name '*.pod' -delete
 }
