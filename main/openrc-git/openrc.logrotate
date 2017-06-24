@@ -1,5 +1,0 @@
-/var/log/rc.log {
-	missingok
-	rotate 4
-	weekly
-}
