@@ -2,7 +2,7 @@
 
 pkgname=haveged
 pkgver=1.9.1
-pkgrel=1
+pkgrel=2
 pkgdesc='The Haveged package contains a daemon that generates an unpredictable stream of random numbers and feeds the /dev/random device'
 arch=('x86_64')
 url='http://www.issihosts.com/haveged'
@@ -19,7 +19,9 @@ md5sums=('015ff58cd10607db0e0de60aeca2f5f8'
 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
-	./configure --prefix=/usr
+	./configure --prefix=/usr \
+		--bindir=/usr/bin \
+		--sbindir=/usr/bin
 	make
 }
 
