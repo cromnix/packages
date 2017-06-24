@@ -1,0 +1,41 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=haveged
+pkgver=1.9.1
+pkgrel=1
+pkgdesc='The Haveged package contains a daemon that generates an unpredictable stream of random numbers and feeds the /dev/random device'
+arch=('x86_64')
+url='http://www.issihosts.com/haveged'
+license=('GPL')
+depends=('glibc')
+source=("http://downloads.sourceforge.net/project/haveged/haveged-${pkgver}.tar.gz"
+		'haveged.initd'
+		'haveged.confd')
+md5sums=('015ff58cd10607db0e0de60aeca2f5f8'
+         'd0ad4e59345941c0416132c82af1dfc5'
+         '7ad953f01e3c94ccfc48ced548051bdc')
+		 
+# todo: create split package and clean up this package
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr
+	make
+}
+
+check() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make check
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+	
+	install -m0755 -d "${pkgdir}"/etc/openrc/{init.d,conf.d}
+	install -m0755 "${srcdir}"/haveged.initd "${pkgdir}"/etc/openrc/init.d/haveged
+	install -m0755 "${srcdir}"/haveged.confd "${pkgdir}"/etc/openrc/conf.d/haveged
+	
+	#mkdir -pv    /usr/share/doc/haveged-1.9.1
+	#cp -v README /usr/share/doc/haveged-1.9.1
+}
