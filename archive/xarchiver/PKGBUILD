@@ -1,0 +1,42 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=xarchiver
+pkgver=0.5.4
+pkgrel=1
+pkgdesc='XArchiver is a GTK+ archive manager with support for tar, xz, bzip2, gzip, zip, 7z, rar, lzo and many other archive formats'
+arch=('x86_64')
+url='https://github.com/ib/xarchiver'
+license=('GPL')
+depends=('gtk2')
+makedepends=('docbook-xsl' 'intltool' 'xmlto' 'atk-dev')
+optdepends=('zip: ZIP support'
+			'unzip: ZIP support'
+			'p7zip: 7z support'
+			'lzop: LZOP support'
+			'cpio: RPM support'
+			'unrar: RAR support')
+source=("http://downloads.sourceforge.net/project/${pkgname}/${pkgname}-${pkgver}.tar.bz2"
+		'xarchiver-0.5.4-fixes-1.patch')
+md5sums=('1b4cd37a6af03afc957a8e307417e8d0'
+         '0b3c933f2ed64e75d572f88bc26635fd')
+
+# todo: rebuild with split gtk2 and gtk3
+
+prepare() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	patch -Np1 -i "${srcdir}"/xarchiver-0.5.4-fixes-1.patch
+}
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr \
+		--libexecdir=/usr/lib/xfce4 \
+		--disable-gtk3 \
+		--docdir=/usr/share/doc/${pkgname}-${pkgver}
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DOCDIR="${pkgdir}"/usr/share/doc/${pkgname}-${pkgver} DESTDIR="${pkgdir}" install
+}
