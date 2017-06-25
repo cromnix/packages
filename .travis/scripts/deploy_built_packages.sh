@@ -8,9 +8,6 @@ REPO="packages"
 REPO_REMOTE=$REPO-sf
 REPODIR_REMOTE="$HOME/$REPO_REMOTE"
 
-# for testing
-echo "${HOME}/.ssh/id_rsa"
-
 if [ ! -f "${HOME}/.ssh/id_rsa" ]; then
 	# cant deploy without key
 	echo "deployment key not found"
