@@ -41,7 +41,7 @@ if [ "$(ls -1 ${REPODIR} | wc -l)" -gt 0 ]; then
 	rm -f "$REPO.db"
 	cp -f "$REPO.db.tar.gz" "$REPO.db"
 	echo "Uploading to $SFREPO"
-	rsync -auvPH --delete-after ${REPODIR_REMOTE}/* "${SFUSER}"@"${SFREPO}"
+	rsync -auvLPH --delete-after ${REPODIR_REMOTE}/* "${SFUSER}"@"${SFREPO}"
 fi
 
 exit $?
