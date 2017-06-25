@@ -9,7 +9,7 @@ env:
   matrix:
     - INIT=openrc
   global:
-    - VERBOSE_BUILD=0
+    - VERBOSE_BUILD=1
     - FAIL_STRICT=1
 
 arch:
