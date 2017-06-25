@@ -3,7 +3,7 @@
 pkgbase=pacman
 pkgname=('pacman' 'pacman-contrib')
 pkgver=5.0.2
-pkgrel=3
+pkgrel=4
 pkgdesc="A library-based package manager with dependency support"
 arch=('x86_64')
 url="http://www.archlinux.org/pacman/"
@@ -16,7 +16,7 @@ source=("https://sources.archlinux.org/other/pacman/$pkgname-$pkgver.tar.gz"
         "makepkg.conf"
         'pacman.logrotate')
 md5sums=('f36f5e7e95a89436febe1bcca874fc33'
-         '0567a36cacd1a47ffa2e03ed7864cbb6'
+         '3aee9fcda7f3614c3a5b847cbba636d4'
          '5f978a84b691754a7a1588b8a5414b46'
          'bfed0ae8b6ec38fe6f5a1a6b1fcec871')
 
