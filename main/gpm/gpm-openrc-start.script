@@ -1,0 +1,12 @@
+#!/bin/bash
+
+. etc/cromnix.conf
+
+if test -r run/openrc/softlevel; then
+	if [ "${SVSTART}" == 'yes' ]; then
+		usr/lib/openrc/bin/service_started gpm
+		if [ "$?" -eq 1 ]; then
+			rc-service gpm start
+		fi
+	fi
+fi

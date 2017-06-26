@@ -1,0 +1,29 @@
+post_install() {
+	. /etc/cromnix.conf
+	if [ "${SVENABLE}" == 'yes' ]; then
+		rc-update add gpm default
+	fi
+}
+
+post_upgrade() {
+	. /etc/cromnix.conf
+	if test -r run/openrc/softlevel; then
+		if [ "${SVRESTART}" == 'yes' ]; then
+			usr/lib/openrc/bin/service_started gpm
+			if [ "$?" -eq 0 ]; then
+				rc-service gpm restart
+			fi
+		else
+			usr/lib/openrc/bin/service_started gpm
+			if [ "$?" -eq 0 ]; then
+				echo "==> gpm needs to be restarted"
+			fi
+		fi
+	fi
+}
+
+post_remove() {
+	for _service in $(find /etc/openrc/runlevels/*/ -name 'gpm'); do
+		rm ${_service}
+	done
+}
