@@ -4,7 +4,7 @@ pkgbase=eudev
 pkgname=('eudev' 'eudev-openrc')
 pkgver=3.2.2
 _openrc_pkgver=32
-pkgrel=2
+pkgrel=3
 pkgdesc="The Eudev package contains programs for dynamic creation of device nodes."
 arch=('x86_64')
 url="https://wiki.gentoo.org/wiki/Project:Eudev"
@@ -13,15 +13,17 @@ makedepends=('gperf')
 source=("http://dev.gentoo.org/~blueness/eudev/$pkgbase-$pkgver.tar.gz"
 		"https://dev.gentoo.org/~williamh/dist/udev-init-scripts-${_openrc_pkgver}.tar.gz"
 		'udevadm-hwdb.hook'
-		'eudev-openrc-install.hook'
-		'eudev-openrc-upgrade.hook'
-		'eudev-openrc.script')
+		'https://raw.githubusercontent.com/cromnix/openrc-services/master/svc-openrc-install.hook'
+		'https://raw.githubusercontent.com/cromnix/openrc-services/master/svc-openrc-upgrade.hook'
+		'https://raw.githubusercontent.com/cromnix/openrc-services/master/svc-openrc-remove.hook'
+		'https://raw.githubusercontent.com/cromnix/openrc-services/master/svc-openrc.script')
 md5sums=('41e19b70462692fefd072a3f38818b6e'
          'a8098437126a0ecdc23f83e923de3644'
          'cc11561625e862c4f24f964a1015f530'
-         '48913130da42fc05fa2029ef966caccb'
-         '43027a271e5da0dfa9cd944e04f11d54'
-         '18627e4134720794d34ad4323e58d9e0')
+         'b40e4171b91d6c488d4f349083460383'
+         '65041d59dc10dfb0de74637675e51ce7'
+         '9e2098cc56d38fc6bcd04ba3aa8edb96'
+         '964664ce8a9d83544e476c76ca9adc36')
 
 prepare() {
 	cd "$srcdir/$pkgbase-$pkgver"
@@ -65,13 +67,20 @@ package_eudev-openrc() {
 	arch=('any')
 	depends=('openrc')
 	provides=('eudev-init')
-	install=eudev-openrc.install
 	install -v -m755 -d ${pkgdir}/etc/openrc/init.d
 	install -v -m755 -d ${pkgdir}/etc/openrc/conf.d
 	install -v -m755 ${srcdir}/udev-init-scripts-${_openrc_pkgver}/init.d/* ${pkgdir}/etc/openrc/init.d
 	install -v -m755 ${srcdir}/udev-init-scripts-${_openrc_pkgver}/conf.d/* ${pkgdir}/etc/openrc/conf.d
 	
-	install -Dm644 ${srcdir}/eudev-openrc-install.hook ${pkgdir}/usr/share/libalpm/hooks/eudev-openrc-install.hook
-	install -Dm644 ${srcdir}/eudev-openrc-upgrade.hook ${pkgdir}/usr/share/libalpm/hooks/eudev-openrc-upgrade.hook
-	install -Dm755 ${srcdir}/eudev-openrc.script ${pkgdir}/usr/share/libalpm/scripts/eudev-openrc
+	install -Dm644 "${srcdir}"/svc-openrc-install.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-install.hook
+	install -Dm644 "${srcdir}"/svc-openrc-upgrade.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-upgrade.hook
+	install -Dm644 "${srcdir}"/svc-openrc-remove.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-remove.hook
+	install -Dm755 "${srcdir}"/svc-openrc.script "${pkgdir}"/usr/share/libalpm/scripts/${pkgbase}-openrc
+	
+	sed -e "s/@svc@/${pkgbase}/" -i "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-{install,upgrade,remove}.hook
+	sed -e "s/@svc_enable@/'udev' 'udev-trigger'/" \
+		-e "s/@svc_run@/'udev' 'udev-trigger'/" \
+		-e "s/@svc_remove@/'udev' 'udev-trigger' 'udev-settle'/" \
+		-e "s/@svlevel@/sysinit/" \
+		-i "${pkgdir}"/usr/share/libalpm/scripts/${pkgbase}-openrc
 }

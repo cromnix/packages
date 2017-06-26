@@ -1,5 +1,0 @@
-post_remove() {
-	for _service in $(find /etc/openrc/runlevels/*/ -name 'dhcpcd'); do
-		rm ${_service}
-	done
-}

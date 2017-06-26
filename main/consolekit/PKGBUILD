@@ -3,7 +3,7 @@
 pkgbase=consolekit
 pkgname=('consolekit' 'consolekit-openrc')
 pkgver=1.1.2
-pkgrel=2
+pkgrel=3
 pkgdesc="The ConsoleKit package is a framework for keeping track of the various users, sessions, and seats present on a system"
 arch=('x86_64')
 url="https://github.com/ConsoleKit2/ConsoleKit2"
@@ -12,15 +12,17 @@ makedepends=('dbus' 'glib' 'libx11' 'eudev' 'zlib' 'xmlto' 'docbook-xsl' 'python
 options=('!libtool')
 source=("https://github.com/Consolekit2/ConsoleKit2/releases/download/${pkgver}/ConsoleKit2-${pkgver}.tar.bz2"
 		"https://gitweb.gentoo.org/repo/gentoo.git/plain/sys-auth/consolekit/files/consolekit-1.0.0.initd"
-		'consolekit-openrc-install.hook'
-		'consolekit-openrc-upgrade.hook'
-		'consolekit-openrc.script'
+		'https://raw.githubusercontent.com/cromnix/openrc-services/master/svc-openrc-install.hook'
+		'https://raw.githubusercontent.com/cromnix/openrc-services/master/svc-openrc-upgrade.hook'
+		'https://raw.githubusercontent.com/cromnix/openrc-services/master/svc-openrc-remove.hook'
+		'https://raw.githubusercontent.com/cromnix/openrc-services/master/svc-openrc.script'
 		'openrc-shutdown.patch')
 md5sums=('6ae77a545eb72d31c2f91e7439f98dff'
          '63704264bd6fca3e0d9eb9605e06dbfb'
-         'c06088e19102d887b2d9682aec2e6ae7'
-         'f4195f6b453ec33f235389572d03bd31'
-         '2ddb3f871a55655aad5592b76a2d1461'
+         'b40e4171b91d6c488d4f349083460383'
+         '65041d59dc10dfb0de74637675e51ce7'
+         '9e2098cc56d38fc6bcd04ba3aa8edb96'
+         '964664ce8a9d83544e476c76ca9adc36'
          '99c001b89af45fd1ad44c4284ab8e597')
 
 # todo: review this package, I beleive it could use some fine tuning
@@ -66,10 +68,18 @@ package_consolekit-openrc() {
 	arch=('any')
 	depends=('openrc')
 	provides=('consolekit-init')
-	install=consolekit-openrc.install
 	install -v -m755 -d ${pkgdir}/etc/openrc/init.d
 	install -v -m755 ${srcdir}/consolekit-1.0.0.initd ${pkgdir}/etc/openrc/init.d/consolekit
-	install -Dm644 ${srcdir}/consolekit-openrc-install.hook ${pkgdir}/usr/share/libalpm/hooks/consolekit-openrc-install.hook
-	install -Dm644 ${srcdir}/consolekit-openrc-upgrade.hook ${pkgdir}/usr/share/libalpm/hooks/consolekit-openrc-upgrade.hook
-	install -Dm755 ${srcdir}/consolekit-openrc.script ${pkgdir}/usr/share/libalpm/scripts/consolekit-openrc
+
+	install -Dm644 "${srcdir}"/svc-openrc-install.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-install.hook
+	install -Dm644 "${srcdir}"/svc-openrc-upgrade.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-upgrade.hook
+	install -Dm644 "${srcdir}"/svc-openrc-remove.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-remove.hook
+	install -Dm755 "${srcdir}"/svc-openrc.script "${pkgdir}"/usr/share/libalpm/scripts/${pkgbase}-openrc
+	
+	sed -e "s/@svc@/${pkgbase}/" -i "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-{install,upgrade,remove}.hook
+	sed -e "s/@svc_enable@/'${pkgbase}'/" \
+		-e "s/@svc_run@/'${pkgbase}'/" \
+		-e "s/@svc_remove@/'${pkgbase}'/" \
+		-e "s/@svlevel@/default/" \
+		-i "${pkgdir}"/usr/share/libalpm/scripts/${pkgbase}-openrc
 }

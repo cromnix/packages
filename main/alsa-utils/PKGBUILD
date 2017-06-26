@@ -21,7 +21,7 @@ md5sums=('01e3934ca5bd22a80c27289d1b0adcdc'
          'a30ad1df6f85eca2d5615cd3bb72b699'
          'b40e4171b91d6c488d4f349083460383'
          '65041d59dc10dfb0de74637675e51ce7'
-         '1c6a8e236b841ada520bcc255f69a3e0'
+         '9e2098cc56d38fc6bcd04ba3aa8edb96'
          '964664ce8a9d83544e476c76ca9adc36')
 
 # todo: alsa modules conf
@@ -61,9 +61,9 @@ package_alsa-utils-openrc() {
 	install -Dm755 "${srcdir}"/svc-openrc.script "${pkgdir}"/usr/share/libalpm/scripts/${pkgbase}-openrc
 	
 	sed -e "s/@svc@/${pkgbase}/" -i "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-{install,upgrade,remove}.hook
-	sed -e "s/@svc_enable@/'${pkgbase}'/" \
-		-e "s/@svc_run@/'${pkgbase}'/" \
-		-e "s/@svc_remove@/'${pkgbase}'/" \
+	sed -e "s/@svc_enable@/'alsasound'/" \
+		-e "s/@svc_run@/'alsasound'/" \
+		-e "s/@svc_remove@/'alsasound'/" \
 		-e "s/@svlevel@/default/" \
 		-i "${pkgdir}"/usr/share/libalpm/scripts/${pkgbase}-openrc
 }
