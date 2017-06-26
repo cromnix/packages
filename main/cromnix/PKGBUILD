@@ -4,7 +4,7 @@ pkgname=cromnix
 pkgver=17.06
 _codename='ale'
 _codename_pretty='Ale'
-pkgrel=1
+pkgrel=3
 pkgdesc='Cromnix base filesystem'
 arch=('any')
 license=('GPL')
@@ -41,15 +41,15 @@ source=('cromnix.conf'
 		'lsb-release'
 		'os-release'
 		'cromnix-release'
-		'profile'
 		'environment'
 		'inputrc'
 		'issue'
 		'motd'
+		'profile'
 		'dircolors.sh'
 		'umask.sh'
 		'i18n.sh')
-md5sums=('2e56c015e0ff46d6296f13a401f57069'
+md5sums=('91d712d6cc47cd7f5e3eff5740a109df'
          'eac16c640077bdbe06f04b36978aaed1'
          'd647291edd0e34efd899c9f2dbfe7703'
          'ee3a71feb17c91e4787a9bd86c31575e'
@@ -63,11 +63,11 @@ md5sums=('2e56c015e0ff46d6296f13a401f57069'
          'a70c6026dcbb7cabdc35da78abc4c285'
          'c953869136c4d533c11847ab24875bf2'
          '18abd5ced09bd469fb9daa49dfe9b4bd'
-         '5a42cdfd3e6d944d109514a3e9a8cf2e'
          'f5e2d783d5f61af54590139f0de80223'
          'a1514268c756b0029d071e2c33b3feb5'
          '24dee8dc8be6556d90a948ff98929f58'
          'd41d8cd98f00b204e9800998ecf8427e'
+         '5a42cdfd3e6d944d109514a3e9a8cf2e'
          '1b3d12993d06081c7efd58a8fb51e7f9'
          'eb426f16468c8f4da4904a25e3f4925c'
          'bac0d8dedad1bed2ab5d127f21ed5e2f')

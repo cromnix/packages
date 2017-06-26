@@ -1,9 +1,9 @@
 # Maintainer: Chris Cromer <chris@cromer.cl>
 
 pkgbase=dbus
-pkgname=('dbus' 'dbus-cromnix' 'dbus-vanilla' 'dbus-openrc')
+pkgname=('dbus' 'dbus-openrc')
 pkgver=1.10.18
-pkgrel=1
+pkgrel=2
 pkgdesc='D-Bus is a message bus system, a simple way for applications to talk to one another'
 arch=('x86_64')
 url='https://wiki.freedesktop.org/www/Software/dbus/'
@@ -11,16 +11,16 @@ license=('GPL' 'custom')
 makedepends=('xmlto' 'docbook-xsl' 'python' 'libx11' 'dbus')
 source=("http://dbus.freedesktop.org/releases/${pkgbase}/${pkgbase}-${pkgver}.tar.gz"
 		'https://gitweb.gentoo.org/repo/gentoo.git/plain/sys-apps/dbus/files/dbus.initd-r1'
-		'dbus-service.hook'
-		'dbus-service.script'
+		'dbus-openrc-install.hook'
+		'dbus-openrc-upgrade.hook'
+		'dbus-openrc.script'
 		'30-dbus.sh')
 md5sums=('1209c455598165a0c5263d4201894179'
          '779e0690de06451c05371c4fd47c67c2'
-         '8e1f12bfe710dc35d27e98d3a5767eab'
-         '680f4c938de571df938529166ff74a27'
+         '006ea44f529727ff4388c85e508400de'
+         'c6ef57dc224420d96721369bf2d9fabc'
+         '8725016aabfca860ddddb92fede9c12d'
          '9e7e4011d29c6eb8b865e603ddc4603e')
-
-# todo: remove dbus from the default passwd and group files and create them in this package
 
 build() {
 	cd ${srcdir}/${pkgbase}-${pkgver}
@@ -56,14 +56,6 @@ check() {
 }
 
 package_dbus() {
-	# meta package
-	depends=('dbus-bin')
-	arch=('any')
-}
-
-package_dbus-vanilla() {
-	provides=('dbus-bin')
-	conflicts=('dbus-cromnix')
 	depends=('dbus-init' 'expat')
 	optdepends=('libx11: dbus-launch support')
 	install=dbus.install
@@ -73,28 +65,7 @@ package_dbus-vanilla() {
 	chmod -v 4750 ${pkgdir}/usr/lib/dbus-1.0/dbus-daemon-launch-helper
 
 	rm -r ${pkgdir}/var/run
-}
-
-package_dbus-cromnix() {
-	provides=('dbus-bin')
-	conflicts=('dbus-vanilla')
-	depends=('openrc' 'expat' 'libx11')
-	install=dbus-service.install
-	cd ${srcdir}/${pkgbase}-${pkgver}
-	make DESTDIR=${pkgdir} install
-	chown -v root:dbus ${pkgdir}/usr/lib/dbus-1.0/dbus-daemon-launch-helper
-	chmod -v 4750 ${pkgdir}/usr/lib/dbus-1.0/dbus-daemon-launch-helper
-
-	rm -r ${pkgdir}/var/run
-
-	install -v -m755 -d ${pkgdir}/etc/openrc/init.d
-	install -v -m755 ${srcdir}/dbus.initd-r1 ${pkgdir}/etc/openrc/init.d/dbus
-
-	sed -e 's|dbus.pid|dbus/pid|g' -i ${pkgdir}/etc/openrc/init.d/dbus
-
-	install -Dm644 ${srcdir}/dbus-service.hook ${pkgdir}/usr/share/libalpm/hooks/dbus-service.hook
-	install -Dm755 ${srcdir}/dbus-service.script ${pkgdir}/usr/share/libalpm/scripts/dbus-service
-
+	
 	install -v -m755 -d ${pkgdir}/etc/X11/xinit/xinitrc.d
 	install -m755 ${srcdir}/30-dbus.sh ${pkgdir}/etc/X11/xinit/xinitrc.d/30-dbus.sh
 }
@@ -104,9 +75,13 @@ package_dbus-openrc() {
 	arch=('any')
 	depends=('openrc')
 	provides=('dbus-init')
-	conflicts=('dbus-cromnix')
+	install=dbus-openrc.install
 	install -v -m755 -d ${pkgdir}/etc/openrc/init.d
 	install -v -m755 ${srcdir}/dbus.initd-r1 ${pkgdir}/etc/openrc/init.d/dbus
 
 	sed -e 's|dbus.pid|dbus/pid|g' -i ${pkgdir}/etc/openrc/init.d/dbus
+	
+	install -Dm644 ${srcdir}/dbus-openrc-install.hook ${pkgdir}/usr/share/libalpm/hooks/dbus-openrc-install.hook
+	install -Dm644 ${srcdir}/dbus-openrc-upgrade.hook ${pkgdir}/usr/share/libalpm/hooks/dbus-openrc-upgrade.hook
+	install -Dm755 ${srcdir}/dbus-openrc.script ${pkgdir}/usr/share/libalpm/scripts/dbus-openrc
 }

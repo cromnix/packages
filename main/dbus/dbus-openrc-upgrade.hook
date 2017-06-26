@@ -1,0 +1,10 @@
+[Trigger]
+Operation = Upgrade
+Type = Package
+Target = dbus
+
+[Action]
+Description = Upgrading dbus OpenRC service...
+When = PostTransaction
+Exec = /usr/share/libalpm/scripts/dbus-openrc upgrade
+Depends = dbus
