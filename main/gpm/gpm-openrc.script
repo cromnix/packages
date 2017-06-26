@@ -1,0 +1,28 @@
+#!/bin/bash
+
+. etc/cromnix.conf
+
+if [ "${1}" == 'install' ]; then
+	if [ "${SVENABLE}" == 'yes' ]; then
+		rc-update add gpm default
+	fi
+fi
+
+if test -r run/openrc/softlevel; then
+	if [ "${1}" == 'install' ]; then
+		if [ "${SVSTART}" == 'yes' ]; then
+			usr/lib/openrc/bin/service_started gpm
+			if [ "$?" -eq 1 ]; then
+				rc-service gpm start
+			fi
+		fi
+	fi
+	if [ "${1}" == 'upgrade' ]; then
+		if [ "${SVRESTART}" == 'yes' ]; then
+			usr/lib/openrc/bin/service_started gpm
+			if [ "$?" -eq 0 ]; then
+				rc-service gpm restart
+			fi
+		fi
+	fi
+fi

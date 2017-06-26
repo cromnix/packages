@@ -1,0 +1,10 @@
+[Trigger]
+Operation = Install
+Type = Package
+Target = gpm
+
+[Action]
+Description = Installing gpm OpenRC service...
+When = PostTransaction
+Exec = /usr/share/libalpm/scripts/gpm-openrc install
+Depends = gpm
