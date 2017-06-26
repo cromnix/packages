@@ -1,9 +1,9 @@
 # Maintainer: Chris Cromer <chris@cromer.cl>
 
 pkgbase=fcron
-pkgname=('fcron' 'fcron-cromnix' 'fcron-vanilla' 'fcron-openrc')
+pkgname=('fcron' 'fcron-openrc')
 pkgver=3.2.1
-pkgrel=1
+pkgrel=2
 pkgdesc='The Fcron package contains a periodical command scheduler'
 arch=('x86_64')
 url='http://fcron.free.fr'
@@ -12,19 +12,21 @@ makedepends=('fcron' 'nano')
 source=("http://fcron.free.fr/archives/${pkgname}-${pkgver}.src.tar.gz"
 		"https://gitweb.gentoo.org/repo/gentoo.git/plain/sys-process/fcron/files/fcron.init.4"
 		"https://gitweb.gentoo.org/repo/gentoo.git/plain/sys-process/cronbase/files/run-crons-0.3.7"
-		'fcron-service.hook'
-		'fcron-service.script'
+		'fcron-openrc-install.hook'
+		'fcron-openrc-upgrade.hook'
+		'fcron-openrc.script'
 		'fcrontab'
 		'crontab')
 md5sums=('bd4996e941a40327d11efc5e3fd1f839'
          '6f2a4b161349abd2cfee8baf306443c6'
          'c5caba6f41a37c3c5dff46ca5193e323'
-         'd938c8794d576c2ba333e70e56eaac13'
-         'd348e876294b19425960c69ff1cf7041'
+         '7b81020126eef223ef9242d2a7f546ac'
+         'fc5a07b8cbbce655e9d9d7aa82c972e0'
+         '5e0f146524ef74788b63b7c19cc0dda1'
          '731c1325a859235347e1956fd72aa36a'
          'a0e7c32bef48f80023b708d8cc766728')
 
-# rebuild with vi as requirement
+# todo: rebuild with vi as requirement
 
 prepare() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
@@ -46,14 +48,6 @@ build() {
 }
 
 package_fcron() {
-	# meta package
-	depends=('fcron-bin')
-	arch=('any')
-}
-
-package_fcron-vanilla() {
-	provides=('fcron-bin')
-	conflicts=('fcron-cromnix')
 	depends=('fcron-init')
 	install=fcron.install
 	cd "$srcdir/$pkgbase-$pkgver"
@@ -76,45 +70,16 @@ package_fcron-vanilla() {
 	rm -rf ${pkgdir}/var/run
 }
 
-package_fcron-cromnix() {
-	provides=('fcron-bin')
-	conflicts=('fcron-vanilla')
-	depends=('openrc')
-	optdepends=('vi: to edit fcrontab')
-	install=fcron-service.install
-	cd "$srcdir/$pkgbase-$pkgver"
-	make DESTDIR="$pkgdir" install
-	
-	install -v -m755 "${srcdir}"/run-crons-0.3.7 ${pkgdir}/usr/bin/run-crons
-	install -v -m750 -d "${pkgdir}"/var/spool/cron/lastrun
-	
-	install -v -m640 "${srcdir}"/fcrontab ${pkgdir}/etc/fcron/fcrontab
-	chown root:fcron ${pkgdir}/etc/fcron/fcrontab
-	
-	install -v -m644 "${srcdir}"/crontab ${pkgdir}/etc/crontab
-	install -v -m755 -d "${pkgdir}"/etc/cron.d
-	
-	install -v -m755 -d "${pkgdir}"/usr/lib/fcron/
-	install -v -m755 script/check_system_crontabs.sh ${pkgdir}/usr/lib/fcron/check_system_crontabs
-	
-	install -v -m750 -d "${pkgdir}"/etc/cron.{hourly,daily,weekly,monthly}
-	
-	rm -rf ${pkgdir}/var/run
-
-	install -v -m755 -d ${pkgdir}/etc/openrc/init.d
-	install -v -m755 ${srcdir}/fcron.init.4 ${pkgdir}/etc/openrc/init.d/fcron
-
-	install -Dm644 ${srcdir}/fcron-service.hook ${pkgdir}/usr/share/libalpm/hooks/fcron-service.hook
-	install -Dm755 ${srcdir}/fcron-service.script ${pkgdir}/usr/share/libalpm/scripts/fcron-service
-}
-
 package_fcron-openrc() {
 	pkgdesc="OpenRC init scripts for fcron"
 	arch=('any')
 	depends=('openrc')
 	optdepends=('vi: to edit fcrontab')
 	provides=('fcron-init')
-	conflicts=('fcron-cromnix')
+	install=fcron-openrc.install
 	install -v -m755 -d ${pkgdir}/etc/openrc/init.d
 	install -v -m755 ${srcdir}/fcron.init.4 ${pkgdir}/etc/openrc/init.d/fcron
+	install -Dm644 ${srcdir}/fcron-openrc-install.hook ${pkgdir}/usr/share/libalpm/hooks/fcron-openrc-install.hook
+	install -Dm644 ${srcdir}/fcron-openrc-upgrade.hook ${pkgdir}/usr/share/libalpm/hooks/fcron-openrc-upgrade.hook
+	install -Dm755 ${srcdir}/fcron-openrc.script ${pkgdir}/usr/share/libalpm/scripts/fcron-openrc
 }
