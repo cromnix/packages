@@ -49,7 +49,7 @@ source=('cromnix.conf'
 		'dircolors.sh'
 		'umask.sh'
 		'i18n.sh')
-md5sums=('16842255669f1ccb47d3d00e6fa6d512'
+md5sums=('91d712d6cc47cd7f5e3eff5740a109df'
          'eac16c640077bdbe06f04b36978aaed1'
          'd647291edd0e34efd899c9f2dbfe7703'
          'ee3a71feb17c91e4787a9bd86c31575e'
