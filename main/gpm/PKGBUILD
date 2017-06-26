@@ -57,10 +57,10 @@ package_gpm-openrc() {
 	install -v -m755 ${srcdir}/gpm.rc6-2 ${pkgdir}/etc/openrc/init.d/gpm
 	install -v -m644 ${srcdir}/gpm.conf.d ${pkgdir}/etc/openrc/conf.d/gpm
 
-	install -Dm644 ${srcdir}/svc-openrc-install.hook ${pkgdir}/usr/share/libalpm/hooks/${pkgbase}-openrc-install.hook
-	install -Dm644 ${srcdir}/svc-openrc-upgrade.hook ${pkgdir}/usr/share/libalpm/hooks/${pkgbase}-openrc-upgrade.hook
-	install -Dm644 ${srcdir}/svc-openrc-remove.hook ${pkgdir}/usr/share/libalpm/hooks/${pkgbase}-openrc-remove.hook
-	install -Dm755 ${srcdir}/svc-openrc.script ${pkgdir}/usr/share/libalpm/scripts/${pkgbase}-openrc
+	install -Dm644 "${srcdir}"/svc-openrc-install.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-install.hook
+	install -Dm644 "${srcdir}"/svc-openrc-upgrade.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-upgrade.hook
+	install -Dm644 "${srcdir}"/svc-openrc-remove.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-remove.hook
+	install -Dm755 "${srcdir}"/svc-openrc.script "${pkgdir}"/usr/share/libalpm/scripts/${pkgbase}-openrc
 	
 	sed -e "s/@svc@/${pkgbase}/" -i "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-{install,upgrade,remove}.hook
 	sed -e "s/@svc_enable@/'${pkgbase}'/" \
