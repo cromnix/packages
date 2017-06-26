@@ -1,0 +1,57 @@
+#!/bin/bash
+
+. etc/cromnix.conf
+sv='udev'
+sv2='udev-trigger'
+sv3='udev-settle'
+
+if [ "${1}" == 'install' ]; then
+	if [ "${SVENABLE}" == 'yes' ]; then
+		rc-update add ${sv} sysinit
+		rc-update add ${sv2} sysinit
+	fi
+fi
+
+if test -r run/openrc/softlevel; then
+	if [ "${1}" == 'install' ]; then
+		if [ "${SVSTART}" == 'yes' ]; then
+			usr/lib/openrc/bin/service_started ${sv}
+			if [ "$?" -eq 1 ]; then
+				rc-service ${sv} start
+			fi
+			usr/lib/openrc/bin/service_started ${sv2}
+			if [ "$?" -eq 1 ]; then
+				rc-service ${sv2} start
+			fi
+		fi
+	fi
+	if [ "${1}" == 'upgrade' ]; then
+		if [ "${SVRESTART}" == 'yes' ]; then
+			usr/lib/openrc/bin/service_started ${sv}
+			if [ "$?" -eq 0 ]; then
+				rc-service ${sv} restart
+			fi
+			usr/lib/openrc/bin/service_started ${sv2}
+			if [ "$?" -eq 0 ]; then
+				rc-service ${sv2} restart
+			fi
+			usr/lib/openrc/bin/service_started ${sv3}
+			if [ "$?" -eq 0 ]; then
+				rc-service ${sv3} restart
+			fi
+		else
+			usr/lib/openrc/bin/service_started ${sv}
+			if [ "$?" -eq 0 ]; then
+				echo "==> ${sv} needs to be restarted"
+			fi
+			usr/lib/openrc/bin/service_started ${sv2}
+			if [ "$?" -eq 0 ]; then
+				echo "==> ${sv2} needs to be restarted"
+			fi
+			usr/lib/openrc/bin/service_started ${sv3}
+			if [ "$?" -eq 0 ]; then
+				echo "==> ${sv3} needs to be restarted"
+			fi
+		fi
+	fi
+fi

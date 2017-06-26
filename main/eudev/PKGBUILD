@@ -1,10 +1,10 @@
 # Maintainer: Chris Cromer <chris@cromer.cl>
 
 pkgbase=eudev
-pkgname=('eudev' 'eudev-cromnix' 'eudev-vanilla' 'eudev-openrc')
+pkgname=('eudev' 'eudev-openrc')
 pkgver=3.2.2
 _openrc_pkgver=32
-pkgrel=1
+pkgrel=2
 pkgdesc="The Eudev package contains programs for dynamic creation of device nodes."
 arch=('x86_64')
 url="https://wiki.gentoo.org/wiki/Project:Eudev"
@@ -12,22 +12,19 @@ license=('GPL')
 makedepends=('gperf')
 source=("http://dev.gentoo.org/~blueness/eudev/$pkgbase-$pkgver.tar.gz"
 		"https://dev.gentoo.org/~williamh/dist/udev-init-scripts-${_openrc_pkgver}.tar.gz"
-		"udevadm-hwdb.hook"
-		'eudev-service.hook'
-		'eudev-service.script'
-		'gperf-3.1.patch')
+		'udevadm-hwdb.hook'
+		'eudev-openrc-install.hook'
+		'eudev-openrc-upgrade.hook'
+		'eudev-openrc.script')
 md5sums=('41e19b70462692fefd072a3f38818b6e'
          'a8098437126a0ecdc23f83e923de3644'
          'cc11561625e862c4f24f964a1015f530'
-         '4c011c889647ccbc5ddf8f51d5438340'
-         '71626b1cfffb795bda1dcbf8725985ee'
-         '2c45b0171ffa9fd5eafd617e22fe0733')
+         '48913130da42fc05fa2029ef966caccb'
+         '43027a271e5da0dfa9cd944e04f11d54'
+         '18627e4134720794d34ad4323e58d9e0')
 
 prepare() {
 	cd "$srcdir/$pkgbase-$pkgver"
-
-	# fix to compile again gperf 3.1, only needed with eudev 3.2.1
-	#patch -Np1 -i ${srcdir}/gperf-3.1.patch
 
 	sed -r -i 's|/usr(/bin/test)|\1|' test/udev-test.pl
 }
@@ -54,15 +51,7 @@ check() {
 }
 
 package_eudev() {
-	# meta package
 	groups=('cromnix-base')
-	depends=('eudev-bin')
-	arch=('any')
-}
-
-package_eudev-vanilla() {
-	provides=('eudev-bin')
-	conflicts=('eudev-cromnix')
 	depends=('eudev-init' 'kmod' 'util-linux' 'glibc' 'coreutils')
 	cd "$srcdir/$pkgbase-$pkgver"
 
@@ -71,34 +60,18 @@ package_eudev-vanilla() {
 	install -Dm644 ${srcdir}/udevadm-hwdb.hook ${pkgdir}/usr/share/libalpm/hooks/udevadm-hwdb.hook
 }
 
-package_eudev-cromnix() {
-	provides=('eudev-bin')
-	conflicts=('eudev-vanilla')
-	depends=('openrc' 'kmod' 'util-linux' 'glibc' 'coreutils')
-	install=eudev-service.install
-	cd "$srcdir/$pkgbase-$pkgver"
-
-	make DESTDIR="$pkgdir" install
-
-	install -Dm644 ${srcdir}/udevadm-hwdb.hook ${pkgdir}/usr/share/libalpm/hooks/udevadm-hwdb.hook
-
-	install -v -m755 -d ${pkgdir}/etc/openrc/init.d
-	install -v -m755 -d ${pkgdir}/etc/openrc/conf.d
-	install -v -m755 ${srcdir}/udev-init-scripts-${_openrc_pkgver}/init.d/* ${pkgdir}/etc/openrc/init.d
-	install -v -m755 ${srcdir}/udev-init-scripts-${_openrc_pkgver}/conf.d/* ${pkgdir}/etc/openrc/conf.d
-
-	install -Dm644 ${srcdir}/eudev-service.hook ${pkgdir}/usr/share/libalpm/hooks/eudev-service.hook
-	install -Dm755 ${srcdir}/eudev-service.script ${pkgdir}/usr/share/libalpm/scripts/eudev-service
-}
-
 package_eudev-openrc() {
 	pkgdesc="OpenRC init scripts for eudev"
 	arch=('any')
 	depends=('openrc')
 	provides=('eudev-init')
-	conflicts=('eudev-cromnix')
+	install=eudev-openrc.install
 	install -v -m755 -d ${pkgdir}/etc/openrc/init.d
 	install -v -m755 -d ${pkgdir}/etc/openrc/conf.d
 	install -v -m755 ${srcdir}/udev-init-scripts-${_openrc_pkgver}/init.d/* ${pkgdir}/etc/openrc/init.d
 	install -v -m755 ${srcdir}/udev-init-scripts-${_openrc_pkgver}/conf.d/* ${pkgdir}/etc/openrc/conf.d
+	
+	install -Dm644 ${srcdir}/eudev-openrc-install.hook ${pkgdir}/usr/share/libalpm/hooks/eudev-openrc-install.hook
+	install -Dm644 ${srcdir}/eudev-openrc-upgrade.hook ${pkgdir}/usr/share/libalpm/hooks/eudev-openrc-upgrade.hook
+	install -Dm755 ${srcdir}/eudev-openrc.script ${pkgdir}/usr/share/libalpm/scripts/eudev-openrc
 }

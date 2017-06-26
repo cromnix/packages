@@ -1,0 +1,5 @@
+post_remove() {
+	for _service in $(/usr/bin/find /etc/openrc/runlevels/*/ -name 'udev' -or -name 'udev-trigger' -or -name 'udev-settle'); do
+		/usr/bin/rm ${_service}
+	done
+}

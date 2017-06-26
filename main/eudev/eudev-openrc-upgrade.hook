@@ -1,0 +1,10 @@
+[Trigger]
+Operation = Upgrade
+Type = Package
+Target = eudev
+
+[Action]
+Description = Upgrading eudev OpenRC service...
+When = PostTransaction
+Exec = /usr/share/libalpm/scripts/eudev-openrc upgrade
+Depends = eudev
