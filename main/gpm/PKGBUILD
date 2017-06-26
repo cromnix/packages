@@ -3,7 +3,7 @@
 pkgbase=gpm
 pkgname=('gpm' 'gpm-openrc')
 pkgver=1.20.7
-pkgrel=2
+pkgrel=3
 pkgdesc="The GPM (General Purpose Mouse daemon) package contains a mouse server for the console and xterm."
 arch=('x86_64')
 url="http://www.nico.schottelius.org/software/gpm/"
@@ -11,15 +11,17 @@ license=('GPL')
 source=("http://www.nico.schottelius.org/software/gpm/archives/$pkgbase-$pkgver.tar.bz2"
 		"https://gitweb.gentoo.org/repo/gentoo.git/plain/sys-libs/gpm/files/gpm.rc6-2"
 		"https://gitweb.gentoo.org/repo/gentoo.git/plain/sys-libs/gpm/files/gpm.conf.d"
-		'gpm-openrc-install.hook'
-		'gpm-openrc-upgrade.hook'
-		'gpm-openrc.script')
+		'https://raw.githubusercontent.com/cromnix/openrc-services/master/svc-openrc-install.hook'
+		'https://raw.githubusercontent.com/cromnix/openrc-services/master/svc-openrc-upgrade.hook'
+		'https://raw.githubusercontent.com/cromnix/openrc-services/master/svc-openrc-remove.hook'
+		'https://raw.githubusercontent.com/cromnix/openrc-services/master/svc-openrc.script')
 md5sums=('bf84143905a6a903dbd4d4b911a2a2b8'
          '9404f8eb54a47f4129e280a0c199093a'
          '5968cb47e493e348cf289b0dd1990f4a'
-         '503a41f7283b38f7a412004416703301'
-         '91f175956a6d28dd1c90744f13b0da7f'
-         '1bc954a651c048b71d83f3a021be1b3c')
+         'b40e4171b91d6c488d4f349083460383'
+         '65041d59dc10dfb0de74637675e51ce7'
+         '9e2098cc56d38fc6bcd04ba3aa8edb96'
+         '964664ce8a9d83544e476c76ca9adc36')
 
 build() {
 	cd "$srcdir/$pkgbase-$pkgver"
@@ -50,12 +52,20 @@ package_gpm-openrc() {
 	arch=('any')
 	depends=('openrc')
 	provides=('gpm-init')
-	install=gpm-openrc.install
 	install -v -m755 -d ${pkgdir}/etc/openrc/init.d
 	install -v -m755 -d ${pkgdir}/etc/openrc/conf.d
 	install -v -m755 ${srcdir}/gpm.rc6-2 ${pkgdir}/etc/openrc/init.d/gpm
 	install -v -m644 ${srcdir}/gpm.conf.d ${pkgdir}/etc/openrc/conf.d/gpm
-	install -Dm644 ${srcdir}/gpm-openrc-install.hook ${pkgdir}/usr/share/libalpm/hooks/gpm-openrc-install.hook
-	install -Dm644 ${srcdir}/gpm-openrc-upgrade.hook ${pkgdir}/usr/share/libalpm/hooks/gpm-openrc-upgrade.hook
-	install -Dm755 ${srcdir}/gpm-openrc.script ${pkgdir}/usr/share/libalpm/scripts/gpm-openrc
+
+	install -Dm644 "${srcdir}"/svc-openrc-install.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-install.hook
+	install -Dm644 "${srcdir}"/svc-openrc-upgrade.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-upgrade.hook
+	install -Dm644 "${srcdir}"/svc-openrc-remove.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-remove.hook
+	install -Dm755 "${srcdir}"/svc-openrc.script "${pkgdir}"/usr/share/libalpm/scripts/${pkgbase}-openrc
+	
+	sed -e "s/@svc@/${pkgbase}/" -i "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-{install,upgrade,remove}.hook
+	sed -e "s/@svc_enable@/'${pkgbase}'/" \
+		-e "s/@svc_run@/'${pkgbase}'/" \
+		-e "s/@svc_remove@/'${pkgbase}'/" \
+		-e "s/@svlevel@/default/" \
+		-i "${pkgdir}"/usr/share/libalpm/scripts/${pkgbase}-openrc
 }

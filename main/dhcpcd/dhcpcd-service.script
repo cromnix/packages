@@ -1,5 +1,0 @@
-#!/bin/bash
-
-if test -r /run/openrc/softlevel; then
-	/usr/bin/rc-service dhcpcd start
-fi

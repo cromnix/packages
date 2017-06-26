@@ -3,7 +3,7 @@
 pkgbase=dbus
 pkgname=('dbus' 'dbus-openrc')
 pkgver=1.10.18
-pkgrel=2
+pkgrel=3
 pkgdesc='D-Bus is a message bus system, a simple way for applications to talk to one another'
 arch=('x86_64')
 url='https://wiki.freedesktop.org/www/Software/dbus/'
@@ -11,15 +11,17 @@ license=('GPL' 'custom')
 makedepends=('xmlto' 'docbook-xsl' 'python' 'libx11' 'dbus')
 source=("http://dbus.freedesktop.org/releases/${pkgbase}/${pkgbase}-${pkgver}.tar.gz"
 		'https://gitweb.gentoo.org/repo/gentoo.git/plain/sys-apps/dbus/files/dbus.initd-r1'
-		'dbus-openrc-install.hook'
-		'dbus-openrc-upgrade.hook'
-		'dbus-openrc.script'
+		'https://raw.githubusercontent.com/cromnix/openrc-services/master/svc-openrc-install.hook'
+		'https://raw.githubusercontent.com/cromnix/openrc-services/master/svc-openrc-upgrade.hook'
+		'https://raw.githubusercontent.com/cromnix/openrc-services/master/svc-openrc-remove.hook'
+		'https://raw.githubusercontent.com/cromnix/openrc-services/master/svc-openrc.script'
 		'30-dbus.sh')
 md5sums=('1209c455598165a0c5263d4201894179'
          '779e0690de06451c05371c4fd47c67c2'
-         '006ea44f529727ff4388c85e508400de'
-         'c6ef57dc224420d96721369bf2d9fabc'
-         '8725016aabfca860ddddb92fede9c12d'
+         'b40e4171b91d6c488d4f349083460383'
+         '65041d59dc10dfb0de74637675e51ce7'
+         '9e2098cc56d38fc6bcd04ba3aa8edb96'
+         '964664ce8a9d83544e476c76ca9adc36'
          '9e7e4011d29c6eb8b865e603ddc4603e')
 
 build() {
@@ -75,13 +77,20 @@ package_dbus-openrc() {
 	arch=('any')
 	depends=('openrc')
 	provides=('dbus-init')
-	install=dbus-openrc.install
 	install -v -m755 -d ${pkgdir}/etc/openrc/init.d
 	install -v -m755 ${srcdir}/dbus.initd-r1 ${pkgdir}/etc/openrc/init.d/dbus
 
 	sed -e 's|dbus.pid|dbus/pid|g' -i ${pkgdir}/etc/openrc/init.d/dbus
 	
-	install -Dm644 ${srcdir}/dbus-openrc-install.hook ${pkgdir}/usr/share/libalpm/hooks/dbus-openrc-install.hook
-	install -Dm644 ${srcdir}/dbus-openrc-upgrade.hook ${pkgdir}/usr/share/libalpm/hooks/dbus-openrc-upgrade.hook
-	install -Dm755 ${srcdir}/dbus-openrc.script ${pkgdir}/usr/share/libalpm/scripts/dbus-openrc
+	install -Dm644 "${srcdir}"/svc-openrc-install.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-install.hook
+	install -Dm644 "${srcdir}"/svc-openrc-upgrade.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-upgrade.hook
+	install -Dm644 "${srcdir}"/svc-openrc-remove.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-remove.hook
+	install -Dm755 "${srcdir}"/svc-openrc.script "${pkgdir}"/usr/share/libalpm/scripts/${pkgbase}-openrc
+	
+	sed -e "s/@svc@/${pkgbase}/" -i "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-{install,upgrade,remove}.hook
+	sed -e "s/@svc_enable@/'${pkgbase}'/" \
+		-e "s/@svc_run@/'${pkgbase}'/" \
+		-e "s/@svc_remove@/'${pkgbase}'/" \
+		-e "s/@svlevel@/default/" \
+		-i "${pkgdir}"/usr/share/libalpm/scripts/${pkgbase}-openrc
 }

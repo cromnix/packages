@@ -1,9 +1,9 @@
 # Maintainer: Chris Cromer <chris@cromer.cl>
 
 pkgbase=wpa_supplicant
-pkgname=('wpa_supplicant' 'wpa_supplicant-cromnix' 'wpa_supplicant-vanilla' 'wpa_supplicant-openrc')
+pkgname=('wpa_supplicant' 'wpa_supplicant-openrc')
 pkgver=2.6
-pkgrel=1
+pkgrel=2
 pkgdesc="WPA Supplicant is a Wi-Fi Protected Access (WPA) client and IEEE 802.1X supplicant."
 arch=('x86_64')
 url="https://w1.fi/wpa_supplicant/"
@@ -12,19 +12,23 @@ makedepends=('libnl')
 source=("https://w1.fi/releases/$pkgbase-$pkgver.tar.gz"
 		"https://gitweb.gentoo.org/repo/gentoo.git/plain/net-wireless/wpa_supplicant/files/wpa_supplicant-init.d"
 		"https://gitweb.gentoo.org/repo/gentoo.git/plain/net-wireless/wpa_supplicant/files/wpa_supplicant-conf.d"
+		'https://raw.githubusercontent.com/cromnix/openrc-services/master/svc-openrc-install.hook'
+		'https://raw.githubusercontent.com/cromnix/openrc-services/master/svc-openrc-upgrade.hook'
+		'https://raw.githubusercontent.com/cromnix/openrc-services/master/svc-openrc-remove.hook'
+		'https://raw.githubusercontent.com/cromnix/openrc-services/master/svc-openrc.script'
 		'wpa_cli.sh'
 		'wpa_supplicant.conf'
-		'config'
-		'wpa_supplicant-service.hook'
-		'wpa_supplicant-service.script')
+		'config')
 md5sums=('091569eb4440b7d7f2b4276dbfc03c3c'
          '81e607b82ff5965f9ea6c004ea7287c2'
          'bc117427f2c538439f3f1481a028ee06'
+         'b40e4171b91d6c488d4f349083460383'
+         '65041d59dc10dfb0de74637675e51ce7'
+         '9e2098cc56d38fc6bcd04ba3aa8edb96'
+         '964664ce8a9d83544e476c76ca9adc36'
          '3ee21a12dcca2736f23d6dbd5a89da35'
          '14d93e3d160e801386c34ee2e54a39ff'
-         '446fd44cf39ee04501e59d34970ea3f5'
-         '4bd4890d6358b66b0cce0948a322f4d4'
-         'bd62914813f55b3e9aff692f1980645b')
+         '446fd44cf39ee04501e59d34970ea3f5')
 
 prepare() {
 	cp -v ${srcdir}/config "$srcdir/$pkgbase-$pkgver/wpa_supplicant/.config"
@@ -36,14 +40,6 @@ build() {
 }
 
 package_wpa_supplicant() {
-	# meta package
-	depends=('wpa_supplicant-bin')
-	arch=('any')
-}
-
-package_wpa_supplicant-vanilla() {
-	provides=('wpa_supplicant-bin')
-	conflicts=('wpa_supplicant-cromnix')
 	depends=('wpa_supplicant-init' 'openssl' 'libnl')
 	backup=('etc/wpa_supplicant/wpa_supplicant.conf')
 	cd "$srcdir/$pkgbase-$pkgver/wpa_supplicant"
@@ -62,44 +58,25 @@ package_wpa_supplicant-vanilla() {
 	install -v -m755 ${srcdir}/wpa_cli.sh ${pkgdir}/etc/wpa_supplicant/wpa_cli.sh
 }
 
-package_wpa_supplicant-cromnix() {
-	provides=('wpa_supplicant-bin')
-	conflicts=('wpa_supplicant-vanilla')
-	depends=('openrc' 'openssl' 'libnl')
-	backup=('etc/wpa_supplicant/wpa_supplicant.conf')
-	install=wpa_supplicant-service.install
-	cd "$srcdir/$pkgbase-$pkgver/wpa_supplicant"
-
-	install -v -m755 -d ${pkgdir}/usr/bin
-	install -v -m755 -d ${pkgdir}/usr/share/man/man5
-	install -v -m755 -d ${pkgdir}/usr/share/man/man8
-	install -v -m755 wpa_{cli,passphrase,supplicant} ${pkgdir}/usr/bin/
-	install -v -m644 doc/docbook/wpa_supplicant.conf.5 ${pkgdir}/usr/share/man/man5/
-	install -v -m644 doc/docbook/wpa_{cli,passphrase,supplicant}.8 ${pkgdir}/usr/share/man/man8/
-
-	install -v -m755 -d ${pkgdir}/etc/wpa_supplicant
-	install -v -m644 ${srcdir}/wpa_supplicant.conf ${pkgdir}/etc/wpa_supplicant/wpa_supplicant.conf
-	install -v -m644 wpa_supplicant.conf ${pkgdir}/etc/wpa_supplicant/wpa_supplicant.conf.example
-
-	install -v -m755 ${srcdir}/wpa_cli.sh ${pkgdir}/etc/wpa_supplicant/wpa_cli.sh
-
-	install -v -m755 -d ${pkgdir}/etc/openrc/init.d
-	install -v -m755 ${srcdir}/wpa_supplicant-init.d ${pkgdir}/etc/openrc/init.d/wpa_supplicant
-	install -v -m755 -d ${pkgdir}/etc/openrc/conf.d
-	install -v -m755 ${srcdir}/wpa_supplicant-conf.d ${pkgdir}/etc/openrc/conf.d/wpa_supplicant
-
-	install -Dm644 ${srcdir}/wpa_supplicant-service.hook ${pkgdir}/usr/share/libalpm/hooks/wpa_supplicant-service.hook
-	install -Dm755 ${srcdir}/wpa_supplicant-service.script ${pkgdir}/usr/share/libalpm/scripts/wpa_supplicant-service
-}
-
 package_wpa_supplicant-openrc() {
 	pkgdesc="OpenRC init scripts for wpa_supplicant"
 	arch=('any')
 	depends=('openrc')
 	provides=('wpa_supplicant-init')
-	conflicts=('wpa_supplicant-cromnix')
 	install -v -m755 -d ${pkgdir}/etc/openrc/init.d
 	install -v -m755 ${srcdir}/wpa_supplicant-init.d ${pkgdir}/etc/openrc/init.d/wpa_supplicant
 	install -v -m755 -d ${pkgdir}/etc/openrc/conf.d
 	install -v -m755 ${srcdir}/wpa_supplicant-conf.d ${pkgdir}/etc/openrc/conf.d/wpa_supplicant
+	
+	install -Dm644 "${srcdir}"/svc-openrc-install.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-install.hook
+	install -Dm644 "${srcdir}"/svc-openrc-upgrade.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-upgrade.hook
+	install -Dm644 "${srcdir}"/svc-openrc-remove.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-remove.hook
+	install -Dm755 "${srcdir}"/svc-openrc.script "${pkgdir}"/usr/share/libalpm/scripts/${pkgbase}-openrc
+	
+	sed -e "s/@svc@/${pkgbase}/" -i "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-{install,upgrade,remove}.hook
+	sed -e "s/@svc_enable@/'${pkgbase}'/" \
+		-e "s/@svc_run@/'${pkgbase}'/" \
+		-e "s/@svc_remove@/'${pkgbase}'/" \
+		-e "s/@svlevel@/default/" \
+		-i "${pkgdir}"/usr/share/libalpm/scripts/${pkgbase}-openrc
 }
