@@ -49,6 +49,7 @@ package_alsa-utils-openrc() {
 	arch=('any')
 	depends=('openrc')
 	provides=('alsa-utils-init')
+	install=alsa-utils-openrc.install
 	install -v -m755 -d ${pkgdir}/etc/openrc/{init.d,conf.d}
 	install -v -m755 ${srcdir}/alsasound.initd-r6 ${pkgdir}/etc/openrc/init.d/alsasound
 	install -v -m755 ${srcdir}/alsasound.confd-r4 ${pkgdir}/etc/openrc/conf.d/alsasound
