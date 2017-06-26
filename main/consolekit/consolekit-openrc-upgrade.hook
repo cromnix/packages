@@ -1,0 +1,10 @@
+[Trigger]
+Operation = Upgrade
+Type = Package
+Target = consolekit
+
+[Action]
+Description = Upgrading consolekit OpenRC service...
+When = PostTransaction
+Exec = /usr/share/libalpm/scripts/consolekit-openrc upgrade
+Depends = consolekit

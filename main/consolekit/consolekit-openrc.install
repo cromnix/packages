@@ -1,0 +1,5 @@
+post_remove() {
+	for _service in $(find /etc/openrc/runlevels/*/ -name 'consolekit'); do
+		rm ${_service}
+	done
+}
