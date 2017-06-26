@@ -3,7 +3,7 @@
 pkgbase=alsa-utils
 pkgname=('alsa-utils' 'alsa-utils-openrc')
 pkgver=1.1.4
-pkgrel=2
+pkgrel=3
 pkgdesc='The ALSA Utilities package contains various utilities which are useful for controlling your sound card'
 arch=('x86_64')
 url='http://www.alsa-project.org'
@@ -12,15 +12,17 @@ makedepends=('alsa-lib-dev' 'libalsa')
 source=("ftp://ftp.alsa-project.org/pub/utils/${pkgbase}-${pkgver}.tar.bz2"
 		"https://gitweb.gentoo.org/repo/gentoo.git/plain/media-sound/${pkgbase}/files/alsasound.initd-r6"
 		"https://gitweb.gentoo.org/repo/gentoo.git/plain/media-sound/${pkgbase}/files/alsasound.confd-r4"
-		'alsa-utils-openrc-install.hook'
-		'alsa-utils-openrc-upgrade.hook'
-		'alsa-utils-openrc.script')
+		'https://raw.githubusercontent.com/cromnix/openrc-services/master/svc-openrc-install.hook'
+		'https://raw.githubusercontent.com/cromnix/openrc-services/master/svc-openrc-upgrade.hook'
+		'https://raw.githubusercontent.com/cromnix/openrc-services/master/svc-openrc-remove.hook'
+		'https://raw.githubusercontent.com/cromnix/openrc-services/master/svc-openrc.script')
 md5sums=('01e3934ca5bd22a80c27289d1b0adcdc'
          '8e3b6845ad66d74796889ca3edc3187c'
          'a30ad1df6f85eca2d5615cd3bb72b699'
-         '6398af9892b829b1bde76173504bd60a'
-         '6c09b3fd827c46edb351cc8b785c9a31'
-         '2e79bf9f3634af604843a47b8a06db25')
+         'b40e4171b91d6c488d4f349083460383'
+         '65041d59dc10dfb0de74637675e51ce7'
+         '1c6a8e236b841ada520bcc255f69a3e0'
+         '964664ce8a9d83544e476c76ca9adc36')
 
 # todo: alsa modules conf
 
@@ -49,11 +51,19 @@ package_alsa-utils-openrc() {
 	arch=('any')
 	depends=('openrc')
 	provides=('alsa-utils-init')
-	install=alsa-utils-openrc.install
 	install -v -m755 -d ${pkgdir}/etc/openrc/{init.d,conf.d}
 	install -v -m755 ${srcdir}/alsasound.initd-r6 ${pkgdir}/etc/openrc/init.d/alsasound
 	install -v -m755 ${srcdir}/alsasound.confd-r4 ${pkgdir}/etc/openrc/conf.d/alsasound
-	install -Dm644 ${srcdir}/alsa-utils-openrc-install.hook ${pkgdir}/usr/share/libalpm/hooks/alsa-utils-openrc-install.hook
-	install -Dm644 ${srcdir}/alsa-utils-openrc-upgrade.hook ${pkgdir}/usr/share/libalpm/hooks/alsa-utils-openrc-upgrade.hook
-	install -Dm755 ${srcdir}/alsa-utils-openrc.script ${pkgdir}/usr/share/libalpm/scripts/alsa-utils-openrc
+
+	install -Dm644 "${srcdir}"/svc-openrc-install.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-install.hook
+	install -Dm644 "${srcdir}"/svc-openrc-upgrade.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-upgrade.hook
+	install -Dm644 "${srcdir}"/svc-openrc-remove.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-remove.hook
+	install -Dm755 "${srcdir}"/svc-openrc.script "${pkgdir}"/usr/share/libalpm/scripts/${pkgbase}-openrc
+	
+	sed -e "s/@svc@/${pkgbase}/" -i "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-{install,upgrade,remove}.hook
+	sed -e "s/@svc_enable@/'${pkgbase}'/" \
+		-e "s/@svc_run@/'${pkgbase}'/" \
+		-e "s/@svc_remove@/'${pkgbase}'/" \
+		-e "s/@svlevel@/default/" \
+		-i "${pkgdir}"/usr/share/libalpm/scripts/${pkgbase}-openrc
 }
