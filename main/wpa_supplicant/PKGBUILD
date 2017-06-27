@@ -3,12 +3,12 @@
 pkgbase=wpa_supplicant
 pkgname=('wpa_supplicant' 'wpa_supplicant-openrc')
 pkgver=2.6
-pkgrel=2
+pkgrel=3
 pkgdesc="WPA Supplicant is a Wi-Fi Protected Access (WPA) client and IEEE 802.1X supplicant."
 arch=('x86_64')
 url="https://w1.fi/wpa_supplicant/"
 license=('GPL')
-makedepends=('libnl')
+makedepends=('libnl' 'dbus')
 source=("https://w1.fi/releases/$pkgbase-$pkgver.tar.gz"
 		"https://gitweb.gentoo.org/repo/gentoo.git/plain/net-wireless/wpa_supplicant/files/wpa_supplicant-init.d"
 		"https://gitweb.gentoo.org/repo/gentoo.git/plain/net-wireless/wpa_supplicant/files/wpa_supplicant-conf.d"
@@ -27,8 +27,8 @@ md5sums=('091569eb4440b7d7f2b4276dbfc03c3c'
          '9e2098cc56d38fc6bcd04ba3aa8edb96'
          '964664ce8a9d83544e476c76ca9adc36'
          '3ee21a12dcca2736f23d6dbd5a89da35'
-         '14d93e3d160e801386c34ee2e54a39ff'
-         '446fd44cf39ee04501e59d34970ea3f5')
+         '6198b16d60af3a0ff96f88688eea3144'
+         '3124d9a6958b0c83c83bd03a72aee89b')
 
 prepare() {
 	cp -v ${srcdir}/config "$srcdir/$pkgbase-$pkgver/wpa_supplicant/.config"
