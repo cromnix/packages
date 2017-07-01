@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <chris@cromer.cl>
 
 pkgname=libnl
-pkgver=3.2.29
+pkgver=3.3.0
 _pkgver=${pkgver//./_}
 pkgrel=1
 pkgdesc="The libnl suite is a collection of libraries providing APIs to netlink protocol based Linux kernel interfaces."
@@ -12,8 +12,8 @@ checkdepends=('check')
 source=("https://github.com/thom311/libnl/releases/download/libnl${_pkgver}/$pkgname-$pkgver.tar.gz"
         "https://github.com/thom311/libnl/releases/download/libnl${_pkgver}/libnl-doc-$pkgver.tar.gz")
         noextract=('libnl-doc-$pkgver.tar.gz')
-md5sums=('a8ba62a5c4f883f4e493a46d1f3733fe'
-         '92e97d8f5e810dbae937a42dd13c9731')
+md5sums=('ab3ef137cad95bdda5ff0ffa5175dfa5'
+         'caea892c8c09e759d9e05698d9cc692c')
 
 prepare() {
     cd "$srcdir/$pkgname-$pkgver"

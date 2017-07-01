@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <chris@cromer.cl>
 
 pkgname=xterm
-pkgver=329
+pkgver=330
 pkgrel=1
 pkgdesc='X Terminal Emulator'
 arch=('x86_64')
@@ -10,7 +10,7 @@ license=('custom')
 depends=('libxft' 'libxaw' 'ncurses' 'luit' 'xbitmaps' 'libxkbfile')
 source=("ftp://invisible-island.net/${pkgname}/${pkgname}-${pkgver}.tgz"
 		'XTerm')
-md5sums=('af560754441332d8114301f4bb43f523'
+md5sums=('9a6db7974aa4ccbb50eabebf72618467'
          '1fd0d9760491c5102a15d8077360655f')
 
 prepare() {

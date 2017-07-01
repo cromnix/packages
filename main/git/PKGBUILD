@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <chris@cromer.cl>
 
 pkgname=git
-pkgver=2.13.1
+pkgver=2.13.2
 pkgrel=1
 pkgdesc="Git is a free and open source, distributed version control system designed to handle everything from small to very large projects with speed and efficiency."
 arch=('x86_64')
@@ -14,9 +14,9 @@ source=("https://github.com/git/git/archive/v$pkgver.tar.gz"
         "https://www.kernel.org/pub/software/scm/git/git-htmldocs-$pkgver.tar.xz")
 noextract=("git-manpages-$pkgver.tar.xz"
            "git-htmldocs-$pkgver.tar.xz")
-md5sums=('c0e3fe359f715cb7dfc3ac63fa6e733a'
-         '20ced60758fbc2548538bc5e9981f32c'
-         'ded893d057955ef6f181b0daa90b53d4')
+md5sums=('d5af4f91fdfedadd73abf11803ea87c1'
+         '6542a5f24aaf01bc2c65ebc6c20e2d1e'
+         '991c776993919888da49b4bc0aa3995d')
 
 # todo: rebuild with manpages
 

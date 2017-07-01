@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <chris@cromer.cl>
 
 pkgname=libgcrypt
-pkgver=1.7.6
+pkgver=1.7.8
 pkgrel=1
 pkgdesc="The libgcrypt package contains a general purpose crypto library based on the code used in GnuPG. The library provides a high level interface to cryptographic building blocks using an extendable and flexible API."
 arch=('x86_64')
@@ -10,7 +10,7 @@ license=('GPL2')
 depends=('libgpg-error')
 options=('!emptydirs')
 source=("ftp://ftp.gnupg.org/gcrypt/libgcrypt/$pkgname-$pkgver.tar.bz2")
-md5sums=('54e180679a7ae4d090f8689ca32b654c')
+md5sums=('34fd2e6d230cbe56799cdf7df05f56c5')
 
 # todo: documentation
 
