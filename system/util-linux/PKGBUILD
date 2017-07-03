@@ -2,8 +2,8 @@
 
 pkgbase=util-linux
 pkgname=('util-linux' 'libutil-linux')
-pkgver=2.29.2
-_basepkgver=2.29
+pkgver=2.30
+_basepkgver=2.30
 pkgrel=1
 pkgdesc="The Util-linux package contains miscellaneous utility programs. Among them are utilities for handling file systems, consoles, partitions, and messages."
 arch=('x86_64')
@@ -11,7 +11,7 @@ url="https://www.kernel.org/pub/linux/utils/util-linux/"
 license=('GPL2')
 options=('strip')
 source=("https://www.kernel.org/pub/linux/utils/util-linux/v$_basepkgver/$pkgname-$pkgver.tar.xz")
-md5sums=('63c40c2068fcbb7e1d5c1d281115d973')
+md5sums=('eaa3429150268027908a1b8ae6ee9a62')
 
 build() {
     cd "$srcdir/$pkgname-$pkgver"
