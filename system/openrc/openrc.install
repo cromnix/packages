@@ -1,0 +1,22 @@
+post_install() {
+    # agetty support
+    for i in `seq 1 6`; do
+		ln -s agetty etc/openrc/init.d/agetty.tty${i}
+		cp /etc/openrc/conf.d/agetty etc/openrc/conf.d/agetty.tty${i}
+		ln -s /etc/openrc/init.d/agetty.tty${i} etc/openrc/runlevels/default/agetty.tty${i}
+
+		sed -e 's/#baud=""/baud="38400"/' -i etc/openrc/conf.d/agetty.tty${i}
+		sed -e 's/#termtype="linux"/termtype="linux"/' -i etc/openrc/conf.d/agetty.tty${i}
+		if [ ${i} -eq 1 ]; then
+			sed -e 's/#agetty_options=""/agetty_options="--noclear"/' -i etc/openrc/conf.d/agetty.tty${i}
+		fi
+	done
+}
+
+pre_remove() {
+	for i in `seq 1 6`; do
+		[[ -L etc/openrc/init.d/agetty.tty${i} ]] && rm etc/openrc/init.d/agetty.tty${i}
+		[[ -f etc/openrc/conf.d/agetty.tty${i} ]] && rm etc/openrc/conf.d/agetty.tty${i}
+		[[ -L etc/openrc/runlevels/default/agetty.tty${i} ]] && rm etc/openrc/runlevels/default/agetty.tty${i}
+	done
+}

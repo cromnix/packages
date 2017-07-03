@@ -2,7 +2,7 @@
 
 pkgname=openrc
 pkgver=0.27.2
-pkgrel=2
+pkgrel=3
 pkgdesc="An init and service control software"
 arch=('x86_64')
 url="http://www.gentoo.org/proj/en/base/openrc/"
@@ -30,6 +30,7 @@ backup=('etc/openrc/rc.conf'
         'etc/openrc/conf.d/urandom')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/OpenRC/openrc/archive/$pkgver.tar.gz"
 		'openrc.logrotate')
+install=openrc.install
 options=('debug' 'strip')
 md5sums=('04eb2628a41d9cb89dca80cd5e9e4ebd'
          '0d8a00d30812ec460ef8c32a96372c31')
@@ -74,19 +75,6 @@ package() {
 	
 	# fix broken symlink
 	ln -svf /usr/lib/openrc/bin/rc-sstat "${pkgdir}"/usr/bin/rc-sstat
-
-    # agetty support
-    for i in `seq 1 6`; do
-		ln -sv agetty ${pkgdir}/etc/openrc/init.d/agetty.tty${i}
-		cp ${pkgdir}/etc/openrc/conf.d/agetty ${pkgdir}/etc/openrc/conf.d/agetty.tty${i}
-		ln -sv /etc/openrc/init.d/agetty.tty${i} ${pkgdir}/etc/openrc/runlevels/default/agetty.tty${i}
-
-		sed -e 's/#baud=""/baud="38400"/' -i ${pkgdir}/etc/openrc/conf.d/agetty.tty${i}
-		sed -e 's/#termtype="linux"/termtype="linux"/' -i ${pkgdir}/etc/openrc/conf.d/agetty.tty${i}
-		if [ ${i} -eq 1 ]; then
-			sed -e 's/#agetty_options=""/agetty_options="--noclear"/' -i ${pkgdir}/etc/openrc/conf.d/agetty.tty${i}
-		fi
-	done
 
     rm "${pkgdir}"/{bin,sbin,lib}
 }
