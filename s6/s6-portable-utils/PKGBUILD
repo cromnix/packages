@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <chris@cromer.cl>
 
 pkgname=s6-portable-utils
-pkgver=2.1.0.0
+pkgver=2.2.1.0
 pkgrel=1
 pkgdesc="s6-portable-utils is a set of tiny general Unix utilities, often performing well-known tasks such as cut and grep, but optimized for simplicity and small size."
 arch=('x86_64')
@@ -9,7 +9,7 @@ url="http://skarnet.org/software/s6-portable-utils/"
 license=('ISC')
 depends=('skalibs')
 source=("http://skarnet.org/software/s6-portable-utils/$pkgname-$pkgver.tar.gz")
-md5sums=('b0289aa1c46ede3b036a9cfccf00fbd7')
+md5sums=('e10003258a32fad23e31f89484d8e862')
 
 build() {
     cd "$srcdir/$pkgname-$pkgver"
