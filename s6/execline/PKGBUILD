@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <chris@cromer.cl>
 
 pkgname=execline
-pkgver=2.2.0.0
+pkgver=2.3.0.1
 pkgrel=1
 pkgdesc="execline is a (non-interactive) scripting language, like sh ; but its syntax is quite different from a traditional shell syntax."
 arch=('x86_64')
@@ -9,7 +9,7 @@ url="http://skarnet.org/software/execline/"
 license=('ISC')
 depends=('skalibs')
 source=("http://skarnet.org/software/execline/$pkgname-$pkgver.tar.gz")
-md5sums=('8dc0f40cdbbabd7915e9e7b95544d13e')
+md5sums=('3c36b3782c8bc0fa0ac4d076a3bbf52f')
 
 build() {
     cd "$srcdir/$pkgname-$pkgver"
