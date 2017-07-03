@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <chris@cromer.cl>
 
 pkgname=s6-rc
-pkgver=0.1.0.0
+pkgver=0.2.0.1
 pkgrel=1
 pkgdesc="s6-rc is a service manager for s6-based systems."
 arch=('x86_64')
@@ -11,7 +11,7 @@ depends=('skalibs' 'execline' 's6')
 makedepends=('s6-rc')
 source=("http://skarnet.org/software/s6-rc/$pkgname-$pkgver.tar.gz"
 		"source.tar.gz")
-md5sums=('4d17dea017a07d0d1b5fc0d0ba5ade41'
+md5sums=('9ac7f0ed4e5ba7c32616e7e743ba9b45'
          '05dc6200d05bd9d1523c91a33b7c40c0')
 
 build() {
