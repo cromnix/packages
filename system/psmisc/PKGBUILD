@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <chris@cromer.cl>
 
 pkgname=psmisc
-pkgver=22.21
+pkgver=23.1
 pkgrel=1
 pkgdesc="The Psmisc package contains programs for displaying information about running processes."
 arch=('x86_64')
@@ -9,8 +9,8 @@ url="http://psmisc.sourceforge.net/index.html"
 license=('GPL')
 groups=('cromnix-base')
 depends=('ncurses')
-source=("http://downloads.sourceforge.net/project/psmisc/psmisc/$pkgname-$pkgver.tar.gz")
-md5sums=('935c0fd6eb208288262b385fa656f1bf')
+source=("http://downloads.sourceforge.net/project/psmisc/psmisc/$pkgname-$pkgver.tar.xz")
+md5sums=('bbba1f701c02fb50d59540d1ff90d8d1')
 
 build() {
     cd "$srcdir/$pkgname-$pkgver"
