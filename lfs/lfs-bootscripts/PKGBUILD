@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <chris@cromer.cl>
 
 pkgname=lfs-bootscripts
-pkgver=20170325
+pkgver=20170626
 pkgrel=1
 pkgdesc='The LFS-Bootscripts package contains a set of scripts to start/stop the LFS system at bootup/shutdown.'
 arch=('any')
@@ -23,7 +23,7 @@ source=("http://www.linuxfromscratch.org/lfs/downloads/development/${pkgname}-${
 		'network'
 		'rc.site'
 		'boot.logrotate')
-md5sums=('dbdb435b391e2300fad36bde67c2e9bd'
+md5sums=('9cc13b6a9b655efb39a4e9fb7fe227cf'
          'bc70d748bf51679f0d0d94037e14cfa6'
          '680723f0829e4b76845859f984dc878a'
          'ab1eb4f041944eba15d5643e224369a3'
