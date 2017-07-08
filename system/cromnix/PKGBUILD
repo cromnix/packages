@@ -1,10 +1,10 @@
 # Maintainer: Chris Cromer <chris@cromer.cl>
 
 pkgname=cromnix
-pkgver=17.06
+pkgver=17.07
 _codename='ale'
 _codename_pretty='Ale'
-pkgrel=4
+pkgrel=1
 pkgdesc='Cromnix base filesystem'
 arch=('any')
 license=('GPL')
@@ -49,7 +49,7 @@ source=('cromnix.conf'
 		'dircolors.sh'
 		'umask.sh'
 		'i18n.sh')
-md5sums=('0f4219551b98ba0b5abea535ae499261'
+md5sums=('99bf243b970a3fcd84a63d6d2ffc6bd0'
          'eac16c640077bdbe06f04b36978aaed1'
          'd647291edd0e34efd899c9f2dbfe7703'
          'ee3a71feb17c91e4787a9bd86c31575e'

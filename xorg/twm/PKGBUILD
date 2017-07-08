@@ -1,9 +1,9 @@
 # Maintainer: Chris Cromer <chris@cromer.cl>
 
 pkgbase=twm
-pkgname=('twm' 'twm-cromnix' 'twm-vanilla' 'twm-session')
+pkgname=('twm' 'twm-session')
 pkgver=1.0.9
-pkgrel=1
+pkgrel=2
 pkgdesc='The twm package contains a very minimal window manager'
 arch=('x86_64')
 url='https://xorg.freedesktop.org/'
@@ -38,36 +38,9 @@ build() {
 }
 
 package_twm() {
-	# meta package
 	groups=('wm')
-	depends=('twm-bin')
-	arch=('any')
-}
-
-package_twm-session() {
-	arch=('any')
-	optdepends=('twm: to use twm')
-	mkdir -p "${pkgdir}"/usr/share/xsessions
-	cp "${srcdir}"/twm.desktop "${pkgdir}"/usr/share/xsessions/twm.desktop
-}
-
-package_twm-vanilla() {
 	backup=('usr/share/X11/twm/system.twmrc')
 	depends=('libxmu')
-	provides=('twm-bin')
-	conflicts=('twm-cromnix')
-	cd ${srcdir}/${pkgbase}-${pkgver}
-	make DESTDIR=${pkgdir} install
-	#mkdir -pv ${pkgdir}/etc/X11/app-defaults
-	#ln -sv /usr/share/X11/twm/system.twmrc ${pkgdir}/etc/X11/app-defaults/system.twmrc
-}
-
-
-package_twm-cromnix() {
-	backup=('usr/share/X11/twm/system.twmrc')
-	depends=('libxmu')
-	provides=('twm-bin')
-	conflicts=('twm-vanilla')
 	cd ${srcdir}/${pkgbase}-${pkgver}
 	make DESTDIR=${pkgdir} install
 
@@ -78,4 +51,11 @@ package_twm-cromnix() {
 
 	mkdir -pv ${pkgdir}/usr/share/X11/twm/icons
 	cp -v ${srcdir}/*.xbm ${pkgdir}/usr/share/X11/twm/icons
+}
+
+package_twm-session() {
+	arch=('any')
+	optdepends=('twm: to use twm')
+	mkdir -p "${pkgdir}"/usr/share/xsessions
+	cp "${srcdir}"/twm.desktop "${pkgdir}"/usr/share/xsessions/twm.desktop
 }

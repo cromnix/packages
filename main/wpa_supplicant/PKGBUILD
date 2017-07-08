@@ -3,29 +3,21 @@
 pkgbase=wpa_supplicant
 pkgname=('wpa_supplicant' 'wpa_supplicant-openrc')
 pkgver=2.6
-pkgrel=3
+pkgrel=4
 pkgdesc="WPA Supplicant is a Wi-Fi Protected Access (WPA) client and IEEE 802.1X supplicant."
 arch=('x86_64')
 url="https://w1.fi/wpa_supplicant/"
 license=('GPL')
-makedepends=('libnl' 'dbus')
+makedepends=('libnl' 'dbus' 'openrc-services')
 source=("https://w1.fi/releases/$pkgbase-$pkgver.tar.gz"
 		"https://gitweb.gentoo.org/repo/gentoo.git/plain/net-wireless/wpa_supplicant/files/wpa_supplicant-init.d"
 		"https://gitweb.gentoo.org/repo/gentoo.git/plain/net-wireless/wpa_supplicant/files/wpa_supplicant-conf.d"
-		'https://raw.githubusercontent.com/cromnix/openrc-services/master/svc-openrc-install.hook'
-		'https://raw.githubusercontent.com/cromnix/openrc-services/master/svc-openrc-upgrade.hook'
-		'https://raw.githubusercontent.com/cromnix/openrc-services/master/svc-openrc-remove.hook'
-		'https://raw.githubusercontent.com/cromnix/openrc-services/master/svc-openrc.script'
 		'wpa_cli.sh'
 		'wpa_supplicant.conf'
 		'config')
 md5sums=('091569eb4440b7d7f2b4276dbfc03c3c'
          '81e607b82ff5965f9ea6c004ea7287c2'
          'bc117427f2c538439f3f1481a028ee06'
-         'b40e4171b91d6c488d4f349083460383'
-         '65041d59dc10dfb0de74637675e51ce7'
-         '9e2098cc56d38fc6bcd04ba3aa8edb96'
-         '964664ce8a9d83544e476c76ca9adc36'
          '3ee21a12dcca2736f23d6dbd5a89da35'
          '6198b16d60af3a0ff96f88688eea3144'
          '3124d9a6958b0c83c83bd03a72aee89b')
@@ -61,17 +53,17 @@ package_wpa_supplicant() {
 package_wpa_supplicant-openrc() {
 	pkgdesc="OpenRC init scripts for wpa_supplicant"
 	arch=('any')
-	depends=('openrc')
+	depends=('openrc' 'openrc-services')
 	provides=('wpa_supplicant-init')
 	install -v -m755 -d ${pkgdir}/etc/openrc/init.d
 	install -v -m755 ${srcdir}/wpa_supplicant-init.d ${pkgdir}/etc/openrc/init.d/wpa_supplicant
 	install -v -m755 -d ${pkgdir}/etc/openrc/conf.d
 	install -v -m755 ${srcdir}/wpa_supplicant-conf.d ${pkgdir}/etc/openrc/conf.d/wpa_supplicant
 	
-	install -Dm644 "${srcdir}"/svc-openrc-install.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-install.hook
-	install -Dm644 "${srcdir}"/svc-openrc-upgrade.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-upgrade.hook
-	install -Dm644 "${srcdir}"/svc-openrc-remove.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-remove.hook
-	install -Dm755 "${srcdir}"/svc-openrc.script "${pkgdir}"/usr/share/libalpm/scripts/${pkgbase}-openrc
+	install -Dm644 /usr/share/openrc-services/hooks/svc-openrc-install.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-install.hook
+	install -Dm644 /usr/share/openrc-services/hooks/svc-openrc-upgrade.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-upgrade.hook
+	install -Dm644 /usr/share/openrc-services/hooks/svc-openrc-remove.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-remove.hook
+	install -Dm755 /usr/share/openrc-services/scripts/svc-openrc.script "${pkgdir}"/usr/share/libalpm/scripts/${pkgbase}-openrc
 	
 	sed -e "s/@svc@/${pkgbase}/" -i "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-{install,upgrade,remove}.hook
 	sed -e "s/@svc_enable@/'${pkgbase}'/" \

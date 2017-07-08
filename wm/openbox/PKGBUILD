@@ -1,9 +1,9 @@
 # Maintainer: Chris Cromer <chris@cromer.cl>
 
 pkgbase=openbox
-pkgname=('openbox' 'openbox-cromnix' 'openbox-vanilla' 'openbox-desktop' 'openbox-session' 'openbox-gnome-session' 'openbox-kde-session')
+pkgname=('openbox' 'openbox-desktop' 'openbox-session' 'openbox-gnome-session' 'openbox-kde-session')
 pkgver=3.6.1
-pkgrel=1
+pkgrel=2
 pkgdesc='Openbox is a highly configurable desktop window manager with extensive standards support'
 arch=('x86_64')
 url='http://openbox.org/'
@@ -32,10 +32,24 @@ build() {
 }
 
 package_openbox() {
-	# meta package
 	groups=('wm')
-	depends=('openbox-bin')
-	arch=('any')
+	depends=('libxml2' 'libxinerama' 'libxrandr' 'libxcursor' 'pango' 'libsm')
+	optdepends=('tint2: panel'
+				'spacefm-ng: desktop'
+				'unzip: to open zip files'
+				'xbacklight'
+				'alsa-utils: sound')
+	backup=('etc/xdg/openbox/menu.xml'
+			'etc/xdg/openbox/rc.xml'
+			'etc/xdg/openbox/autostart'
+			'etc/xdg/openbox/environment')
+
+	cd "${srcdir}/${pkgbase}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+	install -v -m755 "${srcdir}/autostart" "${pkgdir}/etc/xdg/openbox/autostart"
+	install -v -m755 "${srcdir}/rc.xml" "${pkgdir}/etc/xdg/openbox/rc.xml"
+	
+	rm "${pkgdir}"/usr/share/xsessions/openbox{,-gnome,-kde}.desktop
 }
 
 # todo: change openbox-desktop to openbox-de
@@ -70,39 +84,4 @@ package_openbox-kde-session() {
 	cd "${srcdir}/${pkgbase}-${pkgver}"
 	make DESTDIR="${pkgdir}" install-nodist_xsessionsDATA
 	rm "${pkgdir}"/usr/share/xsessions/openbox{,-gnome}.desktop
-}
-
-package_openbox-vanilla() {
-	depends=('libxml2' 'libxinerama' 'libxrandr' 'libxcursor' 'pango' 'libsm')
-	provides=('openbox-bin')
-	conflicts=('openbox-cromnix')
-	backup=('etc/xdg/openbox/menu.xml'
-			'etc/xdg/openbox/rc.xml'
-			'etc/xdg/openbox/autostart'
-			'etc/xdg/openbox/environment')
-
-	cd "${srcdir}/${pkgbase}-${pkgver}"
-	make DESTDIR="${pkgdir}" install
-}
-
-package_openbox-cromnix() {
-	depends=('libxml2' 'libxinerama' 'libxrandr' 'libxcursor' 'pango' 'libsm')
-	optdepends=('tint2: panel'
-				'spacefm-ng: desktop'
-				'unzip: to open zip files'
-				'xbacklight'
-				'alsa-utils: sound')
-	provides=('openbox-bin')
-	conflicts=('openbox-vanilla')
-	backup=('etc/xdg/openbox/menu.xml'
-			'etc/xdg/openbox/rc.xml'
-			'etc/xdg/openbox/autostart'
-			'etc/xdg/openbox/environment')
-
-	cd "${srcdir}/${pkgbase}-${pkgver}"
-	make DESTDIR="${pkgdir}" install
-	install -v -m755 "${srcdir}/autostart" "${pkgdir}/etc/xdg/openbox/autostart"
-	install -v -m755 "${srcdir}/rc.xml" "${pkgdir}/etc/xdg/openbox/rc.xml"
-	
-	rm "${pkgdir}"/usr/share/xsessions/openbox{,-gnome,-kde}.desktop
 }

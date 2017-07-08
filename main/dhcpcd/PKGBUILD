@@ -3,23 +3,16 @@
 pkgbase=dhcpcd
 pkgname=('dhcpcd' 'dhcpcd-openrc')
 pkgver=6.11.5
-pkgrel=3
+pkgrel=4
 pkgdesc='dhcpcd is an implementation of the DHCP client specified in RFC2131'
 arch=('x86_64')
 url='http://roy.marples.name/projects/dhcpcd/index'
 license=('BSD')
+makedepends=('openrc-services')
 source=("http://roy.marples.name/downloads/${pkgbase}/${pkgbase}-${pkgver}.tar.xz"
-		"https://gitweb.gentoo.org/repo/gentoo.git/plain/net-misc/${pkgbase}/files/${pkgbase}.initd"
-		'https://raw.githubusercontent.com/cromnix/openrc-services/master/svc-openrc-install.hook'
-		'https://raw.githubusercontent.com/cromnix/openrc-services/master/svc-openrc-upgrade.hook'
-		'https://raw.githubusercontent.com/cromnix/openrc-services/master/svc-openrc-remove.hook'
-		'https://raw.githubusercontent.com/cromnix/openrc-services/master/svc-openrc.script')
+		"https://gitweb.gentoo.org/repo/gentoo.git/plain/net-misc/${pkgbase}/files/${pkgbase}.initd")
 md5sums=('2465624b62c1154f0e89dc69c42c849b'
-         '5cd5809d11b77b30f21df8418729d70b'
-         'b40e4171b91d6c488d4f349083460383'
-         '65041d59dc10dfb0de74637675e51ce7'
-         '9e2098cc56d38fc6bcd04ba3aa8edb96'
-         '964664ce8a9d83544e476c76ca9adc36')
+         '5cd5809d11b77b30f21df8418729d70b')
 
 build() {
 	cd ${srcdir}/${pkgbase}-${pkgver}
@@ -43,15 +36,15 @@ package_dhcpcd() {
 package_dhcpcd-openrc() {
 	pkgdesc="OpenRC init scripts for ${pkgbase}"
 	arch=('any')
-	depends=('openrc')
+	depends=('openrc' 'openrc-services')
 	provides=('dhcpcd-init')
 	install -v -m755 -d ${pkgdir}/etc/openrc/init.d
 	install -v -m755 ${srcdir}/dhcpcd.initd ${pkgdir}/etc/openrc/init.d/dhcpcd
 	
-	install -Dm644 "${srcdir}"/svc-openrc-install.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-install.hook
-	install -Dm644 "${srcdir}"/svc-openrc-upgrade.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-upgrade.hook
-	install -Dm644 "${srcdir}"/svc-openrc-remove.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-remove.hook
-	install -Dm755 "${srcdir}"/svc-openrc.script "${pkgdir}"/usr/share/libalpm/scripts/${pkgbase}-openrc
+	install -Dm644 /usr/share/openrc-services/hooks/svc-openrc-install.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-install.hook
+	install -Dm644 /usr/share/openrc-services/hooks/svc-openrc-upgrade.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-upgrade.hook
+	install -Dm644 /usr/share/openrc-services/hooks/svc-openrc-remove.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-remove.hook
+	install -Dm755 /usr/share/openrc-services/scripts/svc-openrc.script "${pkgdir}"/usr/share/libalpm/scripts/${pkgbase}-openrc
 	
 	sed -e "s/@svc@/${pkgbase}/" -i "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-{install,upgrade,remove}.hook
 	sed -e "s/@svc_enable@/'${pkgbase}'/" \

@@ -7,6 +7,7 @@ pkgdesc='OpenRC auto service management'
 arch=('any')
 url='https://github.com/cromnix/openrc-services'
 license=('BSD')
+backup=('etc/openrc/openrc-services.conf')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/cromnix/${pkgname}/archive/${pkgver}.tar.gz")
 md5sums=('bfcd57b3362c19f18b44a35be0ca2b33')
 

@@ -3,28 +3,20 @@
 pkgbase=fcron
 pkgname=('fcron' 'fcron-openrc')
 pkgver=3.2.1
-pkgrel=3
+pkgrel=4
 pkgdesc='The Fcron package contains a periodical command scheduler'
 arch=('x86_64')
 url='http://fcron.free.fr'
 license=('GPL')
-makedepends=('fcron' 'nano')
+makedepends=('fcron' 'nano' 'openrc-services')
 source=("http://fcron.free.fr/archives/${pkgname}-${pkgver}.src.tar.gz"
 		"https://gitweb.gentoo.org/repo/gentoo.git/plain/sys-process/fcron/files/fcron.init.4"
 		"https://gitweb.gentoo.org/repo/gentoo.git/plain/sys-process/cronbase/files/run-crons-0.3.7"
-		'https://raw.githubusercontent.com/cromnix/openrc-services/master/svc-openrc-install.hook'
-		'https://raw.githubusercontent.com/cromnix/openrc-services/master/svc-openrc-upgrade.hook'
-		'https://raw.githubusercontent.com/cromnix/openrc-services/master/svc-openrc-remove.hook'
-		'https://raw.githubusercontent.com/cromnix/openrc-services/master/svc-openrc.script'
 		'fcrontab'
 		'crontab')
 md5sums=('bd4996e941a40327d11efc5e3fd1f839'
          '6f2a4b161349abd2cfee8baf306443c6'
          'c5caba6f41a37c3c5dff46ca5193e323'
-         'b40e4171b91d6c488d4f349083460383'
-         '65041d59dc10dfb0de74637675e51ce7'
-         '9e2098cc56d38fc6bcd04ba3aa8edb96'
-         '964664ce8a9d83544e476c76ca9adc36'
          '731c1325a859235347e1956fd72aa36a'
          'a0e7c32bef48f80023b708d8cc766728')
 
@@ -75,16 +67,16 @@ package_fcron() {
 package_fcron-openrc() {
 	pkgdesc="OpenRC init scripts for fcron"
 	arch=('any')
-	depends=('openrc')
+	depends=('openrc' 'openrc-services')
 	optdepends=('vi: to edit fcrontab')
 	provides=('fcron-init')
 	install -v -m755 -d ${pkgdir}/etc/openrc/init.d
 	install -v -m755 ${srcdir}/fcron.init.4 ${pkgdir}/etc/openrc/init.d/fcron
 
-	install -Dm644 "${srcdir}"/svc-openrc-install.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-install.hook
-	install -Dm644 "${srcdir}"/svc-openrc-upgrade.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-upgrade.hook
-	install -Dm644 "${srcdir}"/svc-openrc-remove.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-remove.hook
-	install -Dm755 "${srcdir}"/svc-openrc.script "${pkgdir}"/usr/share/libalpm/scripts/${pkgbase}-openrc
+	install -Dm644 /usr/share/openrc-services/hooks/svc-openrc-install.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-install.hook
+	install -Dm644 /usr/share/openrc-services/hooks/svc-openrc-upgrade.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-upgrade.hook
+	install -Dm644 /usr/share/openrc-services/hooks/svc-openrc-remove.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-remove.hook
+	install -Dm755 /usr/share/openrc-services/scripts/svc-openrc.script "${pkgdir}"/usr/share/libalpm/scripts/${pkgbase}-openrc
 	
 	sed -e "s/@svc@/${pkgbase}/" -i "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-{install,upgrade,remove}.hook
 	sed -e "s/@svc_enable@/'${pkgbase}'/" \

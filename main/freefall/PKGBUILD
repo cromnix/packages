@@ -3,25 +3,18 @@
 pkgbase=freefall
 pkgname=('freefall' 'freefall-openrc')
 pkgver=4.11.7
-pkgrel=1
+pkgrel=2
 pkgdesc="Disk protection for drops on HP/Dell laptops"
 arch=('x86_64')
 url="https://www.kernel.org/"
 license=('GPL2')
+makedepends=('openrc-services')
 source=("https://www.kernel.org/pub/linux/kernel/v4.x/linux-$pkgver.tar.xz"
 		"https://gitweb.gentoo.org/repo/gentoo.git/plain/sys-apps/linux-misc-apps/files/freefall.initd"
-		"https://gitweb.gentoo.org/repo/gentoo.git/plain/sys-apps/linux-misc-apps/files/freefall.confd"
-		'https://raw.githubusercontent.com/cromnix/openrc-services/master/svc-openrc-install.hook'
-		'https://raw.githubusercontent.com/cromnix/openrc-services/master/svc-openrc-upgrade.hook'
-		'https://raw.githubusercontent.com/cromnix/openrc-services/master/svc-openrc-remove.hook'
-		'https://raw.githubusercontent.com/cromnix/openrc-services/master/svc-openrc.script')
+		"https://gitweb.gentoo.org/repo/gentoo.git/plain/sys-apps/linux-misc-apps/files/freefall.confd")
 md5sums=('54eedc39fcc860ddd2c083f2f6266707'
          '76762cb551df73ceb6a8aab8e942f9c9'
-         '3c2d2bdd54736b440ed47d90583b172e'
-         'b40e4171b91d6c488d4f349083460383'
-         '65041d59dc10dfb0de74637675e51ce7'
-         '9e2098cc56d38fc6bcd04ba3aa8edb96'
-         '964664ce8a9d83544e476c76ca9adc36')
+         '3c2d2bdd54736b440ed47d90583b172e')
 
 build() {
 	cd "$srcdir/linux-$pkgver/tools/laptop/freefall"
@@ -37,17 +30,17 @@ package_freefall() {
 package_freefall-openrc() {
 	pkgdesc="OpenRC init scripts for freefall"
 	arch=('any')
-	depends=('openrc')
+	depends=('openrc' 'openrc-services')
 	provides=('freefall-init')
 	install -v -m755 -d ${pkgdir}/etc/openrc/init.d
 	install -v -m755 -d ${pkgdir}/etc/openrc/conf.d
 	install -v -m755 ${srcdir}/freefall.initd ${pkgdir}/etc/openrc/init.d/freefall
 	install -v -m644 ${srcdir}/freefall.confd ${pkgdir}/etc/openrc/conf.d/freefall
 	
-	install -Dm644 "${srcdir}"/svc-openrc-install.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-install.hook
-	install -Dm644 "${srcdir}"/svc-openrc-upgrade.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-upgrade.hook
-	install -Dm644 "${srcdir}"/svc-openrc-remove.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-remove.hook
-	install -Dm755 "${srcdir}"/svc-openrc.script "${pkgdir}"/usr/share/libalpm/scripts/${pkgbase}-openrc
+	install -Dm644 /usr/share/openrc-services/hooks/svc-openrc-install.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-install.hook
+	install -Dm644 /usr/share/openrc-services/hooks/svc-openrc-upgrade.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-upgrade.hook
+	install -Dm644 /usr/share/openrc-services/hooks/svc-openrc-remove.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-remove.hook
+	install -Dm755 /usr/share/openrc-services/scripts/svc-openrc.script "${pkgdir}"/usr/share/libalpm/scripts/${pkgbase}-openrc
 	
 	sed -e "s/@svc@/${pkgbase}/" -i "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-{install,upgrade,remove}.hook
 	sed -e "s/@svc_enable@/'${pkgbase}'/" \

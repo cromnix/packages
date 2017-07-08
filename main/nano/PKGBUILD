@@ -1,19 +1,20 @@
 # Maintainer: Chris Cromer <chris@cromer.cl>
 
-pkgbase=('nano')
-pkgname=('nano' 'nano-cromnix' 'nano-vanilla')
+pkgname=nano
 pkgver=2.8.5
 _pkgver=${pkgver%.*}
-pkgrel=1
+pkgrel=2
 pkgdesc="Pico editor clone with enhancements"
 arch=('x86_64')
 license=('GPL')
 url="http://www.nano-editor.org"
-source=(http://www.nano-editor.org/dist/v${_pkgver}/${pkgbase}-${pkgver}.tar.gz)
+depends=('ncurses' 'file' 'sh')
+backup=('etc/nanorc')
+source=(http://www.nano-editor.org/dist/v${_pkgver}/${pkgname}-${pkgver}.tar.gz)
 md5sums=('e5a090e890647a016d05ef8f9fbb0187')
 
 build() {
-	cd ${pkgbase}-${pkgver}
+	cd ${pkgname}-${pkgver}
 	./configure --prefix=/usr \
 		--sysconfdir=/etc \
 		--enable-utf8 \
@@ -25,32 +26,11 @@ build() {
 	make
 }
 
-package_nano() {
-	# meta package
-	depends=('nano-bin')
-	arch=('any')
-}
-
-package_nano-vanilla() {
-	depends=('ncurses' 'file' 'sh')
-	backup=('etc/nanorc')
-	provides=('nano-bin')
-	conflicts=('nano-cromnix')
-	cd ${pkgbase}-${pkgver}
+package() {
+	cd ${pkgname}-${pkgver}
 	make DESTDIR=${pkgdir} install
 	install -v -m644 doc/nano.html ${pkgdir}/usr/share/doc/nano-${pkgver}
-	install -DTm644 ${srcdir}/${pkgbase}-${pkgver}/doc/sample.nanorc ${pkgdir}/etc/nanorc
-}
-
-package_nano-cromnix() {
-	depends=('ncurses' 'file' 'sh')
-	backup=('etc/nanorc')
-	provides=('nano-bin')
-	conflicts=('nano-vanilla')
-	cd ${pkgbase}-${pkgver}
-	make DESTDIR=${pkgdir} install
-	install -v -m644 doc/nano.html ${pkgdir}/usr/share/doc/nano-${pkgver}
-	install -DTm644 ${srcdir}/${pkgbase}-${pkgver}/doc/sample.nanorc ${pkgdir}/etc/nanorc
+	install -DTm644 ${srcdir}/${pkgname}-${pkgver}/doc/sample.nanorc ${pkgdir}/etc/nanorc
 
 	sed -e 's|# set autoindent|set autoindent|' \
 		-e 's|# set constantshow|set constantshow|' \
