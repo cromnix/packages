@@ -1,0 +1,16 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=openrc-services
+pkgver=1.0.0
+pkgrel=1
+pkgdesc='OpenRC auto service management'
+arch=('any')
+url='https://github.com/cromnix/openrc-services'
+license=('BSD')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/cromnix/${pkgname}/archive/${pkgver}.tar.gz")
+md5sums=('bfcd57b3362c19f18b44a35be0ca2b33')
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" CONFDIR="/etc/openrc" install
+}
