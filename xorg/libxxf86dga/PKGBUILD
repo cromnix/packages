@@ -1,4 +1,4 @@
-#Maintainer: Chris Cromer <cromer@cromnix.org>
+# Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=libxxf86dga
 _pkgname=libXxf86dga

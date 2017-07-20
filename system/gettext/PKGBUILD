@@ -1,4 +1,4 @@
-#Maintainer: Chris Cromer <cromer@cromnix.org>
+# Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=gettext
 pkgver=0.19.8.1

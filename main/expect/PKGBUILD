@@ -1,4 +1,4 @@
-#Maintainer: Chris Cromer <cromer@cromnix.org>
+# Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=expect
 pkgver=5.45

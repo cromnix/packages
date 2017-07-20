@@ -1,4 +1,4 @@
-#Maintainer: Chris Cromer <cromer@cromnix.org>
+# Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=pcmanfm
 pkgver=1.2.5

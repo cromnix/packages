@@ -1,4 +1,4 @@
-#Maintainer: Chris Cromer <cromer@cromnix.org>
+# Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=libjpeg-turbo
 pkgver=1.5.2

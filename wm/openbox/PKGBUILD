@@ -1,4 +1,4 @@
-#Maintainer: Chris Cromer <cromer@cromnix.org>
+# Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgbase=openbox
 pkgname=('openbox' 'openbox-desktop' 'openbox-session' 'openbox-gnome-session' 'openbox-kde-session')

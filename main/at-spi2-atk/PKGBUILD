@@ -1,4 +1,4 @@
-#Maintainer: Chris Cromer <cromer@cromnix.org>
+# Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgbase=at-spi2-atk
 pkgname=('libat-spi2-atk' 'at-spi2-atk-dev')

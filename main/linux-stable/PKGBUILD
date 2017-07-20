@@ -1,4 +1,4 @@
-#Maintainer: Chris Cromer <cromer@cromnix.org>
+# Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgbase=linux-stable
 pkgname=('linux-stable' 'linux-stable-doc')

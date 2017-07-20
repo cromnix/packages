@@ -1,4 +1,4 @@
-#Maintainer: Chris Cromer <cromer@cromnix.org>
+# Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgbase=bzip2
 pkgname=('bzip2' 'libbzip2' 'bzip2-doc')
