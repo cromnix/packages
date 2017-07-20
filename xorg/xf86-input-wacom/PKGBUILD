@@ -1,4 +1,4 @@
-# Maintainer: Chris Cromer <chris@cromer.cl>
+#Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=xf86-input-wacom
 pkgver=0.35.0

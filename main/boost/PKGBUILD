@@ -1,4 +1,4 @@
-# Maintainer: Chris Cromer <chris@cromer.cl>
+#Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=boost
 pkgver=1.64.0

@@ -3,5 +3,9 @@
 */*/pkg
 *.pkg.tar.gz
 *.pkg.tar.xz
+*.pkg.tar.xz.sig
+*.pkg.tar.gz.sig
 *.src.tar.gz
 *.src.tar.xz
+*.src.tar.gz.sig
+*.src.tar.xz.sig

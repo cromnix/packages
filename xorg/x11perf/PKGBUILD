@@ -1,4 +1,4 @@
-# Maintainer: Chris Cromer <chris@cromer.cl>
+#Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=x11perf
 pkgver=1.6.0

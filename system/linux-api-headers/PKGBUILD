@@ -1,4 +1,4 @@
-# Maintainer: Chris Cromer <chris@cromer.cl>
+#Maintainer: Chris Cromer <cromer@cromnix.org>
 
 # toolchain build order: linux-api-headers->glibc->binutils->gcc->binutils->glibc->libtool->valgrind
 

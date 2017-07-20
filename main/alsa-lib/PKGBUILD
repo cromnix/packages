@@ -1,4 +1,4 @@
-# Maintainer: Chris Cromer <chris@cromer.cl>
+#Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgbase=alsa-lib
 pkgname=('alsa-lib' 'libalsa' 'alsa-lib-dev' 'alsa-lib-common' 'alsa-lib-doc')

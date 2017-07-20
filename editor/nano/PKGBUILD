@@ -1,4 +1,4 @@
-# Maintainer: Chris Cromer <chris@cromer.cl>
+#Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=nano
 pkgver=2.8.5
@@ -12,6 +12,8 @@ depends=('ncurses' 'file' 'sh')
 backup=('etc/nanorc')
 source=(http://www.nano-editor.org/dist/v${_pkgver}/${pkgname}-${pkgver}.tar.gz)
 md5sums=('e5a090e890647a016d05ef8f9fbb0187')
+
+# todo: remove autoindent
 
 build() {
 	cd ${pkgname}-${pkgver}

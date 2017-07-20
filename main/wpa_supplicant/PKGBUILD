@@ -1,4 +1,4 @@
-# Maintainer: Chris Cromer <chris@cromer.cl>
+#Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgbase=wpa_supplicant
 pkgname=('wpa_supplicant' 'wpa_supplicant-openrc')
