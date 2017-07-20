@@ -1,13 +1,14 @@
 # Maintainer: Chris Cromer <chris@cromer.cl>
 
 pkgname=cromnix-mirrorlist
-pkgver=20170710
+pkgver=20170720
 pkgrel=1
 pkgdesc='List of cromnix mirrors for pacman'
 arch=('any')
 url='https://www.cromnix.org'
 license=('BSD3')
 source=('mirrorlist')
+backup=('etc/pacman.d/mirrorlist-cromnix')
 md5sums=('18ff82ad5d59455a60d370a81aec3575')
 
 pkgver() {
