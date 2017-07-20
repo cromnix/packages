@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <chris@cromer.cl>
 
 pkgname=cmake
-pkgver=3.8.1
+pkgver=3.8.2
 _pkgver=${pkgver%.*}
 pkgrel=1
 pkgdesc='Contains a modern toolset used for generating Makefiles'
@@ -10,7 +10,7 @@ url='https://www.cmake.org/'
 license=('GPL')
 depends=('curl' 'libarchive')
 source=("http://www.cmake.org/files/v${_pkgver}/${pkgname}-${pkgver}.tar.gz")
-md5sums=('e8ef820ddf7a650845252bca846696e7')
+md5sums=('b5dff61f6a7f1305271ab3f6ae261419')
 
 # todo: add optional dependencies
 

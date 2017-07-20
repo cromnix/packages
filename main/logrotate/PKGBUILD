@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <chris@cromer.cl>
 
 pkgname=logrotate
-pkgver=3.11.0
+pkgver=3.12.3
 pkgrel=1
 pkgdesc='The logrotate package allows automatic rotation, compression, removal, and mailing of log files'
 arch=('x86_64')
@@ -11,7 +11,7 @@ depends=('popt' 'gzip' 'acl')
 backup=('etc/logrotate.conf')
 source=("https://github.com/${pkgname}/${pkgname}/releases/download/${pkgver}/${pkgname}-${pkgver}.tar.xz"
 		'logrotate.conf')
-md5sums=('3a9280e4caeb837427a2d54518fbcdac'
+md5sums=('a560c57fac87c45b2fc17406cdf79288'
          '7932d4851874957c7fe4a3621730948c')
 
 prepare() {

@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <chris@cromer.cl>
 
 pkgname=xf86-video-nouveau
-pkgver=1.0.14
+pkgver=1.0.15
 pkgrel=1
 pkgdesc='The Xorg Nouveau Driver package contains the X.Org Video Driver for NVidia Cards including RIVA TNT, RIVA TNT2, GeForce 256, QUADRO, GeForce2, QUADRO2, GeForce3, QUADRO DDC, nForce, nForce2, GeForce4, QUADRO4, GeForce FX, QUADRO FX, GeForce 6XXX and GeForce 7xxx chipsets'
 arch=('x86_64')
@@ -12,7 +12,7 @@ depends=('mesa')
 makedepends=('xorg-server' 'xproto' 'fontsproto' 'libdrm' 'randrproto' 'renderproto' 'videoproto' 'xextproto' 'dri2proto' 'inputproto' 'scrnsaverproto'
 			'resourceproto' 'xf86driproto' 'glproto' 'dri3proto' 'presentproto' 'xineramaproto')
 source=("http://ftp.x.org/pub/individual/driver/${pkgname}-${pkgver}.tar.bz2")
-md5sums=('c57c89e1a3c9bc319d26f2e11c80e7fb')
+md5sums=('717203cb87029cddcbccf7398f9ad8c3')
 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"

@@ -1,14 +1,14 @@
 # Maintainer: Chris Cromer <chris@cromer.cl>
 
 pkgname=pciutils
-pkgver=3.5.4
+pkgver=3.5.5
 pkgrel=1
 pkgdesc="The PCI Utils package contains a set of programs for listing PCI devices, inspecting their status and setting their configuration registers."
 arch=('x86_64')
 url="http://mj.ucw.cz/sw/pciutils/"
 license=('GPL')
 source=("ftp://atrey.karlin.mff.cuni.cz/pub/linux/pci/$pkgname-$pkgver.tar.gz")
-md5sums=('c20c5fb89ce22935bb908d1f3d3addde')
+md5sums=('f99f9ea87d063e98ab19943e91716eca')
 
 build() {
     cd "$srcdir/$pkgname-$pkgver"

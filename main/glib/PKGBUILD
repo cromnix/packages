@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <chris@cromer.cl>
 
 pkgname=glib
-pkgver=2.52.2
+pkgver=2.52.3
 _pkgver=${pkgver%.*}
 pkgrel=1
 pkgdesc='The GLib package contains low-level libraries useful for providing data structure handling for C'
@@ -12,7 +12,7 @@ depends=('pcre' 'libffi')
 makedepends=('libffi' 'python' 'pcre' 'zlib' 'gettext' 'shared-mime-info')
 checkdepends=('desktop-file-utils' 'dbus')
 source=("http://ftp.gnome.org/pub/gnome/sources/glib/${_pkgver}/glib-${pkgver}.tar.xz")
-md5sums=('ec099bce26ce6a85104ed1d89bb45856')
+md5sums=('89265d0289a436e99cad54491eb21ef4')
 
 build() {
 	cd "$srcdir/$pkgname-$pkgver"

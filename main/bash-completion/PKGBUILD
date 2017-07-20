@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <chris@cromer.cl>
 
 pkgname=bash-completion
-pkgver=2.5
+pkgver=2.7
 pkgrel=1
 pkgdesc='Auto tab completion for bash'
 arch=('any')
@@ -9,7 +9,7 @@ url='https://github.com/scop/bash-completion'
 license=('GPL')
 depends=('bash')
 source=("https://github.com/scop/${pkgname}/releases/download/${pkgver}/${pkgname}-${pkgver}.tar.xz")
-md5sums=('15300010bd4034de12c3fc4f171692e3')
+md5sums=('28117492bdc9408438e6041683a423ce')
 
 build() {
 	cd ${srcdir}/${pkgname}-${pkgver}

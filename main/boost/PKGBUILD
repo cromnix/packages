@@ -22,19 +22,49 @@ md5sums=('93eecce2abed9d2442c9676914709349')
 
 prepare() {
 	cd "${srcdir}/${pkgname}_${_pkgver}"
-	sed -e '/using python/ s@;@: /usr/include/python${PYTHON_VERSION/3*/${PYTHON_VERSION}m} ;@' -i bootstrap.sh
+	if [ -d "${srcdir}/install" ]; then
+		rm -rf "${srcdir}/install"
+	fi
+	mkdir -p "${srcdir}/install"
 }
 
 build() {
 	cd "${srcdir}/${pkgname}_${_pkgver}"
-	./bootstrap.sh --prefix=/usr \
-		--with-toolset=gcc \
-		--with-icu \
-		--with-python=/usr/bin/python3
 	local JOBS="$(sed -e 's/.*\(-j *[0-9]\+\).*/\1/' <<< ${MAKEFLAGS})"
-	./b2 --prefix=/usr \
-		stage \
-		variant=release \
+	
+	install -dm755 "${srcdir}"/install/share/boostbook
+	cp -a tools/boostbook/{xsl,dtd} "${srcdir}"/install/share/boostbook/
+
+	./bootstrap.sh --with-toolset=gcc \
+		--with-icu \
+		--with-python=/usr/bin/python2
+	
+	# copy the binary to the install folder
+	install -Dm755 tools/build/src/engine/bin.linuxx86_64/b2 "${srcdir}"/install/bin/b2
+	ln -s b2 "${srcdir}"/install/bin/bjam
+		
+	./b2 variant=release \
+		debug-symbols=off \
+		threading=multi \
+		runtime-link=shared \
+		link=shared,static \
+		toolset=gcc \
+		python=2.7 \
+		cflags="${CPPFLAGS} ${CFLAGS} -fPIC -O3" \
+		cxxflags="${CPPFLAGS} ${CXXFLAGS} -std=c++14 -fPIC -O3" \
+		linkflags="${LDFLAGS}" \
+		--layout=system \
+		--prefix="${srcdir}/install" \
+		install \
+		${JOBS}
+	
+	sed -e '/using python/ s@;@: /usr/include/python${PYTHON_VERSION/3*/${PYTHON_VERSION}m} ;@' -i bootstrap.sh
+	./bootstrap.sh --with-toolset=gcc \
+		--with-icu \
+		--with-python=/usr/bin/python3 \
+		--with-libraries=python
+	./b2 clean
+	./b2 variant=release \
 		debug-symbols=off \
 		threading=multi \
 		runtime-link=shared \
@@ -45,7 +75,13 @@ build() {
 		cxxflags="${CPPFLAGS} ${CXXFLAGS} -std=c++14 -fPIC -O3" \
 		linkflags="${LDFLAGS}" \
 		--layout=system \
+		--prefix="${srcdir}/install/python3" \
+		--with-python \
+		install \
 		${JOBS}
+		
+		cp -a "${srcdir}"/install/python3/lib/libboost_* "${srcdir}"/install/lib
+		rm -rf "${srcdir}"/install/python3
 }
 
 check() {
@@ -55,26 +91,9 @@ check() {
 
 package() {
 	cd "${srcdir}/${pkgname}_${_pkgver}"
-	./b2 --prefix="${pkgdir}/usr" \
-		install \
-		variant=release \
-		debug-symbols=off \
-		threading=multi \
-		runtime-link=shared \
-		link=shared,static \
-		toolset=gcc \
-		python=3.6 \
-		cflags="${CPPFLAGS} ${CFLAGS} -fPIC -O3" \
-		cxxflags="${CPPFLAGS} ${CXXFLAGS} -std=c++14 -fPIC -O3" \
-		linkflags="${LDFLAGS}" \
-		--layout=system \
-		${JOBS}
-
-	# binary
-	install -Dm755 tools/build/src/engine/bin.linuxx86_64/b2 "${pkgdir}"/usr/bin/b2
-	ln -s /usr/bin/b2 "${pkgdir}"/usr/bin/bjam
-
-	#doc
-	install -dm755 "${pkgdir}"/usr/share/boostbook
-	cp -a tools/boostbook/{xsl,dtd} "${pkgdir}"/usr/share/boostbook/
+	
+	install -dm755 "${pkgdir}"/usr
+	cp -a "${srcdir}"/install/{bin,include,lib,share} "${pkgdir}"/usr
+	
+	install -Dm644 LICENSE_1_0.txt "${pkgdir}"/usr/share/licenses/boost/LICENSE
 }

@@ -2,7 +2,7 @@
 
 pkgbase=nasm
 pkgname=('nasm' 'nasm-doc')
-pkgver=2.12.02
+pkgver=2.13.01
 pkgrel=1
 pkgdesc='NASM (Netwide Assembler) is an 80x86 assembler designed for portability and modularity. It includes a disassembler as well'
 arch=('x86_64')
@@ -12,8 +12,8 @@ depends=('glibc')
 source=("http://www.nasm.us/pub/${pkgbase}/releasebuilds/${pkgver}/${pkgbase}-${pkgver}.tar.xz"
 		"http://www.nasm.us/pub/${pkgbase}/releasebuilds/${pkgver}/${pkgbase}-${pkgver}-xdoc.tar.xz")
 noextract=("${pkgbase}-${pkgver}-xdoc.tar.xz")
-md5sums=('b90a3d85b93e51a7fa5a67e2a8fccfef'
-         '8dfcf5540e782a9c4d4df0bbfbc9c242')
+md5sums=('b3ae134bd1b5ead73d659286f568da95'
+         '0b84a306da9357ec4419b9f18f0afa2b')
 
 prepare() {
 	cd ${srcdir}/${pkgbase}-${pkgver}
@@ -30,9 +30,6 @@ package_nasm() {
 	optdepends=('nasm-doc: documentation')
 	cd ${srcdir}/${pkgbase}-${pkgver}
 	make INSTALLROOT=${pkgdir} install install_rdf
-	install -m755 -d ${pkgdir}/usr/share/info
-	cp -v doc/info/* ${pkgdir}/usr/share/info
-	install-info ${pkgdir}/usr/share/info/nasm.info ${pkgdir}/usr/share/info/dir
 }
 
 package_nasm-doc() {

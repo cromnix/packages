@@ -4,7 +4,7 @@ pkgbase=eudev
 pkgname=('eudev' 'eudev-openrc')
 pkgver=3.2.2
 _openrc_pkgver=32
-pkgrel=4
+pkgrel=5
 pkgdesc="The Eudev package contains programs for dynamic creation of device nodes."
 arch=('x86_64')
 url="https://wiki.gentoo.org/wiki/Project:Eudev"
@@ -57,8 +57,8 @@ package_eudev() {
 package_eudev-openrc() {
 	pkgdesc="OpenRC init scripts for eudev"
 	arch=('any')
-	depends=('openrc')
-	provides=('eudev-init' 'openrc-services')
+	depends=('openrc' 'openrc-services')
+	provides=('eudev-init')
 	install -v -m755 -d ${pkgdir}/etc/openrc/init.d
 	install -v -m755 -d ${pkgdir}/etc/openrc/conf.d
 	install -v -m755 ${srcdir}/udev-init-scripts-${_openrc_pkgver}/init.d/* ${pkgdir}/etc/openrc/init.d

@@ -1,0 +1,55 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=abiword
+pkgver=3.0.2
+pkgrel=1
+pkgdesc='AbiWord is a word processor which is useful for writing reports, letters and other formatted documents'
+arch=('x86_64')
+url='http://www.abisource.com'
+license=('GPL')
+depends=('fribidi' 'wv' 'goffice' 'librsvg' 'desktop-file-utils' 'libxslt' 'libgsf')
+# 'gtk-update-icon-cache' instead of gtk2
+makedepends=('pkg-config' 'boost' 'atk-dev')
+options=('!makeflags')
+source=("http://www.abisource.com/downloads/${pkgname}/${pkgver}/source/${pkgname}-${pkgver}.tar.gz"
+		'gtk-3.22.patch'
+		'python-override.patch'
+		'flicker.patch')
+md5sums=('cda6dd58c747c133b421cc7eb18f5796'
+         '4127d3f8779734988dbd88042438998b'
+         'bf7ed8608b790886433c1f2cc23348ce'
+         '63cb3ecf41574bda71948a8d3489c9e4')
+		 
+# todo: rebuild with depends
+# install docs
+
+prepare() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	patch -Np1 -i "${srcdir}"/flicker.patch
+	patch -Np1 -i "${srcdir}"/python-override.patch
+	patch -Np1 -i "${srcdir}"/gtk-3.22.patch
+	
+	libtoolize --force
+	autoreconf -fi
+}
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr \
+		--enable-shared \
+		--disable-static \
+		--enable-clipart \
+		--enable-templates \
+		--enable-plugins
+	sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+	
+	cd "${srcdir}/${pkgname}-${pkgver}"/src/gi-overrides
+	sed -i 's/python -c/python2 -c/' Makefile
+	make DESTDIR="${pkgdir}" PYTHON=python2 install
+}

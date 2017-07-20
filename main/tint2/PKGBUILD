@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <chris@cromer.cl>
 
 pkgname=tint2
-pkgver=0.14.1
+pkgver=0.14.6
 pkgrel=1
 pkgdesc='A basic task manager for WMs'
 arch=('x86_64')
@@ -10,7 +10,7 @@ license=('GPL2')
 depends=('gtk2' 'imlib2' 'startup-notification' 'librsvg')
 makedepends=('cmake' 'atk-dev')
 source=("${pkgname}-${pkgver}.tar.gz::https://gitlab.com/o9000/tint2/repository/archive.tar.gz?ref=${pkgver}")
-md5sums=('6d3b8c42d216e494350ab3e09ea6ffdd')
+md5sums=('9cac539bc3b7ae774bf62224e882c74f')
 
 prepare() {
 	mv "${srcdir}"/${pkgname}-${pkgver}-* "${srcdir}/${pkgname}"

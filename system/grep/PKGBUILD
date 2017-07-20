@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <chris@cromer.cl>
 
 pkgname=grep
-pkgver=3.0
+pkgver=3.1
 pkgrel=1
 pkgdesc="The Grep package contains programs for searching through files."
 arch=('x86_64')
@@ -11,7 +11,7 @@ groups=('cromnix-base' 'cromnix-dev')
 depends=('glibc' 'perl')
 makedepends=('texinfo')
 source=("http://ftp.gnu.org/gnu/grep/$pkgname-$pkgver.tar.xz")
-md5sums=('fa07c1616adeb9c3262be5177d10ad4a')
+md5sums=('feca7b3e7c7f4aab2b42ecbfc513b070')
 
 build() {
     cd "$srcdir/$pkgname-$pkgver"

@@ -1,0 +1,69 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgbase=vim
+pkgname=('vim' 'vim-vicompat')
+pkgver=8.0.586
+_pkgver=80
+pkgrel=1
+pkgdesc='The Vim package contains a powerful text editor'
+arch=('x86_64')
+url='https://vim.sourceforge.io/'
+license=('custom:vim')
+groups=('cromnix-base')
+source=("ftp://ftp.vim.org/pub/${pkgbase}/unix/${pkgbase}-${pkgver}.tar.bz2"
+		'cromnix.vim'
+		'vimrc'
+		'vimdoc.hook')
+md5sums=('b35e794140c196ff59b492b56c1e73db'
+         '88c72dec5aaf7a6e12e20fb3f7f4ad5a'
+         'dd4cb9484bc411a1c14d05f99d7c6868'
+         '757f3030dfdab8dbced7117470ec0976')
+
+prepare() {
+	cd "${srcdir}/${pkgbase}${_pkgver}"
+	echo '#define SYS_VIMRC_FILE "/etc/vimrc"' >> src/feature.h
+	sed -i '/call/{s/split/xsplit/;s/303/492/}' src/testdir/test_recover.vim
+}
+
+build() {
+	cd "${srcdir}/${pkgbase}${_pkgver}"
+	./configure --prefix=/usr \
+		--with-compiledby='Cromnix' \
+		--localstatedir=/var/lib/vim \
+		--with-features=huge \
+		--enable-acl
+	make
+}
+
+check() {
+	cd "${srcdir}/${pkgbase}${_pkgver}"
+	make -j1 test &> vim-test.log
+}
+
+package_vim() {
+	depends=('acl')
+	cd "${srcdir}/${pkgbase}${_pkgver}"
+	make DESTDIR="${pkgdir}" install
+	install -dm0755 "${pkgdir}"/usr/share/doc/${pkgbase}-${pkgver}
+	cp -r "${pkgdir}"/usr/share/vim/vim80/doc/* "${pkgdir}"/usr/share/doc/${pkgbase}-${pkgver}
+	rm -rf "${pkgdir}"/usr/share/vim/vim80/doc
+	ln -sv /usr/share/doc/${pkgbase}-${pkgver} "${pkgdir}"/usr/share/vim/vim80/doc
+	
+	install -Dm644 "${srcdir}"/vimrc "${pkgdir}"/etc/vimrc
+	install -Dm644 "${srcdir}"/cromnix.vim "${pkgdir}"/usr/share/vim/vimfiles/cromnix.vim
+	
+	install -Dm644 "${srcdir}"/vimdoc.hook "${pkgdir}"/usr/share/libalpm/hooks/vimdoc.hook
+}
+
+package_vim-vicompat() {
+	depends=('vim')
+	cd "${srcdir}/${pkgbase}${_pkgver}"
+	make DESTDIR="${pkgdir}" install
+	install -dm0755 "${pkgdir}"/usr/bin 
+	ln -sv vim "${pkgdir}"/usr/bin/vi
+	for _dir in "${pkgdir}"/usr/share/man/{,*/}man1/vim.1; do
+		ln -sv vim.1.gz $(dirname ${_dir})/vi.1.gz
+	done
+	make DESTDIR="${pkgdir}" uninstall
+	rm -rf "${pkgdir}"/usr/share/{applications,icons}
+}

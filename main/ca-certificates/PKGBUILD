@@ -1,17 +1,17 @@
 # Maintainer: Chris Cromer <chris@cromer.cl>
 
 pkgname=ca-certificates
-pkgver=20170613
+pkgver=20170717
 pkgrel=1
 pkgdesc='Certificate Authority Certificates'
 arch=('x86_64')
 url="https://hg.mozilla.org/releases/mozilla-release/raw-file/default/security/nss/lib/ckfw/builtins/certdata.txt"
 license=('GPL2')
 depends=('sh')
-source=('https://hg.mozilla.org/releases/mozilla-release/raw-file/default/security/nss/lib/ckfw/builtins/certdata.txt'
-		'make-ca.sh::http://anduin.linuxfromscratch.org/BLFS/other/make-ca.sh-20161126')
-md5sums=('SKIP'
-		 'fca9ae62242800a9dcaee5d400ee5c41')
+source=('make-ca.sh::http://anduin.linuxfromscratch.org/BLFS/other/make-ca.sh-20170514'
+		'https://hg.mozilla.org/releases/mozilla-release/raw-file/default/security/nss/lib/ckfw/builtins/certdata.txt')
+md5sums=('a21a04d6ff5c4645c748220dbaa9f221'
+         'e588e80db2c9c68a77caafb81a9a5d7e')
 
 pkgver() {
 	date +%Y%m%d

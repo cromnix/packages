@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <chris@cromer.cl>
 
 pkgname=libinput
-pkgver=1.7.3
+pkgver=1.8.0
 pkgrel=1
 pkgdesc='libinput is a library that handles input devices for display servers and other applications that need to directly deal with input devices'
 arch=('x86_64')
@@ -10,7 +10,9 @@ license=('custom:X11')
 depends=('mtdev' 'libevdev')
 makedepends=('python' 'check')
 source=("http://www.freedesktop.org/software/${pkgname}/${pkgname}-${pkgver}.tar.xz")
-md5sums=('f2993b477db8d7ec0e785ce04ffecb03')
+md5sums=('f12066eeda3e1aeaa65eeca4b9ad833d')
+
+# todo: rebuid with doxygen
 
 build() {
 	cd ${srcdir}/${pkgname}-${pkgver}
@@ -19,7 +21,10 @@ build() {
 		--sysconfdir=/etc \
 		--localstatedir=/var \
 		--disable-libwacom \
+		--disable-tests \
+		--disable-debug-gui \
 		--with-udev-dir=/usr/lib/udev \
+		--disable-documentation \
 		--disable-static
 	make
 }

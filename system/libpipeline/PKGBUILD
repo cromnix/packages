@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <chris@cromer.cl>
 
 pkgname=libpipeline
-pkgver=1.4.1
+pkgver=1.4.2
 pkgrel=1
 pkgdesc="The Libpipeline package contains a library for manipulating pipelines of subprocesses in a flexible and convenient way."
 arch=('x86_64')
@@ -9,7 +9,7 @@ url="http://libpipeline.nongnu.org/"
 license=('GPL')
 depends=('glibc')
 source=("http://download.savannah.gnu.org/releases/libpipeline/$pkgname-$pkgver.tar.gz")
-md5sums=('e54590ec68d6c1239f67b5b44e92022c')
+md5sums=('d5c80387eb9c9e5d089da2a06e8a6b12')
 
 build() {
     cd "$srcdir/$pkgname-$pkgver"

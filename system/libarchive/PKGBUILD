@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <chris@cromer.cl>
 
 pkgname=libarchive
-pkgver=3.3.1
+pkgver=3.3.2
 pkgrel=1
 pkgdesc="The libarchive library provides a single interface for reading/writing various compression formats."
 arch=('x86_64')
@@ -11,7 +11,7 @@ depends=('acl' 'attr' 'bzip2' 'expat' 'openssl' 'xz' 'zlib')
 makedepends=('acl-dev')
 options=('strip' '!libtool')
 source=("http://www.libarchive.org/downloads/$pkgname-$pkgver.tar.gz")
-md5sums=('d2af45480aa5b0db5b5f3919cd0ea65e')
+md5sums=('4583bd6b2ebf7e0e8963d90879eb1b27')
 
 build() {
     cd "$srcdir/$pkgname-$pkgver"

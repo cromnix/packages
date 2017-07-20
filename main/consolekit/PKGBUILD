@@ -2,8 +2,8 @@
 
 pkgbase=consolekit
 pkgname=('consolekit' 'consolekit-openrc')
-pkgver=1.1.2
-pkgrel=4
+pkgver=1.2.0
+pkgrel=5
 pkgdesc="The ConsoleKit package is a framework for keeping track of the various users, sessions, and seats present on a system"
 arch=('x86_64')
 url="https://github.com/ConsoleKit2/ConsoleKit2"
@@ -13,7 +13,7 @@ options=('!libtool')
 source=("https://github.com/Consolekit2/ConsoleKit2/releases/download/${pkgver}/ConsoleKit2-${pkgver}.tar.bz2"
 		"https://gitweb.gentoo.org/repo/gentoo.git/plain/sys-auth/consolekit/files/consolekit-1.0.0.initd"
 		'openrc-shutdown.patch')
-md5sums=('6ae77a545eb72d31c2f91e7439f98dff'
+md5sums=('22aa77f63a55afc95860f9693d312803'
          '63704264bd6fca3e0d9eb9605e06dbfb'
          '99c001b89af45fd1ad44c4284ab8e597')
 

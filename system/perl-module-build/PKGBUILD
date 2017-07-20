@@ -2,7 +2,7 @@
 
 pkgname=perl-module-build
 _pkgname=Module-Build
-pkgver=0.4220
+pkgver=0.4224
 pkgrel=1
 pkgdesc="Build, test, and install Perl modules."
 arch=('any')
@@ -11,7 +11,7 @@ license=('GPL' 'PerlArtistic')
 depends=('perl')
 options=('!emptydirs')
 source=("http://search.cpan.org/CPAN/authors/id/L/LE/LEONT/$_pkgname-$pkgver.tar.gz")
-md5sums=('9df204e188462a4410d496f316c2c531')
+md5sums=('b74c2f6e84b60aad3a3defd30b6f0f4d')
 
 build() {
     cd "$srcdir/$_pkgname-$pkgver"

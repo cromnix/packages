@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <chris@cromer.cl>
 
 pkgname=fontconfig
-pkgver=2.12.3
+pkgver=2.12.4
 pkgrel=1
 pkgdesc='Contains a library and support programs used for configuring and customizing font access'
 arch=('x86_64')
@@ -10,7 +10,7 @@ license=('custom')
 depends=('expat' 'freetype')
 makedepends=('python2' 'gperf')
 source=("http://www.freedesktop.org/software/fontconfig/release/${pkgname}-${pkgver}.tar.bz2")
-md5sums=('872f757ec180e8c51918ff39705c40de')
+md5sums=('29105662c7d319720e0088a0ac53f494')
 
 build() {
 	cd "$srcdir/$pkgname-$pkgver"

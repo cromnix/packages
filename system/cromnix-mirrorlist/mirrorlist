@@ -1,0 +1,56 @@
+##
+## Cromnix repository mirrorlist
+## Generated on 2017-07-10
+##
+
+## Brazil
+# Server = https://ufpr.dl.sourceforge.net/project/cromnix/repos/$repo/$arch
+# Server = https://razaoinfo.dl.sourceforge.net/project/cromnix/repos/$repo/$arch
+
+## Bulgaria
+# Server = https://netix.dl.sourceforge.net/project/cromnix/repos/$repo/$arch
+
+## Canada
+# Server = https://iweb.dl.sourceforge.net/project/cromnix/repos/$repo/$arch
+
+## Czech Replubic
+# Server = https://10Gbps.io.dl.sourceforge.net/project/cromnix/repos/$repo/$arch
+
+## France
+# Server = https://freefr.dl.sourceforge.net/project/cromnix/repos/$repo/$arch
+
+## Germany
+# Server = https://netcologne.dl.sourceforge.net/project/cromnix/repos/$repo/$arch
+
+## India
+# Server = https://excellmedia.dl.sourceforge.net/project/cromnix/repos/$repo/$arch
+
+## Japan
+# Server = https://jaist.dl.sourceforge.net/project/cromnix/repos/$repo/$arch
+
+## Kenya
+# Server = https://liquidtelecom.dl.sourceforge.net/project/cromnix/repos/$repo/$arch
+
+## Taiwan
+# Server = https://nchc.dl.sourceforge.net/project/cromnix/repos/$repo/$arch
+# Server = https://ncu.dl.sourceforge.net/project/cromnix/repos/$repo/$arch
+
+## United Kingdom
+# Server = https://kent.dl.sourceforge.net/project/cromnix/repos/$repo/$arch
+# Server = https://vorboss.dl.sourceforge.net/project/cromnix/repos/$repo/$arch
+
+## United States
+# Server = https://ayera.dl.sourceforge.net/project/cromnix/repos/$repo/$arch
+# Server = https://cfhcable.dl.sourceforge.net/project/cromnix/repos/$repo/$arch
+# Server = https://cytranet.dl.sourceforge.net/project/cromnix/repos/$repo/$arch
+# Server = https://gigenet.dl.sourceforge.net/project/cromnix/repos/$repo/$arch
+# Server = https://managedway.dl.sourceforge.net/project/cromnix/repos/$repo/$arch
+# Server = https://phoenixnap.dl.sourceforge.net/project/cromnix/repos/$repo/$arch
+# Server = https://pilotfiber.dl.sourceforge.net/project/cromnix/repos/$repo/$arch
+# Server = https://superb-dca2.dl.sourceforge.net/project/cromnix/repos/$repo/$arch
+# Server = https://superb-sea2.dl.sourceforge.net/project/cromnix/repos/$repo/$arch
+# Server = https://svwh.dl.sourceforge.net/project/cromnix/repos/$repo/$arch
+# Server = https://versaweb.dl.sourceforge.net/project/cromnix/repos/$repo/$arch
+
+## Misc
+# Server = https://downloads.sourceforge.net/project/cromnix/repos/$repo/$arch

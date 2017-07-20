@@ -1,14 +1,14 @@
 # Maintainer: Chris Cromer <chris@cromer.cl>
 
 pkgname=openrc
-pkgver=0.27.2
-pkgrel=3
+pkgver=0.28
+pkgrel=4
 pkgdesc="An init and service control software"
 arch=('x86_64')
 url="http://www.gentoo.org/proj/en/base/openrc/"
 license=('BSD2')
 groups=('cromnix-base')
-depends=('kbd' 'procps-ng' 'psmisc')
+depends=('kbd' 'procps-ng' 'psmisc' 'sed')
 backup=('etc/openrc/rc.conf'
         'etc/openrc/conf.d/bootmisc'
         'etc/openrc/conf.d/consolefont'
@@ -32,7 +32,7 @@ source=("$pkgname-$pkgver.tar.gz::https://github.com/OpenRC/openrc/archive/$pkgv
 		'openrc.logrotate')
 install=openrc.install
 options=('debug' 'strip')
-md5sums=('04eb2628a41d9cb89dca80cd5e9e4ebd'
+md5sums=('9e3172a3862a2264d61d541012fe7aad'
          '0d8a00d30812ec460ef8c32a96372c31')
 
 _args=(
