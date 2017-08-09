@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=ca-certificates
-pkgver=20170717
+pkgver=20170809
 pkgrel=1
 pkgdesc='Certificate Authority Certificates'
 arch=('x86_64')

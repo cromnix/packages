@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=pango
-pkgver=1.40.8
+pkgver=1.40.9
 _pkgver=${pkgver%.*}
 pkgrel=1
 pkgdesc='Pango is a library for laying out and rendering of text, with an emphasis on internationalization'
@@ -12,7 +12,7 @@ depends=('cairo' 'libxft' 'harfbuzz')
 makedepends=('cairo' 'harfbuzz' 'fontconfig' 'libxft' 'help2man')
 checkdepends=('ttf-dejavu')
 source=("http://ftp.gnome.org/pub/gnome/sources/${pkgname}/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
-md5sums=('1b4280450731eb3b18d0e2c632ae088a')
+md5sums=('5485d2c82a14222315706eb8da20353c')
 
 build() {
 	cd ${srcdir}/${pkgname}-${pkgver}
