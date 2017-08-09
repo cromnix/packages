@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=libdrm
-pkgver=2.4.81
+pkgver=2.4.82
 pkgrel=1
 pkgdesc='Provides a user space library for accessing the DRM, direct rendering manager'
 arch=('x86_64')
@@ -11,7 +11,7 @@ depends=('libpciaccess')
 makedepends=('util-macros' 'libxslt' 'docbook-xsl')
 checkdepends=('cairo')
 source=("http://dri.freedesktop.org/${pkgname}/${pkgname}-${pkgver}.tar.bz2")
-md5sums=('d04f3567f0a812188d06f860fded5ab7')
+md5sums=('29867814123c3d23056b1d05aada1b9d')
 
 build() {
 	cd ${srcdir}/${pkgname}-${pkgver}

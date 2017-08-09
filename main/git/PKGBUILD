@@ -1,35 +1,29 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=git
-pkgver=2.13.3
-pkgrel=1
+pkgver=2.14.0
+pkgrel=2
 pkgdesc="Git is a free and open source, distributed version control system designed to handle everything from small to very large projects with speed and efficiency."
 arch=('x86_64')
 url="https://git-scm.com/"
 license=('GPL')
-depends=('libcurl' 'openssl' 'python2')
-makedepends=('asciidoc')
-source=("https://github.com/git/git/archive/v$pkgver.tar.gz"
-        "https://www.kernel.org/pub/software/scm/git/git-manpages-$pkgver.tar.xz"
-        "https://www.kernel.org/pub/software/scm/git/git-htmldocs-$pkgver.tar.xz")
-noextract=("git-manpages-$pkgver.tar.xz"
-           "git-htmldocs-$pkgver.tar.xz")
-md5sums=('8361e81a3e0948a4dcbe3cfd04919aab'
-         '33caeed94ace70f1ff3342172503d895'
-         'b54dc5be307a47b78560698afc0904fa')
+depends=('libcurl' 'expat' 'perl' 'openssl' 'pcre')
+makedepends=('python2' 'xmlto' 'asciidoc')
+source=("$pkgname-$pkgver.tar.gz::https://github.com/git/git/archive/v$pkgver.tar.gz")
+md5sums=('325b2f6ff163a6f3e4caa9c7747ce5a7')
 
-# todo: rebuild with manpages
+# todo: rebuild with pcre2 and 'perl-error'
 
 build() {
     cd "$srcdir/$pkgname-$pkgver"
     make configure
     ./configure --prefix=/usr \
         --with-gitconfig=/etc/gitconfig \
+        --enable-jit \
         --libexecdir=/usr/lib/git-core
     make
     make html
-    # need to install xmlto, dblatex, and docbook2x to build man
-    #make man
+    make man
 }
 
 check() {
@@ -41,11 +35,8 @@ package() {
     cd "$srcdir/$pkgname-$pkgver"
 
     make DESTDIR="$pkgdir" install
-    #make DESTDIR="$pkgdir" install-man
+    make DESTDIR="$pkgdir" install-man
     make DESTDIR="$pkgdir" htmldir=/usr/share/doc/${pkgname}-${pkgver} install-html
 
 	find ${pkgdir}/usr/share/locale -type d -exec chmod 755 {} +
-
-    # temp manpages until they can be built
-    tar -xf ${srcdir}/git-manpages-${pkgver}.tar.xz -C ${pkgdir}/usr/share/man --no-same-owner --no-overwrite-dir
 }

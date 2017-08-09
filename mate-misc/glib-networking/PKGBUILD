@@ -1,0 +1,37 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=glib-networking
+pkgver=2.50.0
+_pkgver=${pkgver%.*}
+pkgrel=1
+pkgdesc='The GLib Networking package contains Network related gio modules for GLib'
+arch=('x86_64')
+url='https://git.gnome.org/browse/glib-networking'
+license=('GPL2')
+depends=('glib' 'gnutls' 'ca-certificates' 'gsettings-desktop-schemas')
+makedepends=('intltool')
+source=("http://ftp.gnome.org/pub/gnome/sources/${pkgname}/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
+md5sums=('4d06d0224646f274918b1cb6da9a07f6')
+
+# todo: rebuild with libproxy
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr \
+		--without-ca-certificates \
+		--disable-static \
+		--sysconfdir=/etc \
+		--libexecdir=/usr/lib/glib-networking \
+		--disable-installed-tests
+	make
+}
+
+check() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make -k check
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}

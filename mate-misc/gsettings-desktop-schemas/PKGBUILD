@@ -1,0 +1,32 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=gsettings-desktop-schemas
+pkgver=3.24.0
+_pkgver=${pkgver%.*}
+pkgrel=1
+pkgdesc='The GSettings Desktop Schemas package contains a collection of GSettings schemas for settings shared by various components of a GNOME Desktop'
+arch=('any')
+url='https://git.gnome.org/browse/gsettings-desktop-schemas'
+license=('GPL')
+depends=('glib' 'dconf')
+makedepends=('intltool')
+source=("http://ftp.gnome.org/pub/gnome/sources/${pkgname}/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
+md5sums=('cc3465621bea4ff6de915812fadc5a8e')
+		 
+# todo: rebuild with depends
+
+prepare() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	sed -i -r 's:"(/system):"/org/gnome\1:g' schemas/*.in
+}
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}

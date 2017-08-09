@@ -14,7 +14,7 @@ checkdepends=('file')
 source=("https://www.python.org/ftp/python/$pkgver/$_pkgname-$pkgver.tar.xz"
         "https://docs.python.org/2.7/archives/python-$pkgver-docs-html.tar.bz2")
 md5sums=('53b43534153bb2a0363f08bae8b9d990'
-         '34cd0793f2944fc6ac47ae6205b4e09f')
+         'c25fb3066a5e5ac69d4826f012fbcdc6')
 
 prepare() {
     cd "$srcdir/$_pkgname-$pkgver"

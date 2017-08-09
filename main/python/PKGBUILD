@@ -2,7 +2,7 @@
 
 pkgname=python
 _pkgname=Python
-pkgver=3.6.1
+pkgver=3.6.2
 _pkgver=${pkgver%.*}
 pkgrel=1
 pkgdesc="The Python 3 package contains the Python development environment. This is useful for object-oriented programming, writing scripts, prototyping large programs or developing entire applications."
@@ -15,8 +15,8 @@ provides=('python3')
 options=('!makeflags')
 source=("https://www.python.org/ftp/python/$pkgver/Python-$pkgver.tar.xz"
         "https://docs.python.org/3.6/archives/python-$pkgver-docs-html.tar.bz2")
-md5sums=('692b4fc3a2ba0d54d1495d4ead5b0b5c'
-         'c61e0d4fc19fafd7297796d126995297')
+md5sums=('2c68846471994897278364fc18730dd9'
+         '21efc665ac1cbfb78edcfbbcf49fb6fd')
 
 build() {
     cd "$srcdir/$_pkgname-$pkgver"

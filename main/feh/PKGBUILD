@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=feh
-pkgver=2.19
+pkgver=2.19.1
 pkgrel=1
 pkgdesc='feh is a fast, lightweight image viewer which uses Imlib2'
 arch=('x86_64')
@@ -12,7 +12,9 @@ depends=('imlib2' 'curl' 'libxinerama')
 makedepends=('libxt')
 optdepends=('imagemagick: support more file formats')
 source=("http://feh.finalrewind.org/${pkgname}-${pkgver}.tar.bz2")
-md5sums=('54fc20a0f35f0e2fea24541e622ae1d7')
+md5sums=('ee16a66f74cb1da9c9e2ac72ebbf10a8')
+
+# todo: rebuild with libexif
 
 prepare() {
 	cd ${srcdir}/${pkgname}-${pkgver}

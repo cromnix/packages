@@ -1,0 +1,30 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=gtk-doc
+pkgver=1.25
+pkgrel=1
+pkgdesc='The GTK-Doc package contains a code documenter'
+arch=('any')
+url='https://www.gtk.org/gtk-doc/'
+license=('GPL' 'FDL')
+depends=('docbook-xsl' 'docbook-xml' 'perl' 'python2' 'itstool')
+source=("http://ftp.gnome.org/pub/gnome/sources/${pkgname}/${pkgver}/${pkgname}-${pkgver}.tar.xz")
+md5sums=('0dc6570953112a464a409fb99258ccbc')
+
+# todo: missing depends
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	PYTHON=/usr/bin/python2 ./configure --prefix=/usr
+	make
+}
+
+check() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make check
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}

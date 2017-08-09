@@ -2,7 +2,7 @@
 
 pkgbase=dbus
 pkgname=('dbus' 'dbus-openrc')
-pkgver=1.10.20
+pkgver=1.10.22
 pkgrel=1
 pkgdesc='D-Bus is a message bus system, a simple way for applications to talk to one another'
 arch=('x86_64')
@@ -12,7 +12,7 @@ makedepends=('xmlto' 'docbook-xsl' 'python' 'libx11' 'dbus' 'openrc-services')
 source=("http://dbus.freedesktop.org/releases/${pkgbase}/${pkgbase}-${pkgver}.tar.gz"
 		'https://gitweb.gentoo.org/repo/gentoo.git/plain/sys-apps/dbus/files/dbus.initd-r1'
 		'30-dbus.sh')
-md5sums=('94c991e763d4f9f13690416b2dcd9411'
+md5sums=('baaa10b7cb49086ad91179a8decfadc5'
          '779e0690de06451c05371c4fd47c67c2'
          '9e7e4011d29c6eb8b865e603ddc4603e')
 

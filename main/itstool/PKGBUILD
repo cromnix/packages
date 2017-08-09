@@ -1,0 +1,29 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=itstool
+pkgver=2.0.2
+pkgrel=1
+pkgdesc='Itstool extracts messages from XML files and outputs PO template files, then merges translations from MO files to create translated XML files'
+arch=('any')
+url='http://itstool.org/'
+license=('GPL3')
+depends=('python2' 'libxml2')
+source=("http://files.itstool.org/${pkgname}/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('d472d877a7bc49899a73d442085b2f93')
+
+prepare() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	sed -i 's/| python/&2/' configure.ac
+	autoreconf -fi
+}
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr PYTHON=/usr/bin/python2
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}

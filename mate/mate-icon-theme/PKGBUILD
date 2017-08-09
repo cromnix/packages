@@ -1,0 +1,26 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=mate-icon-theme
+pkgver=1.18.0
+_pkgver=${pkgver%.*}
+pkgrel=1
+pkgdesc='MATE icon theme'
+arch=('any')
+url='http://mate-desktop.org/'
+license=('LGPL')
+groups=('mate')
+makedepends=('icon-naming-utils' 'intltool')
+options=('!emptydirs')
+source=("http://pub.mate-desktop.org/releases/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
+md5sums=('93815fc181e6878e24bad8da062d8187')
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}

@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=elfutils
-pkgver=0.169
+pkgver=0.170
 pkgrel=1
 pkgdesc='The elfutils package contains a set of utilities and libraries for handling ELF (Executable and Linkable Format) files'
 arch=('x86_64')
@@ -11,7 +11,7 @@ depends=('gcc-libs' 'zlib' 'bzip2' 'xz')
 checkdepends=('valgrind')
 options=('staticlibs')
 source=("https://sourceware.org/${pkgname}/ftp/${pkgver}/${pkgname}-${pkgver}.tar.bz2")
-md5sums=('1ce77c5315d6bba7d883c3c4f0c2697e')
+md5sums=('03599aee98c9b726c7a732a2dd0245d5')
 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"

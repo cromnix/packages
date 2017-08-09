@@ -1,0 +1,25 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=beaver
+pkgver=0.4.1
+_pkgver=${pkgver%.*}
+pkgrel=1
+pkgdesc='Beaver is an Early AdVanced EditoR'
+arch=('x86_64')
+url='http://beaver-editor.sourceforge.net/'
+license=('GPL2')
+depends=('gtk2' 'hicolor-icon-theme')
+makedepends=('intltool' 'atk-dev')
+source=("http://sourceforge.net/projects/beaver-editor/files/${_pkgver}/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('0cb1bf7350e7399c85a42d6672907d64')
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}

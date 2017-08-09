@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=cromnix-utils
-pkgver=r1.307e272
+pkgver=r3.5c55a25
 pkgrel=1
 pkgdesc='Utilities for various tasks in cromnix'
 arch=('any')

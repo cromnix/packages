@@ -2,13 +2,13 @@
 
 pkgname=lxmusic
 pkgver=0.4.7
-pkgrel=1
+pkgrel=2
 pkgdesc='A frontend for the XMMS2 audio player'
 arch=('x86_64')
 url='https://www.lxde.org/'
 license=('GPL2')
 groups=('lxde')
-depends=('gtk2' 'xmms2')
+depends=('gtk2' 'xmms2' 'libnotify')
 makedepends=('intltool' 'atk-dev')
 source=("http://downloads.sourceforge.net/lxde/${pkgname}-${pkgver}.tar.xz")
 md5sums=('1bbd57f5b34e13ef31152c9ecb31ef68')

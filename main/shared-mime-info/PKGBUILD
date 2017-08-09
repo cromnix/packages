@@ -2,7 +2,7 @@
 
 pkgname=shared-mime-info
 pkgver=1.8
-pkgrel=1
+pkgrel=2
 pkgdesc='The Shared Mime Info package contains a MIME database'
 arch=('x86_64')
 url='https://www.gnu.org/software/patch/patch.html'
@@ -10,12 +10,17 @@ license=('GPL2')
 depends=('libxml2' 'glib')
 makedepends=('intltool' 'pkg-config')
 options=(!makeflags)
-source=("http://freedesktop.org/~hadess/${pkgname}-${pkgver}.tar.xz")
-md5sums=('f6dcadce764605552fc956563efa058c')
+install=shared-mime-info.install
+source=("http://freedesktop.org/~hadess/${pkgname}-${pkgver}.tar.xz"
+		'update-mime-database.hook')
+md5sums=('f6dcadce764605552fc956563efa058c'
+         'fc48155d8fb2147b8fc72597e79936b4')
 
 build() {
 	cd "$srcdir/$pkgname-$pkgver"
-	./configure --prefix=/usr
+	export ac_cv_func_fdatasync=no
+	./configure --prefix=/usr \
+		--disable-update-mimedb
 	make
 }
 
@@ -27,4 +32,5 @@ check() {
 package() {
 	cd "$srcdir/$pkgname-$pkgver"
 	make DESTDIR="$pkgdir" install
+	install -Dm644 "${srcdir}"/update-mime-database.hook "${pkgdir}"/usr/share/libalpm/hooks/update-mime-database.hook
 }

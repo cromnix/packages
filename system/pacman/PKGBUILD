@@ -3,7 +3,7 @@
 pkgbase=pacman
 pkgname=('pacman' 'pacman-contrib')
 pkgver=5.0.2
-pkgrel=4
+pkgrel=6
 pkgdesc="A library-based package manager with dependency support"
 arch=('x86_64')
 url="http://www.archlinux.org/pacman/"
@@ -14,11 +14,15 @@ options=('strip')
 source=("https://sources.archlinux.org/other/pacman/$pkgname-$pkgver.tar.gz"
         "pacman.conf"
         "makepkg.conf"
-        'pacman.logrotate')
+        'pacman.logrotate'
+        'paccache.hook')
 md5sums=('f36f5e7e95a89436febe1bcca874fc33'
-         '1651c36cc707cbc64ff3c17a15c3633b'
+         '967348a29854b7fd947a496ab582131a'
          '5f978a84b691754a7a1588b8a5414b46'
-         'bfed0ae8b6ec38fe6f5a1a6b1fcec871')
+         'bfed0ae8b6ec38fe6f5a1a6b1fcec871'
+         'cd3b81be6dd7cfc4a441fd75b87f72dc')
+         
+# todo: missing depends for check
 
 build() {
     cd "$srcdir/$pkgname-$pkgver"
@@ -39,9 +43,10 @@ check() {
 
 package_pacman() {
 	groups=('cromnix-base')
-	depends=('perl' 'bash' 'glibc' 'libarchive' 'curl' 'gpgme' 'libxml2' 'xdelta3' 'cromnix-mirrorlist' 'cromnix-keyring')
+	depends=('perl' 'bash' 'glibc' 'libarchive' 'curl' 'gpgme' 'libxml2' 'cromnix-mirrorlist' 'cromnix-keyring')
 	optdepends=('pacman-contrib: extra scripts for use with pacman'
-				'bzip2: uncrompess bz2 source files')
+				'bzip2: uncrompess bz2 source files'
+				'xdelta3: delta updates for packages')
 	backup=('etc/pacman.conf'
 			'etc/makepkg.conf'
 			'etc/logrotate.d/pacman')
@@ -69,13 +74,15 @@ package_pacman() {
 }
 
 package_pacman-contrib() {
-	groups=('cromnix-dev')
+	groups=('cromnix-base')
 	depends=('pacman' 'bash' 'perl' 'curl')
 	optdepends=('vim: for pacdiff')
 	arch=('any')
 
     cd "$srcdir/$pkgbase-$pkgver"
     make DESTDIR="$pkgdir" -C contrib install
+    
+	install -Dm644 "${srcdir}"/paccache.hook "${pkgdir}"/usr/share/libalpm/hooks/paccache.hook
 
-    rm -rf ${pkgdir}/etc
+    rm -rf "${pkgdir}"/etc
 }

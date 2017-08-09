@@ -1,0 +1,46 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=vi
+pkgver=070224
+pkgrel=1
+pkgdesc='The original ex/vi text editor'
+arch=('x86_64')
+url='http://ex-vi.sourceforge.net/'
+license=('custom:ex')
+groups=('cromnix-base')
+depends=('ncurses')
+optdepends=('s-nail: used by the preserve command for notification')
+source=("https://sources.archlinux.org/other/${pkgname}/ex-${pkgver}.tar.xz"
+		'fix-tubesize-short-overflow.patch'
+		'navkeys.patch'
+		'preserve-dir.patch')
+md5sums=('dda686d53f6d3e6e8a0a3701e7a4a56a'
+         'a456d3fe231d7d3a422fffd42da83cfe'
+         'aac133930047eafa4f28736cfaf976b3'
+         '8c6d3503e7c41a4413145ae49a7f2b80')
+
+prepare() {
+	cd "${srcdir}/ex-${pkgver}"
+	patch -Np1 -i "${srcdir}"/fix-tubesize-short-overflow.patch
+	patch -Np1 -i "${srcdir}"/navkeys.patch
+	patch -Np1 -i "${srcdir}"/preserve-dir.patch
+}
+
+build() {
+	cd "${srcdir}/ex-${pkgver}"
+	make PREFIX=/usr \
+		LIBEXECDIR=/usr/lib/ex \
+		PRESERVEDIR=/var/lib/ex \
+		TERMLIB=ncurses \
+		FEATURES="-DCHDIR -DFASTTAG -DUCVISUAL -DMB -DBIT8"
+}
+
+package() {
+	cd "${srcdir}/ex-${pkgver}"
+	make PREFIX=/usr \
+		LIBEXECDIR=/usr/lib/ex \
+		PRESERVEDIR=/var/lib/ex \
+		INSTALL=/usr/bin/install \
+		DESTDIR="${pkgdir}" install
+	install -Dm644 LICENSE "${pkgdir}"/usr/share/licenses/${pkgname}/LICENSE
+}

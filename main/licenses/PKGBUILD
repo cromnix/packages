@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=licenses
-pkgver=2.7.1
+pkgver=20170809
 pkgrel=1
 pkgdesc='The standard licenses distribution package'
 arch=('x86_64')

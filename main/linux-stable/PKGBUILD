@@ -2,7 +2,7 @@
 
 pkgbase=linux-stable
 pkgname=('linux-stable' 'linux-stable-doc')
-pkgver=4.12.2
+pkgver=4.12.5
 pkgrel=1
 pkgdesc="This package contain the stable linux kernel, support for this kernel is not guaranteed and may end up EOL(End of Life)"
 arch=('x86_64')
@@ -14,8 +14,8 @@ source=("https://www.kernel.org/pub/linux/kernel/v4.x/linux-$pkgver.tar.xz"
         "config"
         "usb.conf"
         "linux-lib-path.patch")
-md5sums=('a61922df59b3ff54fcf418d2b8a0ab70'
-         '984a423d6fbd47acad7ae89565cbff60'
+md5sums=('7ceda6275f03c7b259c98e062fa3ded3'
+         'fd83484de821fc6d9bc6d90431f73f1f'
          '30994cd9cba3aa218b3afa33d34eb649'
          '9d34da065c7c15ab5aa73fa4b44f4c21')
 

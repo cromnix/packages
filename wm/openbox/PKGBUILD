@@ -3,7 +3,7 @@
 pkgbase=openbox
 pkgname=('openbox' 'openbox-desktop' 'openbox-session' 'openbox-gnome-session' 'openbox-kde-session')
 pkgver=3.6.1
-pkgrel=2
+pkgrel=3
 pkgdesc='Openbox is a highly configurable desktop window manager with extensive standards support'
 arch=('x86_64')
 url='http://openbox.org/'
@@ -57,7 +57,7 @@ package_openbox() {
 package_openbox-desktop() {
 	# meta package to install a complete desktop environment
 	arch=('any')
-	depends=('cromnix-wallpaper' 'firefox' 'tint2' 'feh' 'spacefm-ng' 'unzip' 'alsa-utils' 'openbox-session')
+	depends=('cromnix-wallpaper' 'firefox' 'tint2' 'feh' 'spacefm-ng' 'unzip' 'alsa-utils' 'openbox-session' 'obconf')
 	optdepends=('openbox: to use this desktop environment with openbox')
 	pkgdesc='A complete Openbox desktop environment'
 }

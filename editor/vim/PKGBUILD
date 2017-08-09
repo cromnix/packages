@@ -9,7 +9,6 @@ pkgdesc='The Vim package contains a powerful text editor'
 arch=('x86_64')
 url='https://vim.sourceforge.io/'
 license=('custom:vim')
-groups=('cromnix-base')
 source=("ftp://ftp.vim.org/pub/${pkgbase}/unix/${pkgbase}-${pkgver}.tar.bz2"
 		'cromnix.vim'
 		'vimrc'
@@ -49,6 +48,8 @@ package_vim() {
 	rm -rf "${pkgdir}"/usr/share/vim/vim80/doc
 	ln -sv /usr/share/doc/${pkgbase}-${pkgver} "${pkgdir}"/usr/share/vim/vim80/doc
 	
+	rm "${pkgdir}"/usr/bin/{ex,view}
+	
 	install -Dm644 "${srcdir}"/vimrc "${pkgdir}"/etc/vimrc
 	install -Dm644 "${srcdir}"/cromnix.vim "${pkgdir}"/usr/share/vim/vimfiles/cromnix.vim
 	
@@ -57,10 +58,13 @@ package_vim() {
 
 package_vim-vicompat() {
 	depends=('vim')
+	conflicts=('vi')
 	cd "${srcdir}/${pkgbase}${_pkgver}"
 	make DESTDIR="${pkgdir}" install
 	install -dm0755 "${pkgdir}"/usr/bin 
 	ln -sv vim "${pkgdir}"/usr/bin/vi
+	ln -sv vim "${pkgdir}"/usr/bin/view
+	ln -sv vim "${pkgdir}"/usr/bin/ex
 	for _dir in "${pkgdir}"/usr/share/man/{,*/}man1/vim.1; do
 		ln -sv vim.1.gz $(dirname ${_dir})/vi.1.gz
 	done

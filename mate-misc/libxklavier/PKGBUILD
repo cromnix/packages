@@ -1,0 +1,31 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=libxklavier
+pkgver=5.4
+pkgrel=1
+pkgdesc='The libxklavier package contains a utility library for X keyboard'
+arch=('x86_64')
+url='http://gswitchit.sourceforge.net'
+license=('LGPL')
+depends=('glib' 'libxkbfile' 'libxml2' 'xkeyboard-config' 'libxi' 'iso-codes')
+makedepends=('intltool' 'gtk-doc' 'libxfixes' 'which')
+options=('!emptydirs')
+source=("http://cgit.freedesktop.org/${pkgname}/snapshot/${pkgname}-${pkgver}.zip")
+md5sums=('2817e89676f25a836fe63ffdae69fca8')
+
+# todo: rebuild with depends
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./autogen.sh --prefix=/usr \
+		--with-xkb-bin-base=/usr/bin \
+		--with-xkb-base=/usr/share/X11/xkb \
+		--disable-static \
+		--enable-gtk-doc
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}

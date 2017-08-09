@@ -1,0 +1,48 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=glib
+pkgver=2.52.3
+_pkgver=${pkgver%.*}
+pkgrel=2
+pkgdesc='The GLib package contains low-level libraries useful for providing data structure handling for C'
+arch=('x86_64')
+url='http://www.gtk.org'
+license=('LGPL')
+depends=('pcre' 'libffi' 'libutil-linux')
+makedepends=('libffi' 'python' 'pcre' 'zlib' 'gettext' 'shared-mime-info' 'gtk-doc' 'util-linux' 'elfutils')
+checkdepends=('desktop-file-utils' 'dbus')
+optdepends=('python: for gdbus-codegen and gtester-report'
+			'libelf: gresource inspection tool')
+options=('!emptydirs')
+source=("http://ftp.gnome.org/pub/gnome/sources/${pkgname}/${_pkgver}/${pkgname}-${pkgver}.tar.xz"
+		'glib-compile-schemas.hook'
+		'gio-querymodules.hook')
+md5sums=('89265d0289a436e99cad54491eb21ef4'
+         '9e25d7de10bc4dc105f171e9ae46ef69'
+         'a52ea506b5cf162a4f72d09cc33fae50')
+         
+# change to libelf
+
+build() {
+	cd "$srcdir/$pkgname-$pkgver"
+	./configure --prefix=/usr \
+		--with-pcre=system \
+		--with-python=/usr/bin/python3 \
+		--disable-fam \
+		--enable-gtk-doc
+	sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
+	make
+}
+
+check() {
+	cd "$srcdir/$pkgname-$pkgver"
+	make -k check
+}
+
+package() {
+	cd "$srcdir/$pkgname-$pkgver"
+	make DESTDIR="$pkgdir" install
+	
+	install -d "${pkgdir}"/usr/share/libalpm/hooks/
+	install -m644 "${srcdir}"/{glib-compile-schemas,gio-querymodules}.hook "${pkgdir}"/usr/share/libalpm/hooks/
+}

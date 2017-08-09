@@ -1,0 +1,26 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=obconf
+pkgver=2.0.4
+pkgrel=1
+pkgdesc='A GTK2 based configuration tool for the Openbox windowmanager'
+arch=('x86_64')
+url='http://openbox.org/wiki/ObConf:About'
+license=('GPL')
+depends=('openbox' 'gtk2' 'desktop-file-utils' 'libsm' 'startup-notification' 'libglade')
+makedepends=('atk-dev')
+source=(""http://openbox.org/dist/${pkgname}/${pkgname}-${pkgver}.tar.gz"")
+md5sums=('9271c5d2dc366d61f73665a5e8bceabc')
+
+# todo: rebuild with libglade
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}

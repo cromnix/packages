@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=harfbuzz
-pkgver=1.4.6
+pkgver=1.4.7
 pkgrel=1
 pkgdesc='The HarfBuzz package contains an OpenType text shaping engine'
 arch=('x86_64')
@@ -10,7 +10,7 @@ license=('MIT')
 depends=('glib' 'freetype')
 makedepends=('glib' 'freetype' 'icu' 'python2')
 source=("http://www.freedesktop.org/software/harfbuzz/release/${pkgname}-${pkgver}.tar.bz2")
-md5sums=('e246c08a3bac98e31e731b2a1bf97edf')
+md5sums=('37096205bc43e2977de0f1cf2706940a')
 
 build() {
 	cd "$srcdir/$pkgname-$pkgver"
