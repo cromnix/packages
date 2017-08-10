@@ -3,12 +3,12 @@
 pkgbase=fcron
 pkgname=('fcron' 'fcron-openrc')
 pkgver=3.2.1
-pkgrel=4
+pkgrel=5
 pkgdesc='The Fcron package contains a periodical command scheduler'
 arch=('x86_64')
 url='http://fcron.free.fr'
 license=('GPL')
-makedepends=('fcron' 'nano' 'openrc-services')
+makedepends=('fcron' 'vi' 'openrc-services')
 source=("http://fcron.free.fr/archives/${pkgname}-${pkgver}.src.tar.gz"
 		"https://gitweb.gentoo.org/repo/gentoo.git/plain/sys-process/fcron/files/fcron.init.4"
 		"https://gitweb.gentoo.org/repo/gentoo.git/plain/sys-process/cronbase/files/run-crons-0.3.7"
@@ -19,8 +19,6 @@ md5sums=('bd4996e941a40327d11efc5e3fd1f839'
          'c5caba6f41a37c3c5dff46ca5193e323'
          '731c1325a859235347e1956fd72aa36a'
          'a0e7c32bef48f80023b708d8cc766728')
-
-# todo: rebuild with vi as requirement
 
 prepare() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
@@ -36,8 +34,8 @@ build() {
 		--localstatedir=/var \
 		--without-sendmail \
 		--with-boot-install=no \
-		--with-editor=/usr/bin/nano \
-		--with-systemdsystemunitdir=no 
+		--with-editor=/usr/bin/vi \
+		--with-systemdsystemunitdir=no
 	make
 }
 
