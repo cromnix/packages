@@ -1,22 +1,25 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
-pkgname=gtk3
-pkgver=3.22.17
+pkgbase=gtk3
+pkgname=('gtk3' 'gtk-update-icon-cache')
+pkgver=3.22.18
 _pkgver=${pkgver%.*}
 pkgrel=1
 pkgdesc='The GTK+ 3 package contains libraries used for creating graphical user interfaces for applications'
 arch=('x86_64')
 url='http://www.gtk.org/'
 license=('LGPL')
-depends=('pango' 'libepoxy' 'gdk-pixbuf' 'libat-spi2-atk')
-makedepends=('python' 'at-spi2-atk-dev' 'atk-dev')
+depends=('libatk' 'cairo' 'pango' 'libepoxy' 'gdk-pixbuf' 'libat-spi2-atk'
+		'libxcursor' 'libxinerama' 'libxrandr' 'libxi' 'dconf' 'mesa'
+		'libxcomposite' 'shared-mime-info' 'adwaita-icon-theme'
+		'desktop-file-utils' 'libxdamage' 'librsvg' 'libxkbcommon')
+makedepends=('python' 'at-spi2-atk-dev' 'atk-dev' 'gtk-doc' 'glib')
 source=("http://ftp.gnome.org/pub/gnome/sources/gtk+/${_pkgver}/gtk+-${pkgver}.tar.xz"
 		'gtk-query-immodules-3.0.hook'
 		'gtk-update-icon-cache.hook'
 		'gtk-update-icon-cache.script'
 		'settings.ini')
-install='gtk3.install'
-md5sums=('29f85430cf7cfa8ca8d0703ba65dbe11'
+md5sums=('5c574a872ef3af67706bd612374ea58b'
          '47d92cc1080c92e8a022334b620f0629'
          'c792ef5bb74ceba564b4d8ad306a6592'
          '57010c34ddf8d70c2870a81e0313bdf0'
@@ -31,16 +34,31 @@ build() {
 		--disable-schemas-compile \
 		--enable-broadway-backend \
 		--enable-x11-backend \
-		--disable-wayland-backend
+		--disable-wayland-backend \
+		--enable-gtk-doc
 	make
 }
 
-package() {
+package_gtk3() {
+	depends+=('gtk-update-icon-cache')
+	optdepends=('libcanberra: gtk3-widget-factory demo'
+				'gtk3-print-backends: Printing')
+	install='gtk3.install'
 	cd "${srcdir}/gtk+-${pkgver}"
 	make DESTDIR="${pkgdir}" install
 
-	install -Dm644 "${srcdir}/settings.ini" "${pkgdir}/usr/share/gtk-3.0/settings.ini"
-	install -Dm644 "${srcdir}/gtk-query-immodules-3.0.hook" "${pkgdir}/usr/share/libalpm/hooks/gtk-query-immodules-3.0.hook"
-    install -Dm644 "${srcdir}/gtk-update-icon-cache.hook" "${pkgdir}/usr/share/libalpm/hooks/gtk-update-icon-cache.hook"
-    install -D "${srcdir}/gtk-update-icon-cache.script" "${pkgdir}/usr/share/libalpm/scripts/gtk-update-icon-cache"
+	install -Dm644 "${srcdir}"/settings.ini "${pkgdir}"/usr/share/gtk-3.0/settings.ini
+	install -Dm644 "${srcdir}"/gtk-query-immodules-3.0.hook "${pkgdir}"/usr/share/libalpm/hooks/gtk-query-immodules-3.0.hook
+
+	rm "${pkgdir}"/usr/bin/gtk-update-icon-cache
+}
+
+package_gtk-update-icon-cache() {
+	pkgdesc='GTK+ icon cache updater'
+	depends=('gdk-pixbuf' 'hicolor-icon-theme')
+
+	cd "${srcdir}/gtk+-${pkgver}"
+	install -D gtk/gtk-update-icon-cache "${pkgdir}"/usr/bin/gtk-update-icon-cache
+    install -Dm644 "${srcdir}"/gtk-update-icon-cache.hook "${pkgdir}"/usr/share/libalpm/hooks/gtk-update-icon-cache.hook
+    install -D "${srcdir}"/gtk-update-icon-cache.script "${pkgdir}"/usr/share/libalpm/scripts/gtk-update-icon-cache
 }

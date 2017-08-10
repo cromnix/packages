@@ -1,0 +1,38 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=gstreamer
+pkgver=1.12.2
+pkgrel=1
+pkgdesc='gstreamer is a streaming media framework that enables applications to share a common set of plugins for things like video encoding and decoding, audio encoding and decoding, audio and video filters, audio visualisation, web streaming and anything else that streams in real-time or otherwise'
+arch=('x86_64')
+url='https://gstreamer.freedesktop.org/'
+license=('LGPL')
+depends=('libxml2' 'glib' 'libcap' 'elfutils')
+makedepends=('intltool' 'gtk-doc' 'bash-completion')
+source=("https://${pkgname}.freedesktop.org/src/${pkgname}/${pkgname}-${pkgver}.tar.xz")
+md5sums=('4748860621607ffd96244fb79c86c238')
+
+# todo: rebuild with full depends
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr \
+		--with-package-name="GStreamer ${pkgver} Cromnix" \
+		--with-package-origin="https://www.cromnix.org/" \
+		--enable-gtk-doc \
+		--disable-static
+	
+	sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
+	
+	make
+}
+
+check() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make check
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}

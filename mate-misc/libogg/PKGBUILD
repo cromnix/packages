@@ -1,0 +1,35 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=libogg
+pkgver=1.3.2
+pkgrel=1
+pkgdesc='The libogg package contains the Ogg file structure'
+arch=('x86_64')
+url='http://www.xiph.org/ogg/'
+license=('BSD')
+depends=('glibc')
+source=("http://downloads.xiph.org/releases/ogg/${pkgname}-${pkgver}.tar.xz"
+		'config_types.h')
+md5sums=('5c3a34309d8b98640827e5d0991a4015'
+         'a4d786b1b1955cb85b64fd16cbbee3f9')
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr \
+		--disable-static \
+		--docdir=/usr/share/doc/${pkgname}-${pkgver}
+	make
+}
+
+check() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make check
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+	
+	mv "${pkgdir}"/usr/include/ogg/config_types{,-64}.h
+    install -m 644 "${srcdir}"/config_types.h "${pkgdir}"/usr/include/ogg/config_types.h
+}

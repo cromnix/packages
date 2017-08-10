@@ -2,7 +2,7 @@
 
 pkgname=xorg-server
 pkgver=1.19.3
-pkgrel=3
+pkgrel=4
 pkgdesc='The Xorg Server is the core of the X Window system'
 arch=('x86_64')
 url='http://xorg.freedesktop.org'
@@ -67,7 +67,7 @@ package() {
 	install -m0755 -d "${pkgdir}"/etc/openrc/{init.d,conf.d}
 	install -m0755 "${srcdir}"/xdm.initd "${pkgdir}"/etc/openrc/init.d/xdm
 	install -m0755 "${srcdir}"/xdm-setup.initd "${pkgdir}"/etc/openrc/init.d/xdm-setup
-	install -m0755 "${srcdir}"/xdm.confd "${pkgdir}"/etc/openrc/conf.d/xdm
+	install -m0644 "${srcdir}"/xdm.confd "${pkgdir}"/etc/openrc/conf.d/xdm
 	
 	install -m0755 "${srcdir}"/startDM.sh "${pkgdir}"/etc/X11/startDM.sh
 

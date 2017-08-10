@@ -1,0 +1,27 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=zenity
+pkgver=3.24.0
+_pkgver=${pkgver%.*}
+pkgrel=1
+pkgdesc='Zenity is a rewrite of gdialog, the GNOME port of dialog which allows you to display GTK+ dialog boxes from the command line and shell scripts'
+arch=('x86_64')
+url='https://git.gnome.org/browse/zenity'
+license=('LGPL')
+depends=('gtk3' 'libnotify')
+makedepends=('itstool' 'atk-dev' 'at-spi2-atk-dev')
+source=("http://ftp.gnome.org/pub/gnome/sources/zenity/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
+md5sums=('c905318c3ca76172d53829ed2471ac53')
+
+# todo: rebuild with webkit
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}

@@ -2,7 +2,7 @@
 
 pkgname=openrc
 pkgver=0.28
-pkgrel=4
+pkgrel=5
 pkgdesc="An init and service control software"
 arch=('x86_64')
 url="http://www.gentoo.org/proj/en/base/openrc/"
@@ -29,11 +29,13 @@ backup=('etc/openrc/rc.conf'
         'etc/openrc/conf.d/swap'
         'etc/openrc/conf.d/urandom')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/OpenRC/openrc/archive/$pkgver.tar.gz"
-		'openrc.logrotate')
+		'openrc.logrotate'
+		'quiet.patch')
 install=openrc.install
 options=('debug' 'strip')
 md5sums=('9e3172a3862a2264d61d541012fe7aad'
-         '0d8a00d30812ec460ef8c32a96372c31')
+         '0d8a00d30812ec460ef8c32a96372c31'
+         'c0ec3c5adb0e3ede01213727a26e5015')
 
 _args=(
     SYSCONFDIR=/etc/openrc
@@ -42,6 +44,11 @@ _args=(
 	MKSYSVINIT=yes
     MKTERMCAP=ncurses
 )
+
+prepare() {
+    cd "$srcdir/$pkgname-$pkgver"
+	patch -Np1 -i "${srcdir}"/quiet.patch
+}
 
 build() {
     cd "$srcdir/$pkgname-$pkgver"

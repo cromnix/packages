@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=gnupg
-pkgver=2.1.22
+pkgver=2.1.23
 pkgrel=1
 pkgdesc="The GnuPG package is GNU's tool for secure communication and data storage. It can be used to encrypt data and to create digital signatures. It includes an advanced key management facility and is compliant with the proposed OpenPGP Internet standard as described in RFC2440 and the S/MIME standard as described by several RFCs. GnuPG 2 is the stable version of GnuPG integrating support for OpenPGP and S/MIME."
 arch=('x86_64')
@@ -9,7 +9,9 @@ url="https://www.gnupg.org/index.html"
 license=('GPL3')
 depends=('libassuan' 'libgcrypt' 'libgpg-error' 'libksba' 'npth' 'pinentry' 'libbzip2' 'readline' 'gnutls')
 source=("https://gnupg.org/ftp/gcrypt/gnupg/$pkgname-$pkgver.tar.bz2")
-md5sums=('fea412debbe7ef4fe79c45eaa7201b3a')
+md5sums=('86c2304ead54b74a422e76c3f1bc7a91')
+
+# todo: needs major cleanup
 
 prepare() {
     cd "$srcdir/$pkgname-$pkgver"
@@ -22,6 +24,7 @@ build() {
     ./configure --prefix=/usr \
 		--sbindir=/usr/bin \
         --enable-symcryptrun \
+        --enable-maintainer-mode \
         --libexecdir=/usr/lib/gnupg \
         --docdir=/usr/share/doc/${pkgname}-${pkgver}
     make
@@ -48,12 +51,10 @@ package() {
     install -v -m644 doc/gnupg_nochunks.html ${pkgdir}/usr/share/doc/${pkgname}-${pkgver}/html/gnupg.html
     install -v -m644 doc/*.texi doc/gnupg.txt ${pkgdir}/usr/share/doc/${pkgname}-${pkgver}
 
-    for f in gpg gpgv
-    do
-        ln -svf ${f}2.1 ${pkgdir}/usr/share/man/man1/$f.1
-        ln -svf ${f}2 ${pkgdir}/usr/bin/$f
+    for _f in gpg gpgv; do
+        ln -sv ${_f} ${pkgdir}/usr/bin/${_f}2
+        ln -sv ${_f}.1 ${pkgdir}/usr/share/man/man1/${_f}2.1
     done
-    unset f
 
     #documentation
     #install -v -m644 doc/gnupg.html/* \

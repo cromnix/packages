@@ -3,7 +3,7 @@
 pkgbase=wpa_supplicant
 pkgname=('wpa_supplicant' 'wpa_supplicant-openrc')
 pkgver=2.6
-pkgrel=4
+pkgrel=5
 pkgdesc="WPA Supplicant is a Wi-Fi Protected Access (WPA) client and IEEE 802.1X supplicant."
 arch=('x86_64')
 url="https://w1.fi/wpa_supplicant/"
@@ -55,10 +55,9 @@ package_wpa_supplicant-openrc() {
 	arch=('any')
 	depends=('openrc' 'openrc-services')
 	provides=('wpa_supplicant-init')
-	install -v -m755 -d ${pkgdir}/etc/openrc/init.d
+	install -v -m755 -d ${pkgdir}/etc/openrc/{init.d,conf.d}
 	install -v -m755 ${srcdir}/wpa_supplicant-init.d ${pkgdir}/etc/openrc/init.d/wpa_supplicant
-	install -v -m755 -d ${pkgdir}/etc/openrc/conf.d
-	install -v -m755 ${srcdir}/wpa_supplicant-conf.d ${pkgdir}/etc/openrc/conf.d/wpa_supplicant
+	install -v -m644 ${srcdir}/wpa_supplicant-conf.d ${pkgdir}/etc/openrc/conf.d/wpa_supplicant
 	
 	install -Dm644 /usr/share/openrc-services/hooks/svc-openrc-install.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-install.hook
 	install -Dm644 /usr/share/openrc-services/hooks/svc-openrc-upgrade.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-upgrade.hook

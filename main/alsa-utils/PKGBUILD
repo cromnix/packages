@@ -3,7 +3,7 @@
 pkgbase=alsa-utils
 pkgname=('alsa-utils' 'alsa-utils-openrc')
 pkgver=1.1.4
-pkgrel=4
+pkgrel=5
 pkgdesc='The ALSA Utilities package contains various utilities which are useful for controlling your sound card'
 arch=('x86_64')
 url='http://www.alsa-project.org'
@@ -45,7 +45,7 @@ package_alsa-utils-openrc() {
 	provides=('alsa-utils-init')
 	install -v -m755 -d ${pkgdir}/etc/openrc/{init.d,conf.d}
 	install -v -m755 ${srcdir}/alsasound.initd-r6 ${pkgdir}/etc/openrc/init.d/alsasound
-	install -v -m755 ${srcdir}/alsasound.confd-r4 ${pkgdir}/etc/openrc/conf.d/alsasound
+	install -v -m644 ${srcdir}/alsasound.confd-r4 ${pkgdir}/etc/openrc/conf.d/alsasound
 
 	install -Dm644 /usr/share/openrc-services/hooks/svc-openrc-install.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-install.hook
 	install -Dm644 /usr/share/openrc-services/hooks/svc-openrc-upgrade.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-upgrade.hook

@@ -3,13 +3,15 @@
 pkgname=gtk2
 pkgver=2.24.31
 _pkgver=${pkgver%.*}
-pkgrel=1
+pkgrel=2
 pkgdesc='The GTK+ 2 package contains libraries used for creating graphical user interfaces for applications'
 arch=('x86_64')
 url='http://www.gtk.org/'
 license=('LGPL')
-depends=('libatk' 'pango' 'libxcursor' 'libxinerama' 'libxrandr' 'libxi' 'libxcomposite' 'libxdamage' 'shared-mime-info' 'cairo' 'desktop-file-utils' 'gdk-pixbuf')
-makedepends=('atk-dev' 'python2')
+depends=('libatk' 'pango' 'libxcursor' 'libxinerama' 'libxrandr' 'libxi' 'libxcomposite' 'libxdamage' 'shared-mime-info' 'cairo' 'desktop-file-utils' 'gdk-pixbuf' 'gtk-update-icon-cache' 'librsvg')
+makedepends=('atk-dev' 'python2' 'gtk-doc')
+optdepends=('gnome-themes-standard: Default widget theme'
+            'adwaita-icon-theme: Default icon theme')
 source=("http://ftp.gnome.org/pub/gnome/sources/gtk+/${_pkgver}/gtk+-${pkgver}.tar.xz"
 		'gtk-query-immodules-2.0.hook'
 		'gtkrc')
@@ -29,7 +31,12 @@ prepare() {
 build() {
 	cd "${srcdir}/gtk+-${pkgver}"
 	./configure --prefix=/usr \
-		--sysconfdir=/etc
+		--sysconfdir=/etc \
+		--localstatedir=/var \
+		--with-xinput=yes \
+		--enable-gtk-doc
+		
+	sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
 	make
 }
 

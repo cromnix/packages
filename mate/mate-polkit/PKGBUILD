@@ -1,25 +1,28 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
-pkgname=mate-desktop
-pkgver=1.18.0
+pkgname=mate-polkit
+pkgver=1.18.1
 _pkgver=${pkgver%.*}
 pkgrel=1
-pkgdesc='Library with common API for various MATE modules'
+pkgdesc='PolicyKit integration for the MATE desktop'
 arch=('x86_64')
 url='http://mate-desktop.org/'
-license=('GPL' 'LGPL')
+license=('LGPL')
 groups=('mate')
-depends=('gtk3' 'startup-notification')
+depends=('gtk3' 'polkit')
 makedepends=('intltool' 'atk-dev')
 source=("http://pub.mate-desktop.org/releases/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
-md5sums=('3252cd41ec927805398bc812841215fd')
+md5sums=('1ab96ae9c16d4e030c010e51e9118942')
 
-# todo: rebuild with gobject-introspection
+# todo: rebuild with depends
 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
 	./configure --prefix=/usr \
-		--disable-schemas-compile
+		--libexecdir=/usr/lib/mate-polkit \
+		--sysconfdir=/etc \
+		--localstatedir=/var \
+		--disable-introspection
 
 	#https://bugzilla.gnome.org/show_bug.cgi?id=656231
 	sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool

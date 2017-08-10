@@ -1,0 +1,31 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=libxkbcommon
+pkgver=0.7.2
+pkgrel=1
+pkgdesc='X11 keyboard file manipulation library'
+arch=('x86_64')
+url='https://xkbcommon.org/'
+license=('custom')
+depends=('xkeyboard-config' 'glibc')
+makedepends=('libxcb')
+#checkdepends=('xorg-server-xvfb' 'libgl')
+source=("http://xkbcommon.org/download/${pkgname}-${pkgver}.tar.xz")
+md5sums=('f53fa65beb5ae4b6a6b7f08f9dedabc4')
+
+# todo: rebuild with depends
+
+build() {
+	cd "${srcdir}"/${pkgname}-${pkgver}
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--localstatedir=/var \
+		--disable-static \
+		--docdir=/usr/share/doc/${pkgname}-${pkgver}
+	make
+}
+
+package() {
+	cd "${srcdir}"/${pkgname}-${pkgver}
+	make DESTDIR=${pkgdir} install
+}

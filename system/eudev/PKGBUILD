@@ -4,7 +4,7 @@ pkgbase=eudev
 pkgname=('eudev' 'eudev-openrc')
 pkgver=3.2.2
 _openrc_pkgver=32
-pkgrel=5
+pkgrel=6
 pkgdesc="The Eudev package contains programs for dynamic creation of device nodes."
 arch=('x86_64')
 url="https://wiki.gentoo.org/wiki/Project:Eudev"
@@ -62,7 +62,7 @@ package_eudev-openrc() {
 	install -v -m755 -d ${pkgdir}/etc/openrc/init.d
 	install -v -m755 -d ${pkgdir}/etc/openrc/conf.d
 	install -v -m755 ${srcdir}/udev-init-scripts-${_openrc_pkgver}/init.d/* ${pkgdir}/etc/openrc/init.d
-	install -v -m755 ${srcdir}/udev-init-scripts-${_openrc_pkgver}/conf.d/* ${pkgdir}/etc/openrc/conf.d
+	install -v -m644 ${srcdir}/udev-init-scripts-${_openrc_pkgver}/conf.d/* ${pkgdir}/etc/openrc/conf.d
 	
 	install -Dm644 /usr/share/openrc-services/hooks/svc-openrc-install.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-install.hook
 	install -Dm644 /usr/share/openrc-services/hooks/svc-openrc-upgrade.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-upgrade.hook
