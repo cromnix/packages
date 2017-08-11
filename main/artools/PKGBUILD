@@ -1,0 +1,112 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+_url="https://github.com/cromnix/iso-profiles"
+_profiles=iso-profiles
+
+_tbuild=true
+_pbuild=true
+
+pkgbase=artools
+if $_tbuild;then
+    _pkgname=('artools-base' 'artools-pkg' 'artools-yaml' 'artools-iso')
+    _source=("${pkgbase}-${pkgver}.tar.gz::$url/archive/${pkgver}.tar.gz")
+else
+    _pkgname=()
+    _source=()
+fi
+if $_pbuild;then
+    _pkgname+=('artools-iso-base' 'cromnix-iso-profiles')
+    _source+=("${_profiles}-${pkgver}.tar.gz::$_url/archive/${pkgver}.tar.gz")
+fi
+pkgname=("${_pkgname[@]}")
+pkgver=0.5
+pkgrel=1
+arch=('any')
+pkgdesc='Development tools for Cromnix'
+license=('GPL')
+groups=('artools')
+url='https://github.com/cromnix/artools'
+if $_tbuild;then
+    _source=("${pkgbase}-${pkgver}.tar.gz::$url/archive/${pkgver}.tar.gz")
+else
+    _source=()
+fi
+if $_pbuild;then
+    _source+=("${_profiles}-${pkgver}.tar.gz::$_url/archive/${pkgver}.tar.gz")
+fi
+source=("${_source[@]}")
+sha256sums=('fbb2fbcc932af2366d2611cb9156276ac57430f5c310f33da96e79e172298a36'
+            'cc516887646fda67d0b96f7d8f58146db8f0cf5f3566a7fbf3288f04bffbbacf')
+
+prepare() {
+    if $_tbuild;then
+        cd ${srcdir}/${pkgbase}-${pkgver}
+        sed -e "s/^Version=.*/Version=${pkgver}/" -i Makefile
+    fi
+    if $_pbuild;then
+        cd ${srcdir}/${_profiles}-${pkgver}
+        sed -e "s/^Version=.*/Version=${pkgver}/" -i Makefile
+    fi
+    # patches here
+}
+
+build() {
+    if $_tbuild;then
+        cd ${srcdir}/${pkgbase}-${pkgver}
+        make SYSCONFDIR=/etc PREFIX=/usr
+    else
+        echo
+    fi
+}
+
+package_artools-base() {
+    pkgdesc='Development tools for Cromnix (base tools)'
+    depends=('openssh' 'rsync' 'haveged' 'os-prober' 'gnupg' 'pacman')
+    optdepends=('artools-pkg: Cromnix package tools'
+                'artools-iso: Cromnix iso tools'
+                'artools-yaml: Cromnix yaml tools')
+    backup=('etc/artools/artools.conf')
+
+    cd ${srcdir}/${pkgbase}-${pkgver}
+    make SYSCONFDIR=/etc PREFIX=/usr DESTDIR=${pkgdir} install_base
+}
+
+package_artools-pkg() {
+    pkgdesc='Development tools for Cromnix (packaging tools)'
+    depends=('artools-base' 'namcap' 'wget')
+    conflicts=('devtools')
+
+    cd ${srcdir}/${pkgbase}-${pkgver}
+    make SYSCONFDIR=/etc PREFIX=/usr DESTDIR=${pkgdir} install_pkg
+}
+
+package_artools-yaml() {
+    pkgdesc='Development tools for Cromnix (yaml tools)'
+    depends=('artools-base' 'artools-iso-base')
+
+    cd ${srcdir}/${pkgbase}-${pkgver}
+    make SYSCONFDIR=/etc PREFIX=/usr DESTDIR=${pkgdir} install_yaml
+}
+
+package_artools-iso() {
+    pkgdesc='Development tools for Cromnix (ISO tools)'
+    depends=('artools-yaml' 'dosfstools' 'libisoburn' 'squashfs-tools' 'mkinitcpio' 'mktorrent' 'grub')
+
+    cd ${srcdir}/${pkgbase}-${pkgver}
+    make SYSCONFDIR=/etc PREFIX=/usr DESTDIR=${pkgdir} install_iso
+}
+
+package_artools-iso-base() {
+    pkgdesc='Development tools for Cromnix (ISO base profile)'
+
+    cd ${srcdir}/${_profiles}-${pkgver}
+    make PREFIX=/usr DESTDIR=${pkgdir} install_base
+}
+
+package_cromnix-iso-profiles() {
+    pkgdesc='Cromnix iso profiles'
+    depends=("artools-yaml>=0.2")
+
+    cd ${srcdir}/${_profiles}-${pkgver}
+    make PREFIX=/usr DESTDIR=${pkgdir} install_profiles
+}
