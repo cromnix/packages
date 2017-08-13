@@ -7,8 +7,8 @@ PATH=/sbin:/bin:/usr/sbin:/usr/bin
 #test -x /etc/runit/reboot && LAST=6
 
 echo 'Waiting for services to stop...'
-sv -w196 force-stop /run/runit/service/*
-sv exit /run/runit/service/*
+sv -w196 force-stop /var/service/*
+sv exit /var/service/*
 
 #/etc/init.d/rc $LAST
 

@@ -1,19 +1,21 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgbase=runit
-pkgname=('runit' 'runit-init' 'runit-doc')
+pkgname=('runit' 'runit-doc')
 pkgver=2.1.2
 pkgrel=1
 pkgdesc='runit is a cross-platform Unix init scheme with service supervision'
 arch=('x86_64')
 url='http://smarden.org/runit/'
 license=('BSD')
-source=("http://smarden.org/${pkgname}/${pkgbase}-${pkgver}.tar.gz"
-		'runit.sh'
-		'runit-cromnix.tar.gz')
-md5sums=('6c985fbfe3a34608eb3c53dc719172c4'
-         'feaf222776c387289a8e148c4afe7be7'
-         '72b74e183d31fc51da9a8e1764a9ea01')
+source=("http://smarden.org/${pkgname}/${pkgbase}-${pkgver}.tar.gz")
+md5sums=('6c985fbfe3a34608eb3c53dc719172c4')
+
+prepare() {
+	# set default service path to /var/service
+	cd "${srcdir}/admin/${pkgbase}-${pkgver}"
+	sed -i 's|"/service/"|"/var/service/"|' src/sv.c
+}
 
 build() {
 	cd "${srcdir}/admin/${pkgbase}-${pkgver}"
@@ -30,44 +32,24 @@ check() {
 }
 
 package_runit() {
-	depends=('bash' 'util-linux')
+	depends=('bash' 'runit-init' 'util-linux')
 	optdepends=('runit-doc: documentation')
+	groups=('init')
 	# commands
-	cd "${srcdir}/admin/${pkgbase}-${pkgver}/command"
-	install -v -m755 -d "${pkgdir}/usr/bin"
-	cp * "${pkgdir}/usr/bin"
+	mkdir -p "${pkgdir}/usr/bin"
+	install -Dm755 ${srcdir}/admin/${pkgbase}-${pkgver}/command/* "${pkgdir}/usr/bin"
 
 	# man pages
-	cd "${srcdir}/admin/${pkgbase}-${pkgver}/man"
-	for i in *.[1-8]; do
-		gzip -c ${i} > ${i}.gz
-	done
-	install -v -m755 -d "${pkgdir}/usr/local/man/man8"
-	cp *.gz "${pkgdir}/usr/local/man/man8"
+	mkdir -p "${pkgdir}/usr/share/man/man8"
+	install -Dm644 ${srcdir}/admin/${pkgbase}-${pkgver}/man/* "${pkgdir}/usr/share/man/man8"
 
-	mkdir -p "${pkgdir}"/etc/runit/sv/{installed,active}
+	# default directories
+	mkdir -p "$pkgdir/var"
+	ln -s /run/runit/runsvdir/current "$pkgdir/var/service"
+	mkdir -p "$pkgdir/etc/runit/runsvdir/default"
 
-	install -v -m755 -d "${pkgdir}/etc/env.d"
-	install -v -m644 "${srcdir}/runit.sh" "${pkgdir}/etc/env.d/runit.sh"
-}
-
-package_runit-init() {
-	groups=('init')
-	depends=('runit')
-	arch=('any')
-	install -v -m755 -d "${pkgdir}/usr/bin"
-	mkdir -p "${pkgdir}/etc/runit/init"
-	cp -p "${srcdir}"/runit-cromnix/[123] "${pkgdir}/etc/runit"
-	cp -p "${srcdir}"/runit-cromnix/ctrlaltdel "${pkgdir}/etc/runit"
-
-	for i in `seq 1 6`; do
-		mkdir -p "${pkgdir}/etc/runit/init/getty-${i}"
-		cp -p "${srcdir}"/runit-cromnix/init/getty-tty${i}/* "${pkgdir}/etc/runit/init/getty-${i}"
-	done
-
-	# use the run directory
-	ln -s /run/runit/stopit "${pkgdir}/etc/runit/stopit"
-	ln -s /run/runit/reboot "${pkgdir}/etc/runit/reboot"
+	# license
+	install -Dm644 "${srcdir}/admin/${pkgbase}-${pkgver}/package/COPYING" "$pkgdir/usr/share/licenses/runit/COPYING"
 }
 
 package_runit-doc() {
