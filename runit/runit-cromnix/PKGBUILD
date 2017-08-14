@@ -14,7 +14,7 @@ source=("${pkgname}-${pkgver}.tar.gz::https://github.com/cromnix/runit-cromnix/a
 backup=('etc/runit/rc.conf'
         'etc/runit/rc.local'
         'etc/runit/rc.shutdown')
-sha256sums=('cd6a129b51a953de82b945357c51476df065e1690288ed9b727c04963eccb8a0')
+sha256sums=('c4c62ba3cdd673fab17ed725d16851e09304109f3316d80264f28af2a3f6b60f')
 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
