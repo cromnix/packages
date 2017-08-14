@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=libsoup
-pkgver=2.58.1
+pkgver=2.58.2
 _pkgver=${pkgver%.*}
 pkgrel=1
 pkgdesc='The libsoup is a HTTP client/server library for GNOME'
@@ -12,7 +12,7 @@ depends=('glib' 'libxml2' 'glib-networking' 'sqlite')
 makedepends=('intltool' 'python' 'vala' 'gtk-doc')
 #checkdepends=(apache php-apache)
 source=("http://ftp.gnome.org/pub/gnome/sources/${pkgname}/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
-md5sums=('91d7a6bf8785d31f4b154a7612e53e62')
+md5sums=('eb33adb459c2283efc5c7d09ccdbbcfc')
 
 # todo: rebuild with depends
 
