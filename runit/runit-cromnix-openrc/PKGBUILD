@@ -1,0 +1,24 @@
+# Maintainer:
+
+pkgname=runit-cromnix-openrc
+pkgver=20170813
+pkgrel=0
+pkgdesc='Runit initscripts for Cromnix, which runs OpenRC'
+depends=('openrc')
+conflicts=('runit-cromnix')
+provides=('runit-init')
+license=('custom')
+arch=('i686' 'x86_64')
+sources=("1"
+         "2"
+         "3"
+         "ctrlaltdel")
+md5sums=('ad419be7768c14f28897e7f475ce8ab4'
+         'afbe7bbc1730a2dbc24ad7ab385e17e3'
+         '658f51cab2eaa442bcb6841ff98129ea'
+         'ed9234e16bfa9d40634acb8821abfa44')
+
+package() {
+	mkdir -p "$pkgdir/etc/runit"
+	cp -p {1,2,3,ctrlaltdel} "$pkgdir/etc/runit"
+}

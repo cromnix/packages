@@ -1,0 +1,14 @@
+#!/bin/sh
+
+PATH=/usr/local/bin:/usr/local/sbin:/bin:/sbin:/usr/bin:/usr/sbin:/usr/X11R6/bin
+
+# The reason that boot is not in stage 1 is because if something hangs
+# we can still listen for signals, however in stage 1 there are no signals
+RUNLEVEL=S /usr/bin/openrc boot
+RUNLEVEL=3 /usr/bin/openrc default
+
+mkdir -p /run/runit/runsvdir
+ln -s /etc/runit/runsvdir/current /run/runit/runsvdir/current
+
+exec env - PATH=$PATH \
+runsvdir -P /run/runit/runsvdir/current 'log: ...........................................................................................................................................................................................................................................................................................................................................................................................................'

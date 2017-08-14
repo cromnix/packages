@@ -1,0 +1,31 @@
+# Maintainer:
+
+pkgname=runit-cromnix
+pkgver=20170814
+pkgrel=0
+pkgdesc='Runit initscripts for Cromnix'
+conflicts=('runit-cromnix-openrc')
+provides=('runit-init')
+url='https://github.com/konimex/runit-cromnix/'
+license=('custom:CC0')
+arch=('i686' 'x86_64')
+install='runit-cromnix.install'
+source=("http://github.com/konimex/runit-cromnix/archive/$pkgver.tar.gz")
+sha256sums=('cd6a129b51a953de82b945357c51476df065e1690288ed9b727c04963eccb8a0')
+backup=('etc/runit/rc.conf'
+        'etc/runit/rc.local'
+        'etc/runit/rc.shutdown')
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  make
+}
+
+package() {
+  # License
+  mkdir -p "$pkgdir/usr/share/licenses/runit-cromnix"
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  sed -n '/To the extent/,/0/p' README.md > "$pkgdir/usr/share/licenses/runit-cromnix/LICENSE"
+
+  make DESTDIR="$pkgdir" PREFIX="/usr" install
+}

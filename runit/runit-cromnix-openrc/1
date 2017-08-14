@@ -1,0 +1,14 @@
+#!/bin/sh
+# system one time tasks
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+
+#/etc/init.d/rcS
+#/etc/init.d/rmnologin
+
+RUNLEVEL=S /usr/bin/openrc sysinit
+
+mkdir -p /run/runit
+install -m100 /dev/null /run/runit/stopit
+
+echo 'Init complete, running stage 2...'
