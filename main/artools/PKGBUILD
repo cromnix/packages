@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
-_url="https://github.com/cromnix/iso-profiles"
-_profiles=iso-profiles
+_url="https://github.com/cromnix/artools-iso-profiles"
+_profiles=artools-iso-profiles
 
 _tbuild=true
 _pbuild=true
@@ -15,7 +15,7 @@ else
     _source=()
 fi
 if $_pbuild;then
-    _pkgname+=('artools-iso-base' 'cromnix-iso-profiles')
+    _pkgname+=('artools-iso-base' 'artools-iso-profiles')
     _source+=("${_profiles}-${pkgver}.tar.gz::$_url/archive/${pkgver}.tar.gz")
 fi
 pkgname=("${_pkgname[@]}")
@@ -35,8 +35,8 @@ if $_pbuild;then
     _source+=("${_profiles}-${pkgver}.tar.gz::$_url/archive/${pkgver}.tar.gz")
 fi
 source=("${_source[@]}")
-sha256sums=('fbb2fbcc932af2366d2611cb9156276ac57430f5c310f33da96e79e172298a36'
-            'cc516887646fda67d0b96f7d8f58146db8f0cf5f3566a7fbf3288f04bffbbacf')
+sha256sums=('ac714a645cff65bcc2c9e3a925dad5a34b7372b393591746b419d8c15bc626e7'
+            'e20c6c8633d2c5dc1698d568cb2b48db20ff6d9f987bd000ae8b424a841edd51')
 
 prepare() {
     if $_tbuild;then
@@ -90,7 +90,9 @@ package_artools-yaml() {
 
 package_artools-iso() {
     pkgdesc='Development tools for Cromnix (ISO tools)'
-    depends=('artools-yaml' 'dosfstools' 'libisoburn' 'squashfs-tools' 'mkinitcpio' 'mktorrent' 'grub')
+    depends=('artools-yaml' 'dosfstools' 'libisoburn' 'squashfs-tools' 'grub')
+    optdepends=('mktorrent: create a iso torrent')
+    optdepends=('mkinitcpio: use mkinitcpio for initramfs')
 
     cd ${srcdir}/${pkgbase}-${pkgver}
     make SYSCONFDIR=/etc PREFIX=/usr DESTDIR=${pkgdir} install_iso
@@ -103,7 +105,7 @@ package_artools-iso-base() {
     make PREFIX=/usr DESTDIR=${pkgdir} install_base
 }
 
-package_cromnix-iso-profiles() {
+package_artools-iso-profiles() {
     pkgdesc='Cromnix iso profiles'
     depends=("artools-yaml>=0.2")
 
