@@ -3,11 +3,11 @@
 pkgbase=runit
 pkgname=('runit' 'runit-doc')
 pkgver=2.1.2
-pkgrel=1
+pkgrel=2
 pkgdesc='runit is a cross-platform Unix init scheme with service supervision'
 arch=('x86_64')
 url='http://smarden.org/runit/'
-license=('BSD')
+license=('BSD3')
 source=("http://smarden.org/${pkgname}/${pkgbase}-${pkgver}.tar.gz")
 md5sums=('6c985fbfe3a34608eb3c53dc719172c4')
 
