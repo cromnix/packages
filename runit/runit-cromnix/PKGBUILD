@@ -2,30 +2,31 @@
 
 pkgname=runit-cromnix
 pkgver=20170814
-pkgrel=0
+pkgrel=1
 pkgdesc='Runit initscripts for Cromnix'
 conflicts=('runit-cromnix-openrc')
 provides=('runit-init')
-url='https://github.com/konimex/runit-cromnix/'
+url='https://github.com/cromnix/runit-cromnix/'
 license=('custom:CC0')
 arch=('i686' 'x86_64')
 install='runit-cromnix.install'
-source=("http://github.com/konimex/runit-cromnix/archive/$pkgver.tar.gz")
-sha256sums=('cd6a129b51a953de82b945357c51476df065e1690288ed9b727c04963eccb8a0')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/cromnix/runit-cromnix/archive/${pkgver}.tar.gz")
 backup=('etc/runit/rc.conf'
         'etc/runit/rc.local'
         'etc/runit/rc.shutdown')
+sha256sums=('cd6a129b51a953de82b945357c51476df065e1690288ed9b727c04963eccb8a0')
 
 build() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
-  make
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make
 }
 
 package() {
-  # License
-  mkdir -p "$pkgdir/usr/share/licenses/runit-cromnix"
-  cd "${srcdir}/${pkgname}-${pkgver}"
-  sed -n '/To the extent/,/0/p' README.md > "$pkgdir/usr/share/licenses/runit-cromnix/LICENSE"
+	cd "${srcdir}/${pkgname}-${pkgver}"
 
-  make DESTDIR="$pkgdir" PREFIX="/usr" install
+	make DESTDIR="${pkgdir}" PREFIX="/usr" install
+
+	# License
+	mkdir -p "${pkgdir}"/usr/share/licenses/runit-cromnix
+	sed -n '/To the extent/,/0/p' README.md > "${pkgdir}"/usr/share/licenses/runit-cromnix/LICENSE
 }

@@ -1,6 +1,5 @@
-post_install()
-{
-	echo "runit-cromnix is capable to run a system on its own. However, because"
+post_install() {
+	echo "runit-cromnix is capable of running a system on its own. However, because"
 	echo "there are no runit runscripts for packages yet, you'll need to write"
 	echo "your own runscript for the time being."
 }
