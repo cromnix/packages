@@ -1,24 +1,27 @@
 # Maintainer:
 
 pkgname=runit-cromnix-openrc
-pkgver=20170813
+pkgver=20170814
 pkgrel=0
 pkgdesc='Runit initscripts for Cromnix, which runs OpenRC'
 depends=('openrc')
 conflicts=('runit-cromnix')
 provides=('runit-init')
-license=('custom')
+license=('BSD3')
 arch=('i686' 'x86_64')
-sources=("1"
-         "2"
-         "3"
-         "ctrlaltdel")
+source=('1'
+		'2'
+		'3'
+		'ctrlaltdel'
+		'LICENSE')
 md5sums=('ad419be7768c14f28897e7f475ce8ab4'
          'afbe7bbc1730a2dbc24ad7ab385e17e3'
          '658f51cab2eaa442bcb6841ff98129ea'
-         'ed9234e16bfa9d40634acb8821abfa44')
+         'ed9234e16bfa9d40634acb8821abfa44'
+         '429107de977bd396e1d5ca01166005e0')
 
 package() {
-	mkdir -p "$pkgdir/etc/runit"
-	cp -p {1,2,3,ctrlaltdel} "$pkgdir/etc/runit"
+	mkdir -p "${pkgdir}"/etc/runit
+	cp -p "${srcdir}"/{1,2,3,ctrlaltdel} "${pkgdir}"/etc/runit
+	install -Dm644 "${srcdir}/LICENSE" "${pkgdir}"/usr/share/licenses/runit-cromnix-openrc/LICENSE
 }
