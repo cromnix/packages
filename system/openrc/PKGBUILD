@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=openrc
-pkgver=0.28
+pkgver=0.29
 pkgrel=5
 pkgdesc="An init and service control software"
 arch=('x86_64')
@@ -33,7 +33,7 @@ source=("$pkgname-$pkgver.tar.gz::https://github.com/OpenRC/openrc/archive/$pkgv
 		'quiet.patch')
 install=openrc.install
 options=('debug' 'strip')
-md5sums=('9e3172a3862a2264d61d541012fe7aad'
+md5sums=('32cd43ede2e5ac99b9c93bf94471c026'
          '0d8a00d30812ec460ef8c32a96372c31'
          'c0ec3c5adb0e3ede01213727a26e5015')
 
