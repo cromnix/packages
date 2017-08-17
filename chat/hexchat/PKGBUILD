@@ -1,0 +1,35 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=hexchat
+pkgver=2.12.4
+pkgrel=1
+pkgdesc='HexChat is an IRC chat program'
+arch=('x86_64')
+url='https://hexchat.github.io/'
+license=('GPL')
+depends=('dbus-glib' 'desktop-file-utils' 'gdk-pixbuf' 'glib' 'glibc' 'gtk2'
+		'libcanberra' 'libnotify' 'openssl' 'pango' 'pciutils')
+makedepends=('intltool' 'iso-codes' 'perl' 'python' 'atk-dev')
+optdepends=('enchant: Spell check'
+			'iso-codes: Display language names instead of codes'
+			'lua: Lua plugin'
+			'perl: Perl plugin'
+			'python: Python plugin')
+source=("https://dl.hexchat.net/${pkgname}/${pkgname}-${pkgver}-repack.tar.xz")
+md5sums=('4b1918e0529aa534157bd7b3b5cd2fd8')
+
+# todo: rebuild with depends
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr \
+		--enable-python=python3 \
+		--enable-textfe \
+		--disable-lua
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}
