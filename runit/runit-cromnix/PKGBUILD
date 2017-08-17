@@ -2,7 +2,7 @@
 
 pkgname=runit-cromnix
 pkgver=20170814
-pkgrel=2
+pkgrel=3
 pkgdesc='Runit initscripts for Cromnix'
 conflicts=('runit-cromnix-openrc')
 provides=('runit-init')
@@ -15,7 +15,7 @@ source=("${pkgname}-${pkgver}.tar.gz::https://github.com/cromnix/runit-cromnix/a
 backup=('etc/runit/rc.conf'
         'etc/runit/rc.local'
         'etc/runit/rc.shutdown')
-sha256sums=('c4c62ba3cdd673fab17ed725d16851e09304109f3316d80264f28af2a3f6b60f')
+sha256sums=('97803eb5bc1f82fafb025a67aa339bd934c330690c0d22780f10656c459350e4')
 
 # todo: change gawk depends to awk later
 
