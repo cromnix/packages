@@ -2,7 +2,7 @@
 
 _pkgname=wpa_supplicant
 pkgname=${_pkgname}-runit
-pkgver=20170817
+pkgver=20170818
 pkgrel=1
 pkgdesc="runit init scripts for ${_pkgname}"
 arch=('any')
