@@ -1,0 +1,35 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=mate-panel
+pkgver=1.18.4
+_pkgver=${pkgver%.*}
+pkgrel=1
+pkgdesc='The MATE Panel'
+arch=('x86_64')
+url='http://mate-desktop.org/'
+license=('GPL')
+groups=('mate')
+depends=('dbus-glib' 'libwnck' 'libcanberra' 'libmateweather' 'libsm' 'mate-menus' 'mate-desktop')
+makedepends=('intltool' 'itstool' 'atk-dev')
+source=("http://pub.mate-desktop.org/releases/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
+md5sums=('d77ef48e0934c08513c5d82bc49a1268')
+
+# todo: rebuild with depends
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr \
+		--libexecdir=/usr/lib/${pkgname} \
+        --sysconfdir=/etc \
+        --localstatedir=/var \
+        --disable-introspection
+
+	#https://bugzilla.gnome.org/show_bug.cgi?id=656231
+	sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}

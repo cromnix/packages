@@ -1,25 +1,28 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
-pkgname=libmatekbd
-pkgver=1.18.2
+pkgname=mate-notification-daemon
+pkgver=1.18.0
 _pkgver=${pkgver%.*}
 pkgrel=1
-pkgdesc='MATE keyboard library'
+pkgdesc='Notification daemon for MATE'
 arch=('x86_64')
 url='http://mate-desktop.org/'
-license=('LGPL')
-depends=('gtk3' 'libxklavier')
+license=('GPL')
+groups=('mate')
+depends=('dbus-glib' 'libcanberra' 'libwnck' 'libnotify')
 makedepends=('intltool' 'atk-dev')
 source=("http://pub.mate-desktop.org/releases/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
-md5sums=('1d5a491f45801a18f692714eac31da76')
+md5sums=('d2d3e92b4d3138e78ae0389f0d9aabb0')
+
+# todo: rebuild with depends
 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
-	./configure --prefix=/usr
-	
+	./configure --prefix=/usr \
+		--libexecdir=/usr/lib/${pkgname}
+
 	#https://bugzilla.gnome.org/show_bug.cgi?id=656231
 	sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
-	
 	make
 }
 

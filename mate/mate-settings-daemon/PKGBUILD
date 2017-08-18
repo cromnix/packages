@@ -1,0 +1,37 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=mate-settings-daemon
+pkgver=1.18.1
+_pkgver=${pkgver%.*}
+pkgrel=1
+pkgdesc='The MATE Settings daemon'
+arch=('x86_64')
+url='http://mate-desktop.org/'
+license=('GPL')
+groups=('mate')
+depends=('dbus-glib' 'libcanberra' 'libmatekbd' 'libmatemixer' 'libnotify' 'mate-desktop' 'nss' 'polkit')
+makedepends=('intltool' 'atk-dev')
+optdepends=('libcanberra-pulse: PulseAudio support'
+			'pulseaudio-alsa: PulseAudio support')
+source=("http://pub.mate-desktop.org/releases/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
+md5sums=('b7d4c903f941715bfff7b2c95f2c32bd')
+
+# todo: rebuild with depends
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr \
+		--libexecdir=/usr/lib/${pkgname} \
+		--sysconfdir=/etc \
+		--enable-polkit \
+		--enable-pulse
+
+	#https://bugzilla.gnome.org/show_bug.cgi?id=656231
+	sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}

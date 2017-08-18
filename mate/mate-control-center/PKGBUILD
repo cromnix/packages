@@ -1,0 +1,36 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=mate-control-center
+pkgver=1.18.2
+_pkgver=${pkgver%.*}
+pkgrel=1
+pkgdesc='The Control Center for MATE'
+arch=('x86_64')
+url='http://mate-desktop.org/'
+license=('GPL')
+groups=('mate')
+depends=('mate-menus' 'mate-settings-daemon' 'marco' 'libxscrnsaver')
+makedepends=('intltool' 'itstool' 'atk-dev')
+source=("http://pub.mate-desktop.org/releases/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
+md5sums=('6737ac7c84880672e79ab164f6b0e707')
+
+# todo: rebuild with depends
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+        --sbindir=/usr/bin \
+        --localstatedir=/var \
+        --disable-update-mimedb
+
+	#https://bugzilla.gnome.org/show_bug.cgi?id=656231
+	sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+	rm "${pkgdir}"/usr/share/applications/mimeinfo.cache
+}

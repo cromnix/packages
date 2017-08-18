@@ -1,0 +1,30 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=libwnck
+pkgver=3.24.1
+_pkgver=${pkgver%.*}
+pkgrel=1
+pkgdesc='The libwnck package contains the Window Navigator Construction Kit'
+arch=('x86_64')
+url='https://git.gnome.org/browse/libwnck'
+license=('LGPL')
+depends=('gtk3' 'startup-notification' 'libxres')
+makedepends=('intltool' 'python2' 'gtk-doc' 'atk-dev')
+source=("http://ftp.gnome.org/pub/gnome/sources/${pkgname}/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
+md5sums=('23df51ec0a1169014fe3a102d572b244')
+
+# todo: rebuild with depends
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr \
+		--enable-gtk-doc
+
+	sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}

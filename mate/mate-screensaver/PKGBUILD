@@ -1,0 +1,38 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=mate-screensaver
+pkgver=1.18.1
+_pkgver=${pkgver%.*}
+pkgrel=1
+pkgdesc='Screensaver for MATE'
+arch=('x86_64')
+url='http://mate-desktop.org/'
+license=('GPL')
+groups=('mate-extra')
+depends=('libmatekbd' 'libnotify' 'libxscrnsaver' 'mate-desktop' 'mate-menus' 'mate-session-manager')
+makedepends=('intltool' 'atk-dev')
+optdepends=('rss-glx: Really slick screensavers')
+source=("http://pub.mate-desktop.org/releases/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
+md5sums=('b64bb7852971379bbdd6ee74e0a1a9ed')
+
+# todo: rebuild with depends
+# elogind or consolekit?
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr \
+		--libexecdir=/usr/lib/${pkgname} \
+        --sysconfdir=/etc \
+        --with-xscreensaverdir=/usr/share/xscreensaver/config \
+        --with-xscreensaverhackdir=/usr/lib/xscreensaver \
+        --with-mit-ext \
+        --with-libnotify \
+        --enable-locking \
+        --with-console-kit
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}
