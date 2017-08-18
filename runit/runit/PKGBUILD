@@ -12,9 +12,9 @@ source=("http://smarden.org/${pkgname}/${pkgbase}-${pkgver}.tar.gz")
 md5sums=('6c985fbfe3a34608eb3c53dc719172c4')
 
 prepare() {
-	# set default service path to /var/service
+	# set default service path to /run/runit/service
 	cd "${srcdir}/admin/${pkgbase}-${pkgver}"
-	sed -i 's|"/service/"|"/var/service/"|' src/sv.c
+	sed -i 's|"/service/"|"/run/runit/service/"|' src/sv.c
 }
 
 build() {
@@ -44,8 +44,6 @@ package_runit() {
 	install -Dm644 ${srcdir}/admin/${pkgbase}-${pkgver}/man/* "${pkgdir}/usr/share/man/man8"
 
 	# default directories
-	mkdir -p "$pkgdir/var"
-	ln -s /run/runit/runsvdir/current "$pkgdir/var/service"
 	mkdir -p "$pkgdir/etc/runit/runsvdir/default"
 
 	# license
