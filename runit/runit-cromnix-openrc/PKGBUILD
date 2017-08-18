@@ -15,7 +15,7 @@ source=('1'
 		'ctrlaltdel'
 		'LICENSE')
 md5sums=('ad419be7768c14f28897e7f475ce8ab4'
-         'afbe7bbc1730a2dbc24ad7ab385e17e3'
+         '40a3166250a8b67d9e10e1be7a694398'
          '658f51cab2eaa442bcb6841ff98129ea'
          'ed9234e16bfa9d40634acb8821abfa44'
          '429107de977bd396e1d5ca01166005e0')
