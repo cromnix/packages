@@ -1,6 +1,6 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
-_pkgname=dbus
+_pkgname=wpa_supplicant
 pkgname=${_pkgname}-runit
 pkgver=20170817
 pkgrel=1
@@ -11,9 +11,10 @@ license=('BSD3')
 depends=('runit-init')
 provides=("${_pkgname}-init")
 source=('run'
-		'check')
-md5sums=('85c62fae4d510498fd1c742fe39e5d89'
-         '9fa2fe9767a6bb2bd194fb558fc3e3e8')
+		'conf')
+backup=("etc/runit/sysconfig/${_pkgname}")
+md5sums=('28b8b167c65a1cba3e0be40a4b4c3c8e'
+         '837f265060562d8b0dfa168468724523')
 
 pkgver() {
 	date +%Y%m%d
@@ -21,6 +22,7 @@ pkgver() {
 
 package() {
 	install -v -m755 -d "${pkgdir}"/etc/runit/sv/${_pkgname}
+	install -v -m755 -d "${pkgdir}"/etc/runit/sysconfig
 	install -v -m755 "${srcdir}"/run "${pkgdir}"/etc/runit/sv/${_pkgname}/run
-	install -v -m755 "${srcdir}"/check "${pkgdir}"/etc/runit/sv/${_pkgname}/check
+	install -v -m644 "${srcdir}"/conf "${pkgdir}"/etc/runit/sysconfig/${_pkgname}
 }

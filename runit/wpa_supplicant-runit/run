@@ -1,0 +1,4 @@
+#!/bin/sh
+exec 2>&1
+. /etc/runit/sysconfig/wpa_supplicant
+exec wpa_supplicant -c ${CONF_FILE:=/etc/wpa_supplicant/wpa_supplicant.conf} -i ${WPA_INTERFACE:=wlan0} ${OPTS:=-s}

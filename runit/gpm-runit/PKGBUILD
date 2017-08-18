@@ -1,32 +1,36 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
-pkgname=gpm-runit
-pkgver=1.20.7
+_pkgname=gpm
+pkgname=${_pkgname}-runit
+pkgver=20170817
 pkgrel=1
-pkgdesc='runit init scripts for gpm'
+pkgdesc="runit init scripts for ${_pkgname}"
 arch=('any')
-url='http://www.nico.schottelius.org/software/gpm/'
-license=('GPL')
+url='https://cromnix.org'
+license=('BSD3')
 depends=('runit-init')
 provides=('gpm-init')
 source=('run'
 		'finish'
 		'log'
-		'mouse')
-install='gpm-runit.install'
-md5sums=('2ee52b835ed122f8f1c0b6ded3ba0f43'
+		'conf')
+install=${_pkgname}-runit.install
+backup=("etc/runit/sysconfig/${_pkgname}")
+md5sums=('1a5e9bd069552735486e3fd38107260c'
          '3f475aea46f6c304c24e693254e498e4'
          '0bb8bf64d21e3293667e29ff916d2c84'
-         'fc5d4afe8749d9a590d6a888df07d1cd')
+         '80e6845cd325ecf801297bf8ec004702')
+
+pkgver() {
+	date +%Y%m%d
+}
 
 package() {
-	install -v -m755 -d "${pkgdir}/var/log/runit/gpm"
-	install -v -m755 -d "${pkgdir}/etc/runit/sysconfig"
-	install -v -m755 -d "${pkgdir}/etc/runit/sv/installed/gpm/log"
-	install -v -m755 "${srcdir}/run" "${pkgdir}/etc/runit/sv/installed/gpm/run"
-	install -v -m755 "${srcdir}/finish" "${pkgdir}/etc/runit/sv/installed/gpm/finish"
-	install -v -m755 "${srcdir}/log" "${pkgdir}/etc/runit/sv/installed/gpm/log/run"
-
-	# config
-	install -v -m644 "${srcdir}/mouse" "${pkgdir}/etc/runit/sysconfig/mouse"
+	install -v -m755 -d "${pkgdir}"/var/log/runit/${_pkgname}
+	install -v -m755 -d "${pkgdir}"/etc/runit/sysconfig
+	install -v -m755 -d "${pkgdir}"/etc/runit/sv/${_pkgname}/log
+	install -v -m755 "${srcdir}"/run "${pkgdir}"/etc/runit/sv/${_pkgname}/run
+	install -v -m755 "${srcdir}"/finish "${pkgdir}"/etc/runit/sv/${_pkgname}/finish
+	install -v -m755 "${srcdir}"/log "${pkgdir}"/etc/runit/sv/${_pkgname}/log/run
+	install -v -m644 "${srcdir}"/conf "${pkgdir}"/etc/runit/sysconfig/${_pkgname}
 }

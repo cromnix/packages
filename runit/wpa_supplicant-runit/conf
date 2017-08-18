@@ -1,0 +1,3 @@
+CONF_FILE='/etc/wpa_supplicant/wpa_supplicant.conf'
+WPA_INTERFACE='wlan0'
+OPTS='-s'
