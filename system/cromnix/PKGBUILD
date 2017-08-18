@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=cromnix
-pkgver=17.07
+pkgver=17.08
 _codename='ale'
 _codename_pretty='Ale'
 pkgrel=1
@@ -65,7 +65,7 @@ md5sums=('99bf243b970a3fcd84a63d6d2ffc6bd0'
          '18abd5ced09bd469fb9daa49dfe9b4bd'
          'f5e2d783d5f61af54590139f0de80223'
          'a1514268c756b0029d071e2c33b3feb5'
-         '24dee8dc8be6556d90a948ff98929f58'
+         'dadaa8a342508db6581aac80f60921fc'
          'd41d8cd98f00b204e9800998ecf8427e'
          '5a42cdfd3e6d944d109514a3e9a8cf2e'
          '1b3d12993d06081c7efd58a8fb51e7f9'
