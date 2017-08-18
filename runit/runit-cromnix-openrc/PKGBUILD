@@ -1,7 +1,7 @@
 # Maintainer:
 
 pkgname=runit-cromnix-openrc
-pkgver=20170814
+pkgver=20170818
 pkgrel=1
 pkgdesc='Runit initscripts for Cromnix, which runs OpenRC'
 depends=('openrc')
