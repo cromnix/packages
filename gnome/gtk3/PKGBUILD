@@ -13,7 +13,7 @@ depends=('libatk' 'cairo' 'pango' 'libepoxy' 'gdk-pixbuf' 'libat-spi2-atk'
 		'libxcursor' 'libxinerama' 'libxrandr' 'libxi' 'dconf' 'mesa'
 		'libxcomposite' 'shared-mime-info' 'adwaita-icon-theme'
 		'desktop-file-utils' 'libxdamage' 'librsvg' 'libxkbcommon')
-makedepends=('python' 'at-spi2-atk-dev' 'atk-dev' 'atk-gir' 'gtk-doc' 'glib' 'gobject-introspection')
+makedepends=('python' 'at-spi2-atk-dev' 'atk-dev' 'gtk-doc' 'glib' 'gobject-introspection')
 source=("http://ftp.gnome.org/pub/gnome/sources/gtk+/${_pkgver}/gtk+-${pkgver}.tar.xz"
 		'gtk-query-immodules-3.0.hook'
 		'gtk-update-icon-cache.hook'
