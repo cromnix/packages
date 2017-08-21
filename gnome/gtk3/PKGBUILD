@@ -4,7 +4,7 @@ pkgbase=gtk3
 pkgname=('gtk3' 'gtk-update-icon-cache')
 pkgver=3.22.18
 _pkgver=${pkgver%.*}
-pkgrel=1
+pkgrel=2
 pkgdesc='The GTK+ 3 package contains libraries used for creating graphical user interfaces for applications'
 arch=('x86_64')
 url='http://www.gtk.org/'
@@ -13,7 +13,7 @@ depends=('libatk' 'cairo' 'pango' 'libepoxy' 'gdk-pixbuf' 'libat-spi2-atk'
 		'libxcursor' 'libxinerama' 'libxrandr' 'libxi' 'dconf' 'mesa'
 		'libxcomposite' 'shared-mime-info' 'adwaita-icon-theme'
 		'desktop-file-utils' 'libxdamage' 'librsvg' 'libxkbcommon')
-makedepends=('python' 'at-spi2-atk-dev' 'atk-dev' 'gtk-doc' 'glib')
+makedepends=('python' 'at-spi2-atk-dev' 'atk-dev' 'atk-gir' 'gtk-doc' 'glib' 'gobject-introspection')
 source=("http://ftp.gnome.org/pub/gnome/sources/gtk+/${_pkgver}/gtk+-${pkgver}.tar.xz"
 		'gtk-query-immodules-3.0.hook'
 		'gtk-update-icon-cache.hook'
