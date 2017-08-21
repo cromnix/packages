@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgbase=atk
-pkgname=('libatk' 'atk-dev' 'atk-gir' 'atk-doc')
+pkgname=('libatk' 'atk-dev' 'atk-doc')
 pkgver=2.24.0
 _pkgver=${pkgver%.*}
 pkgrel=2
@@ -12,6 +12,8 @@ license=('LGPL')
 makedepends=('glib' 'gobject-introspection' 'gtk-doc')
 source=("http://ftp.gnome.org/pub/gnome/sources/${pkgbase}/${_pkgver}/${pkgbase}-${pkgver}.tar.xz")
 md5sums=('3747a80089dfa3c0bbcf21adfff9968b')
+
+# todo: split gir package
 
 prepare() {
 	if [ -d "${srcdir}/install" ]; then
@@ -35,21 +37,21 @@ package_libatk() {
 
 	mkdir -p "${pkgdir}/usr/share"
 	cp -vr "${srcdir}/install/usr/lib" "${pkgdir}/usr/lib"
+	#rm -rf "${pkgdir}/usr/lib/girepository-1.0"
 	cp -vr "${srcdir}/install/usr/share/locale" "${pkgdir}/usr/share/locale"
 }
 
 package_atk-dev() {
 	arch=('any')
 
-	mkdir -p "${pkgdir}/usr"
+	mkdir -p "${pkgdir}"/usr/share
 	cp -vr "${srcdir}/install/usr/include" "${pkgdir}/usr/include"
+	cp -vr "${srcdir}/install/usr/share/gir-1.0" "${pkgdir}/usr/share/gir-1.0"
 }
 
-package_atk-gir() {
-	arch=('any')
-	
-	mkdir -p "${pkgdir}/usr/share"
-	cp -vr "${srcdir}/install/usr/share/gir-1.0" "${pkgdir}/usr/share"
+package_atk-gir() {	
+	mkdir -p "${pkgdir}/usr/lib"
+	cp -vr "${srcdir}/install/usr/lib/girepository-1.0" "${pkgdir}/usr/lib"
 }
 
 package_atk-doc() {
