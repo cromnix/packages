@@ -1,0 +1,51 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgbase=gobject-introspection
+pkgname=('gobject-introspection' 'gobject-introspection-runtime')
+pkgver=1.52.1
+_pkgver=${pkgver%.*}
+pkgrel=1
+pkgdesc='The GObject Introspection is used to describe the program APIs and collect them in a uniform, machine readable format'
+arch=('x86_64')
+url='https://wiki.gnome.org/Projects/GObjectIntrospection'
+license=('LGPL' 'GPL')
+depends=('python' 'python-mako')
+makedepends=('cairo' 'gtk-doc')
+options=('!emptydirs')
+source=("http://ftp.gnome.org/pub/gnome/sources/${pkgbase}/${_pkgver}/${pkgbase}-${pkgver}.tar.xz")
+md5sums=('34157073991f9eeb0ed953351b65eb61')
+
+# todo: rebuild with python-mako and cairo
+
+prepare() {
+	cd "${srcdir}/${pkgbase}-${pkgver}"
+}
+
+build() {
+	cd "${srcdir}/${pkgbase}-${pkgver}"
+	./configure --prefix=/usr \
+		--disable-static \
+		--enable-gtk-doc \
+		--enable-doctool
+	sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
+	make
+}
+
+check() {
+	cd "${srcdir}/${pkgbase}-${pkgver}"
+	make check
+}
+
+package_gobject-introspection-runtime() {
+	pkgdesc+=" (runtime library)"
+	depends=('glib')
+	cd "${srcdir}/${pkgbase}-${pkgver}"
+	make DESTDIR="${pkgdir}" install-libLTLIBRARIES install-typelibsDATA
+}
+
+package_gobject-introspection() {
+	depends+=("gobject-introspection-runtime=${pkgver}")
+	cd "${srcdir}/${pkgbase}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+	make DESTDIR="${pkgdir}" uninstall-libLTLIBRARIES uninstall-typelibsDATA
+}
