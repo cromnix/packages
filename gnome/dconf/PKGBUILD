@@ -3,7 +3,7 @@
 pkgname=dconf
 pkgver=0.26.0
 _pkgver=${pkgver%.*}
-pkgrel=1
+pkgrel=2
 pkgdesc='The DConf package contains a low-level configuration system'
 arch=('x86_64')
 url='https://wiki.gnome.org/Projects/dconf/'
@@ -15,7 +15,10 @@ md5sums=('7fc3cb1cf22d904d8744bd12e9c9d3dd')
 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
-	./configure --prefix=/usr
+	./configure --prefix=/usr \
+		--libexecdir=/usr/lib/dconf \
+		--sysconfdir=/etc \
+		--enable-gtk-doc
 	make
 }
 
