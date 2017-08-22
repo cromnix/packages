@@ -3,13 +3,13 @@
 pkgname=gtk2
 pkgver=2.24.31
 _pkgver=${pkgver%.*}
-pkgrel=2
+pkgrel=3
 pkgdesc='The GTK+ 2 package contains libraries used for creating graphical user interfaces for applications'
 arch=('x86_64')
 url='http://www.gtk.org/'
 license=('LGPL')
 depends=('libatk' 'pango' 'libxcursor' 'libxinerama' 'libxrandr' 'libxi' 'libxcomposite' 'libxdamage' 'shared-mime-info' 'cairo' 'desktop-file-utils' 'gdk-pixbuf' 'gtk-update-icon-cache' 'librsvg')
-makedepends=('atk-dev' 'python2' 'gtk-doc')
+makedepends=('atk-dev' 'python2' 'gtk-doc' 'gobject-introspection')
 optdepends=('gnome-themes-standard: Default widget theme'
             'adwaita-icon-theme: Default icon theme')
 source=("http://ftp.gnome.org/pub/gnome/sources/gtk+/${_pkgver}/gtk+-${pkgver}.tar.xz"
