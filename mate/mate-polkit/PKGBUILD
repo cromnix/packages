@@ -3,14 +3,14 @@
 pkgname=mate-polkit
 pkgver=1.18.1
 _pkgver=${pkgver%.*}
-pkgrel=1
+pkgrel=2
 pkgdesc='PolicyKit integration for the MATE desktop'
 arch=('x86_64')
 url='http://mate-desktop.org/'
 license=('LGPL')
 groups=('mate')
 depends=('gtk3' 'polkit')
-makedepends=('intltool' 'atk-dev')
+makedepends=('intltool' 'gobject-introspection' 'atk-dev')
 source=("http://pub.mate-desktop.org/releases/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
 md5sums=('1ab96ae9c16d4e030c010e51e9118942')
 
@@ -22,7 +22,7 @@ build() {
 		--libexecdir=/usr/lib/mate-polkit \
 		--sysconfdir=/etc \
 		--localstatedir=/var \
-		--disable-introspection
+		--enable-introspection
 
 	#https://bugzilla.gnome.org/show_bug.cgi?id=656231
 	sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool

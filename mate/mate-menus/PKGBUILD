@@ -3,14 +3,14 @@
 pkgname=mate-menus
 pkgver=1.18.0
 _pkgver=${pkgver%.*}
-pkgrel=1
+pkgrel=2
 pkgdesc='MATE menu specifications'
 arch=('x86_64')
 url='http://mate-desktop.org/'
 license=('GPL' 'LGPL')
 groups=('mate')
 depends=('glib')
-makedepends=('intltool' 'python2')
+makedepends=('intltool' 'python2' 'gobject-introspection')
 optdepends=('python2: python2 bindings')
 source=("http://pub.mate-desktop.org/releases/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
 md5sums=('b66092d08b7ec18845f04fcdf0b498d5')

@@ -3,18 +3,16 @@
 pkgname=mate-desktop
 pkgver=1.18.0
 _pkgver=${pkgver%.*}
-pkgrel=1
+pkgrel=2
 pkgdesc='Library with common API for various MATE modules'
 arch=('x86_64')
 url='http://mate-desktop.org/'
 license=('GPL' 'LGPL')
 groups=('mate')
 depends=('gtk3' 'startup-notification')
-makedepends=('intltool' 'atk-dev')
+makedepends=('intltool' 'atk-dev' 'gobject-introspection')
 source=("http://pub.mate-desktop.org/releases/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
 md5sums=('3252cd41ec927805398bc812841215fd')
-
-# todo: rebuild with gobject-introspection
 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"

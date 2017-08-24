@@ -1,0 +1,33 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=libexif
+pkgver=0.6.21
+pkgrel=1
+pkgdesc='The libexif package contains a library for parsing, editing, and saving EXIF data'
+arch=('x86_64')
+url='https://sourceforge.net/projects/libexif'
+license=('LGPL')
+depends=('glibc')
+#makedepends=('graphviz' 'doxygen')
+source=("https://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('27339b89850f28c8f1c237f233e05b27')
+
+# todo: rebuild with graphviz and doxygen for documentation
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr \
+		--with-doc-dir=/usr/share/doc/${pkgname}-${pkgver} \
+		--disable-static
+	make
+}
+
+check() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make check
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}

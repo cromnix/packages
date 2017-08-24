@@ -3,7 +3,7 @@
 pkgbase=fcron
 pkgname=('fcron' 'fcron-openrc')
 pkgver=3.2.1
-pkgrel=5
+pkgrel=6
 pkgdesc='The Fcron package contains a periodical command scheduler'
 arch=('x86_64')
 url='http://fcron.free.fr'

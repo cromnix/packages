@@ -2,29 +2,46 @@
 
 pkgname=links
 pkgver=2.14
-pkgrel=1
+pkgrel=2
 pkgdesc='Links is a text and graphics mode WWW browser'
 arch=('x86_64')
 url='http://links.twibright.com/'
 license=('GPL')
-depends=('bzip2' 'xz' 'gpm')
+depends=('bzip2' 'xz' 'gpm' 'openssl' 'libevent')
 makedepends=('libpng' 'libxt')
 optdepends=('libx11: for using xlinks'
 	    'libtiff: for using xlinks'
 	    'libpng: for using xlinks'
 	    'librsvg: for using xlinks')
-source=("http://links.twibright.com/download/${pkgname}-${pkgver}.tar.bz2")
-md5sums=('0d11b388de22ba280008a36a409a34c6')
+source=("http://links.twibright.com/download/${pkgname}-${pkgver}.tar.bz2"
+		'links.desktop')
+md5sums=('0d11b388de22ba280008a36a409a34c6'
+         '7c47b15aaef51f1de129ff3a2afb7eac')
 
 prepare() {
-	cd ${pkgname}-${pkgver}
+	cd ${srcdir}/${pkgname}-${pkgver}
 	sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" configure
+	cp -r "${srcdir}"/${pkgname}-${pkgver}{,-xlinks}
 }
 
 build() {
 	cd ${srcdir}/${pkgname}-${pkgver}
+	(cd intl; ./gen-intl; ./synclang)
 	./configure --prefix=/usr \
 		--mandir=/usr/share/man \
+		--without-x \
+		--without-fb \
+		--enable-javascript \
+		--disable-graphics
+	make
+	
+	cd ${srcdir}/${pkgname}-${pkgver}-xlinks
+	(cd intl; ./gen-intl; ./synclang)
+	./configure --prefix=/usr \
+		--mandir=/usr/share/man \
+		--with-x \
+		--with-fb \
+		--enable-javascript \
 		--enable-graphics
 	make
 }
@@ -32,6 +49,12 @@ build() {
 package() {
 	cd ${srcdir}/${pkgname}-${pkgver}
 	make DESTDIR=${pkgdir} install
+	install -m755 ${srcdir}/${pkgname}-${pkgver}-xlinks/links "${pkgdir}/usr/bin/xlinks"
+	ln -s links.1.gz "${pkgdir}/usr/share/man/man1/xlinks.1.gz"
 	install -v -d -m755 ${pkgdir}/usr/share/doc/${pkgname}-${pkgver}
 	install -v -m644 doc/links_cal/* KEYS BRAILLE_HOWTO ${pkgdir}/usr/share/doc/${pkgname}-${pkgver}
+	install -D -m644 "${srcdir}/links.desktop" "${pkgdir}/usr/share/applications/links.desktop"
+	install -d "${pkgdir}/usr/share/pixmaps"
+	install -m644 links_16x16_1.xpm links_16x16_2.xpm links_32x32.xpm "${pkgdir}/usr/share/pixmaps/"
+
 }

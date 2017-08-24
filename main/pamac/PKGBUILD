@@ -1,0 +1,43 @@
+# Maintainer: Chris Cromer <chris@cromer.cl>
+# Contributor: Guillaume Benoit <guillaume@manjaro.org>
+
+pkgbase=pamac
+pkgname=('pamac')
+pkgver=5.0.0
+pkgrel=1
+pkgdesc="A Gtk3 frontend for libalpm"
+arch=('i686' 'x86_64')
+url="https://github.com/manjaro/pamac"
+license=('GPL3')
+depends=('glib' 'json-glib' 'libsoup' 'dbus-glib' 'polkit' 'vte' 'gtk3'
+         'libnotify' 'desktop-file-utils' 'pacman>=5.0' 'pacman<5.1' 'gnutls')
+makedepends=('gettext' 'itstool' 'vala>=0.36')
+options=(!emptydirs)
+
+source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
+sha256sums=('9089b33ec2b351a7125668375706622a6d36244161c05b98d0cd4d8c04c7b2f6')
+
+prepare() {
+  # adjust version string
+  cd "$srcdir/$pkgname-$pkgver"
+  sed -i -e "s|\"$pkgver\"|\"$pkgver-$pkgrel\"|g" src/transaction.vala
+  # patches here
+}
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  # build
+  make all
+}
+
+package_pamac() {
+  optdepends=('polkit-gnome: needed for authentification in Cinnamon, Gnome'
+              'lxsession: needed for authentification in Xfce, LXDE etc.'
+              'pamac-tray-appindicator: tray icon for KDE')
+  backup=('etc/pamac.conf')
+  replaces=('pamac-aur')
+  cd "$srcdir/$pkgname-$pkgver"
+  make prefix="$pkgdir"/usr sysconfdir="$pkgdir"/etc install
+}
+# vim:set ts=2 sw=2 et:

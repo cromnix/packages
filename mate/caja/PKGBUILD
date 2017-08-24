@@ -3,14 +3,14 @@
 pkgname=caja
 pkgver=1.18.3
 _pkgver=${pkgver%.*}
-pkgrel=1
+pkgrel=3
 pkgdesc='File manager for the MATE desktop'
 arch=('x86_64')
 url='http://mate-desktop.org/'
 license=('GPL')
 groups=('mate')
-depends=('glib' 'libsm' 'mate-desktop' 'libnotify')
-makedepends=('intltool' 'atk-dev' 'python')
+depends=('glib' 'exempi' 'libexif' 'libsm' 'mate-desktop' 'libnotify')
+makedepends=('intltool' 'atk-dev' 'python' 'gobject-introspection' 'gtk-doc')
 optdepends=('gstreamer: automatic media playback when mouseover')
 source=("http://pub.mate-desktop.org/releases/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
 md5sums=('b416e13cb6e8cc9c76bbf9e2ecb2bc67')
@@ -20,8 +20,10 @@ md5sums=('b416e13cb6e8cc9c76bbf9e2ecb2bc67')
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
 	./configure --prefix=/usr \
-		--libexecdir=/usr/lib/caja \
-		--disable-update-mimedb
+        --libexecdir=/usr/lib/caja \
+        --enable-introspection \
+        --disable-update-mimedb \
+        --enable-gtk-doc
 
 	#https://bugzilla.gnome.org/show_bug.cgi?id=656231
 	sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool

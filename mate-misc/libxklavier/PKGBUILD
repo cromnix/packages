@@ -2,13 +2,13 @@
 
 pkgname=libxklavier
 pkgver=5.4
-pkgrel=1
+pkgrel=2
 pkgdesc='The libxklavier package contains a utility library for X keyboard'
 arch=('x86_64')
 url='http://gswitchit.sourceforge.net'
 license=('LGPL')
 depends=('glib' 'libxkbfile' 'libxml2' 'xkeyboard-config' 'libxi' 'iso-codes')
-makedepends=('intltool' 'gtk-doc' 'libxfixes' 'which')
+makedepends=('intltool' 'gtk-doc' 'libxfixes' 'which' 'gobject-introspection')
 options=('!emptydirs')
 source=("http://cgit.freedesktop.org/${pkgname}/snapshot/${pkgname}-${pkgver}.zip")
 md5sums=('2817e89676f25a836fe63ffdae69fca8')

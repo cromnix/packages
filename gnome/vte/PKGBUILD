@@ -3,13 +3,13 @@
 pkgname=vte
 pkgver=0.28.2
 _pkgver=${pkgver%.*}
-pkgrel=1
+pkgrel=2
 pkgdesc='Vte is a library (libvte) implementing a terminal emulator widget for GTK+ 2, and a minimal demonstration application (vte) that uses libvte'
 arch=('x86_64')
 url='https://www.gnome.org/'
 license=('LGPL')
 depends=('gtk2')
-makedepends=('intltool' 'python2' 'atk-dev')
+makedepends=('intltool' 'python2' 'atk-dev' 'gobject-introspection')
 options=('!emptydirs')
 source=("http://ftp.gnome.org/pub/gnome/sources/${pkgname}/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
 md5sums=('497f26e457308649e6ece32b3bb142ff')
@@ -20,7 +20,10 @@ build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
 	./configure --prefix=/usr \
 		--libexecdir=/usr/lib/vte \
+		--enable-introspection \
+		--with-gtk=2.0 \
 		--disable-static
+	sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
 	make
 }
 

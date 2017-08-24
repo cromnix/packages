@@ -3,7 +3,7 @@
 pkgbase=dbus
 pkgname=('dbus' 'dbus-openrc')
 pkgver=1.10.22
-pkgrel=1
+pkgrel=2
 pkgdesc='D-Bus is a message bus system, a simple way for applications to talk to one another'
 arch=('x86_64')
 url='https://wiki.freedesktop.org/www/Software/dbus/'
@@ -55,8 +55,8 @@ package_dbus() {
 	install=dbus.install
 	cd ${srcdir}/${pkgbase}-${pkgver}
 	make DESTDIR=${pkgdir} install
-	chown -v root:dbus ${pkgdir}/usr/lib/dbus-1.0/dbus-daemon-launch-helper
-	chmod -v 4750 ${pkgdir}/usr/lib/dbus-1.0/dbus-daemon-launch-helper
+	#chown -v root:dbus ${pkgdir}/usr/lib/dbus-1.0/dbus-daemon-launch-helper
+	#chmod -v 4750 ${pkgdir}/usr/lib/dbus-1.0/dbus-daemon-launch-helper
 
 	rm -r ${pkgdir}/var/run
 	

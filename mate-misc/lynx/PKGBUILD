@@ -1,0 +1,45 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=lynx
+pkgver=2.8.8
+_relver=${pkgver}rel.2
+pkgrel=1
+pkgdesc='Lynx is a text based web browser'
+arch=('x86_64')
+url='http://lynx.browser.org/'
+license=('GPL')
+depends=('openssl')
+backup=('etc/lynx/lynx.cfg')
+source=("http://invisible-mirror.net/archives/${pkgname}/tarballs/${pkgname}${_relver}.tar.bz2"
+		"${pkgname}-${_relver}-openssl_1.1.0-1.patch")
+md5sums=('b231c2aa34dfe7ca25681ef4e55ee7e8'
+         '49b1aebf88e4d2fbc3fa75212a1202bd')
+
+# todo: rebuild with 'libidn'
+
+prepare() {
+	cd "${srcdir}/${pkgname}"${pkgver//./-}
+	patch -p1 -i "${srcdir}"/${pkgname}-${_relver}-openssl_1.1.0-1.patch
+}
+
+build() {
+	cd "${srcdir}/${pkgname}"${pkgver//./-}
+	./configure --prefix=/usr \
+		--sysconfdir=/etc/lynx \
+		--datadir=/usr/share/doc/${pkgname}-${pkgver} \
+		--with-zlib \
+		--with-bzlib \
+		--with-ssl \
+		--with-screen=ncursesw \
+		--enable-locale-charset \
+		--enable-nls \
+		--enable-ipv6 \
+		--mandir=/usr/share/man
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}"${pkgver//./-}
+	make DESTDIR="${pkgdir}" install-full
+	sed -i -e "s|^HELPFILE.*$|HELPFILE:file:///usr/share/doc/${pkgname}-${pkgver}/lynx_help/lynx_help_main.html|" "${pkgdir}"/etc/lynx/lynx.cfg
+}

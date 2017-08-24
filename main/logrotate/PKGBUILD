@@ -2,7 +2,7 @@
 
 pkgname=logrotate
 pkgver=3.12.3
-pkgrel=1
+pkgrel=2
 pkgdesc='The logrotate package allows automatic rotation, compression, removal, and mailing of log files'
 arch=('x86_64')
 url='https://github.com/logrotate/logrotate'

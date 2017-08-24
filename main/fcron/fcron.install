@@ -10,7 +10,17 @@ post_install() {
         useradd -rmc 'Fcron User' -u 22 -g fcron -d /var/spool/fcron -s /usr/bin/nologin fcron &>/dev/null
 		passwd -l fcron &>/dev/null
     fi
+	if [ ! -f /var/spool/fcron/root ]; then
+		fcrontab /etc/crontab
+	fi
 }
+
+post_upgrade() {
+	if [ ! -f /var/spool/fcron/root ]; then
+		fcrontab /etc/crontab
+	fi
+}
+
 
 post_remove() {
     getent passwd fcron >/dev/null

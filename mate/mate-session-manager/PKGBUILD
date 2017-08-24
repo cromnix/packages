@@ -3,21 +3,28 @@
 pkgname=mate-session-manager
 pkgver=1.18.1
 _pkgver=${pkgver%.*}
-pkgrel=1
+pkgrel=2
 pkgdesc='The MATE Session Handler'
 arch=('x86_64')
 url='http://mate-desktop.org/'
 license=('GPL')
 groups=('mate')
 depends=('dbus-glib' 'gtk3' 'libsm' 'mate-desktop')
-makedepends=('intltool' 'xtrans' 'atk-dev')
+makedepends=('intltool' 'xtrans' 'atk-dev' 'at-spi2-atk-dev')
 optdepends=('gnome-keyring: keyring support'
 			'xdg-user-dirs-gtk: manage user directories')
-source=("http://pub.mate-desktop.org/releases/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
-md5sums=('f7ed15ec600ef96aae1f741eee05e7c8')
+source=("http://pub.mate-desktop.org/releases/${_pkgver}/${pkgname}-${pkgver}.tar.xz"
+		'defaults.list')
+md5sums=('f7ed15ec600ef96aae1f741eee05e7c8'
+         'ea503906da9f532f8ad7faa71ffad4bc')
 
 # todo: rebuild with depends
 # elogind support?
+
+prepare() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	sed -e "s/#define GSM_MANAGER_PHASE_TIMEOUT 30/#define GSM_MANAGER_PHASE_TIMEOUT 10/" -i mate-session/gsm-manager.c
+}
 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
@@ -27,12 +34,12 @@ build() {
 		--localstatedir=/var \
 		--disable-upower
 
-	#https://bugzilla.gnome.org/show_bug.cgi?id=656231
-	sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
 	make
 }
 
 package() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
 	make DESTDIR="${pkgdir}" install
+	mkdir -p "${pkgdir}"/etc/xdg
+	cp "${srcdir}"/defaults.list "${pkgdir}"/etc/xdg/mate-mimeapps.list
 }

@@ -3,14 +3,14 @@
 pkgname=marco
 pkgver=1.18.1
 _pkgver=${pkgver%.*}
-pkgrel=1
+pkgrel=2
 pkgdesc='A window manager for MATE'
 arch=('x86_64')
 url='http://mate-desktop.org/'
 license=('LGPL')
 groups=('mate')
-depends=('mate-desktop' 'zenity' 'libcanberra')
-makedepends=('intltool' 'itstool' 'atk-dev')
+depends=('mate-desktop' 'zenity' 'libcanberra' 'libgtop')
+makedepends=('intltool' 'itstool' 'atk-dev' 'at-spi2-atk-dev')
 source=("http://pub.mate-desktop.org/releases/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
 md5sums=('0d0a3eeb643c7177405122a246188d60')
 
@@ -20,7 +20,8 @@ build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
 	./configure --prefix=/usr \
 		--sysconfdir=/etc \
-		--localstatedir=/var
+		--localstatedir=/var \
+		--enable-startup-notification
 
 	#https://bugzilla.gnome.org/show_bug.cgi?id=656231
 	sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool

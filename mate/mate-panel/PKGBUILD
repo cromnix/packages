@@ -3,14 +3,14 @@
 pkgname=mate-panel
 pkgver=1.18.4
 _pkgver=${pkgver%.*}
-pkgrel=1
+pkgrel=2
 pkgdesc='The MATE Panel'
 arch=('x86_64')
 url='http://mate-desktop.org/'
 license=('GPL')
 groups=('mate')
 depends=('dbus-glib' 'libwnck' 'libcanberra' 'libmateweather' 'libsm' 'mate-menus' 'mate-desktop')
-makedepends=('intltool' 'itstool' 'atk-dev')
+makedepends=('intltool' 'itstool' 'atk-dev' 'gobject-introspection')
 source=("http://pub.mate-desktop.org/releases/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
 md5sums=('d77ef48e0934c08513c5d82bc49a1268')
 
@@ -22,7 +22,7 @@ build() {
 		--libexecdir=/usr/lib/${pkgname} \
         --sysconfdir=/etc \
         --localstatedir=/var \
-        --disable-introspection
+        --enable-introspection
 
 	#https://bugzilla.gnome.org/show_bug.cgi?id=656231
 	sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool

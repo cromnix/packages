@@ -1,0 +1,43 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgbase=python-markupsafe
+pkgname=('python-markupsafe' 'python2-markupsafe')
+pkgver=1.0
+pkgrel=1
+pkgdesc='MarkupSafe is a Python module that implements a XML/HTML/XHTML Markup safe string'
+arch=('x86_64')
+url='http://pypi.python.org/pypi/MarkupSafe'
+license=('custom')
+makedepends=('python-setuptools' 'python2-setuptools')
+source=("https://files.pythonhosted.org/packages/source/M/MarkupSafe/MarkupSafe-${pkgver}.tar.gz")
+md5sums=('2fcedc9284d50e577b5192e8e3578355')
+
+# todo: cleanup depends
+
+prepare() {
+	cp -a MarkupSafe-${pkgver}{,-py2}
+}
+
+build() {
+	cd "${srcdir}"/MarkupSafe-${pkgver}
+	python setup.py build
+	
+	cd "${srcdir}"/MarkupSafe-${pkgver}-py2
+	python2 setup.py build
+}
+
+package_python-markupsafe() {
+	depends=('python')
+	cd "${srcdir}"/MarkupSafe-${pkgver}
+	python setup.py install --root="${pkgdir}" --optimize=1
+
+	install -D -m644 LICENSE "${pkgdir}"/usr/share/licenses/python-markupsafe/LICENSE
+}
+
+package_python2-markupsafe() {
+	depends=('python2')
+	cd "${srcdir}"/MarkupSafe-${pkgver}-py2
+	python2 setup.py install --root="${pkgdir}" --optimize=1
+
+	install -D -m644 LICENSE "${pkgdir}"/usr/share/licenses/python2-markupsafe/LICENSE
+}

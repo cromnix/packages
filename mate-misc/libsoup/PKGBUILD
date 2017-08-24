@@ -3,13 +3,13 @@
 pkgname=libsoup
 pkgver=2.58.2
 _pkgver=${pkgver%.*}
-pkgrel=1
+pkgrel=2
 pkgdesc='The libsoup is a HTTP client/server library for GNOME'
 arch=('x86_64')
 url='https://wiki.gnome.org/Projects/libsoup'
 license=('LGPL')
 depends=('glib' 'libxml2' 'glib-networking' 'sqlite')
-makedepends=('intltool' 'python' 'vala' 'gtk-doc')
+makedepends=('intltool' 'python' 'vala' 'gtk-doc' 'gobject-introspection')
 #checkdepends=(apache php-apache)
 source=("http://ftp.gnome.org/pub/gnome/sources/${pkgname}/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
 md5sums=('eb33adb459c2283efc5c7d09ccdbbcfc')

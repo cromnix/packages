@@ -3,13 +3,13 @@
 pkgname=goffice
 pkgver=0.10.35
 _pkgver=${pkgver%.*}
-pkgrel=1
+pkgrel=2
 pkgdesc='The GOffice package contains a library of GLib/GTK document centric objects and utilities'
 arch=('x86_64')
 url='https://git.gnome.org/browse/goffice/'
 license=('GPL')
 depends=('librsvg' 'gtk3' 'libgsf' 'libxslt' 'libat-spi2-atk' 'which')
-makedepends=('intltool' 'atk-dev' 'at-spi2-atk-dev')
+makedepends=('intltool' 'atk-dev' 'at-spi2-atk-dev' 'gtk-doc' 'gobject-introspection')
 source=("http://ftp.gnome.org/pub/gnome/sources/${pkgname}/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
 md5sums=('3a47150f19f0968d02b77374d1a5008f')
 
@@ -18,7 +18,13 @@ md5sums=('3a47150f19f0968d02b77374d1a5008f')
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
 	./configure --prefix=/usr \
-		--disable-static
+		--sysconfdir=/etc \
+		--localstatedir=/var \
+		--disable-static \
+		--enable-introspection \
+		--enable-gtk-doc
+	
+	sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
 	make
 }
 

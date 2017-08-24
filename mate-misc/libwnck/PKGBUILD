@@ -3,13 +3,13 @@
 pkgname=libwnck
 pkgver=3.24.1
 _pkgver=${pkgver%.*}
-pkgrel=1
+pkgrel=2
 pkgdesc='The libwnck package contains the Window Navigator Construction Kit'
 arch=('x86_64')
 url='https://git.gnome.org/browse/libwnck'
 license=('LGPL')
 depends=('gtk3' 'startup-notification' 'libxres')
-makedepends=('intltool' 'python2' 'gtk-doc' 'atk-dev')
+makedepends=('intltool' 'python2' 'gtk-doc' 'atk-dev' 'gobject-introspection')
 source=("http://ftp.gnome.org/pub/gnome/sources/${pkgname}/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
 md5sums=('23df51ec0a1169014fe3a102d572b244')
 

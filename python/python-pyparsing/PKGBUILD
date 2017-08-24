@@ -1,0 +1,56 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=python-pyparsing
+pkgname=('python-pyparsing' 'python2-pyparsing')
+pkgver=2.2.0
+pkgrel=1
+pkgdesc='General parsing module for Python'
+arch=('any')
+url='http://pyparsing.wikispaces.com/'
+makedepends=('python-setuptools' 'python2-setuptools')
+license=('MIT')
+source=("http://downloads.sourceforge.net/pyparsing/pyparsing-$pkgver.tar.gz")
+sha256sums=('0832bcf47acd283788593e7a0f542407bd9550a55a8a8435214a1960e04bcb04')
+
+prepare() {
+  cp -a pyparsing-$pkgver{,-py2}
+
+  # :/
+  #sed -i '1i#coding=utf-8' pyparsing-$pkgver-py2/src/unitTests.py
+}
+
+build() {
+  cd "$srcdir"/pyparsing-$pkgver
+  python setup.py build
+
+  cd "$srcdir"/pyparsing-$pkgver-py2
+  python2 setup.py build
+}
+
+check() {
+  export LC_CTYPE=en_US.UTF-8
+
+  cd "$srcdir"/pyparsing-$pkgver
+  python unitTests.py
+
+  cd "$srcdir"/pyparsing-$pkgver-py2
+  python2 unitTests.py
+}
+
+package_python-pyparsing() {
+  depends=('python')
+
+  cd pyparsing-$pkgver
+
+  python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1
+  install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+}
+
+package_python2-pyparsing() {
+  depends=('python2')
+
+  cd pyparsing-$pkgver-py2
+
+  python2 setup.py install --prefix=/usr --root="$pkgdir" --optimize=1
+  install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+}

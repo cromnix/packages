@@ -3,13 +3,13 @@
 pkgname=libnotify
 pkgver=0.7.7
 _pkgver=${pkgver%.*}
-pkgrel=1
+pkgrel=2
 pkgdesc='The libnotify library is used to send desktop notifications to a notification daemon, as defined in the Desktop Notifications spec'
 arch=('x86_64')
 url='https://developer.gnome.org/notification-spec/'
 license=('LGPL')
 depends=('gdk-pixbuf')
-makedepends=('gtk3' 'gtk-doc' 'atk-dev')
+makedepends=('gtk3' 'gtk-doc' 'atk-dev' 'gobject-introspection')
 source=("http://ftp.gnome.org/pub/gnome/sources/${pkgname}/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
 md5sums=('e9d911f6a22435e0b922f2fe71212b59')
 

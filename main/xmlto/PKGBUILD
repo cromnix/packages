@@ -2,20 +2,21 @@
 
 pkgname=xmlto
 pkgver=0.0.28
-pkgrel=1
+pkgrel=2
 pkgdesc='The xmlto is a front-end to an XSL toolchain'
 arch=('x86_64')
 url='https://fedorahosted.org/xmlto/'
 license=('GPL')
 depends=('libxslt')
 makedepends=('docbook-xsl')
-source=("https://fedorahosted.org/releases/x/m/xmlto/${pkgname}-${pkgver}.tar.bz2")
-md5sums=('64c7646b36010dfb476e7952efa38dfb')
+source=("https://releases.pagure.org/${pkgname}/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('93bab48d446c826399d130d959fe676f')
 
 build() {
 	cd ${srcdir}/${pkgname}-${pkgver}
-	LINKS='/usr/bin/links'
-	./configure --prefix=/usr
+	./configure BASH=/bin/bash \
+		--prefix=/usr \
+		--mandir=/usr/share/man
 	make
 }
 

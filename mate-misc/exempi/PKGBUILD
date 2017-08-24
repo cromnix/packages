@@ -1,0 +1,32 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=exempi
+pkgver=2.4.3
+pkgrel=1
+pkgdesc='Exempi is an implementation of XMP (Adobe''s Extensible Metadata Platform)'
+arch=('x86_64')
+url='https://libopenraw.freedesktop.org/wiki/Exempi'
+license=('custom:BSD')
+depends=('gcc-libs' 'expat' 'zlib')
+makedepends=('boost')
+checkdepends=('valgrind')
+source=("https://libopenraw.freedesktop.org/download/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('ad612752c8bf50d7c84a4689073246d2')
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr \
+		--disable-static
+	make
+}
+
+check() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make check
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+	install -Dm644 COPYING "${pkgdir}"/usr/share/licenses/${pkgname}/LICENSE
+}

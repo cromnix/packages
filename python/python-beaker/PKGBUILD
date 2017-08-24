@@ -1,0 +1,57 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgbase=python-beaker
+pkgname=('python-beaker' 'python2-beaker')
+pkgver=1.9.0
+pkgrel=1
+arch=('any')
+license=('custom')
+pkgdesc="Caching and sessions WSGI middleware for use with web applications and stand-alone Python scripts and applications"
+url="http://beaker.groovie.org/"
+makedepends=('python-setuptools' 'python2-setuptools')
+checkdepends=('python-nose' 'python2-nose' 'python-mock' 'python2-mock' 'python-sqlalchemy' 'python2-sqlalchemy'
+              'python-crypto' 'python2-crypto' 'python-coverage' 'python2-coverage' 'python-webtest' 'python2-webtest'
+              'python-beautifulsoup4' 'python2-beautifulsoup4')
+source=("beaker-${pkgver}.tar.gz::https://github.com/bbangert/beaker/archive/${pkgver}.tar.gz")
+md5sums=('752957aab34cd69b5c164af4f3547ab9')
+
+prepare() {
+    cp -a beaker-${pkgver}{,-py2}
+
+    sed -i "s#/usr/bin/python#/usr/bin/python3#" beaker-${pkgver}/beaker/crypto/pbkdf2.py
+    sed -i "s#/usr/bin/python#/usr/bin/python2#" beaker-${pkgver}-py2/beaker/crypto/pbkdf2.py
+}
+
+build() {
+    cd "$srcdir"/beaker-${pkgver}
+    python3 setup.py build
+
+    cd "$srcdir"/beaker-${pkgver}-py2
+    python2 setup.py build
+}
+
+check() {
+    cd "$srcdir"/beaker-${pkgver}
+    mkdir tests_py3
+    2to3 -w -n -o tests_py3 tests/*.py
+    PYTHONPATH="$PWD/build/lib:$PYTHONPATH" nosetests3 --py3where=tests_py3
+
+    cd "$srcdir"/beaker-${pkgver}-py2
+    PYTHONPATH="$PWD/build/lib:$PYTHONPATH" nosetests2
+}
+
+package_python-beaker() {
+    depends=('python')
+
+    cd beaker-${pkgver}
+    python3 setup.py install --root="$pkgdir" --optimize=1
+    install -D -m644 LICENSE "$pkgdir"/usr/share/licenses/python-beaker/LICENSE
+}
+
+package_python2-beaker() {
+    depends=('python2')
+
+    cd beaker-${pkgver}-py2
+    python2 setup.py install --root="$pkgdir" --optimize=1
+    install -D -m644 LICENSE "$pkgdir"/usr/share/licenses/python2-beaker/LICENSE
+}
