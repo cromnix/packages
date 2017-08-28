@@ -9,7 +9,7 @@ arch=('x86_64')
 url='http://mate-desktop.org/'
 license=('LGPL')
 groups=('mate')
-depends=('mate-desktop' 'zenity' 'libcanberra' 'libgtop')
+depends=('mate-desktop' 'zenity' 'libcanberra' 'libgtop' 'libsm')
 makedepends=('intltool' 'itstool' 'atk-dev' 'at-spi2-atk-dev')
 source=("http://pub.mate-desktop.org/releases/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
 md5sums=('0d0a3eeb643c7177405122a246188d60')
@@ -21,7 +21,11 @@ build() {
 	./configure --prefix=/usr \
 		--sysconfdir=/etc \
 		--localstatedir=/var \
-		--enable-startup-notification
+		--enable-startup-notification \
+		--disable-schemas-compile  \
+		--disable-static \
+		--enable-sm \
+		--with-x
 
 	#https://bugzilla.gnome.org/show_bug.cgi?id=656231
 	sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool

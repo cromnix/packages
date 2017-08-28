@@ -2,7 +2,7 @@
 
 pkgname=polkit
 pkgver=r916.766a2ea
-pkgrel=2
+pkgrel=3
 pkgdesc='Polkit is a toolkit for defining and handling authorizations. It is used for allowing unprivileged processes to communicate with privileged processes'
 arch=('x86_64')
 url='https://www.freedesktop.org/wiki/Software/polkit/'
@@ -46,4 +46,6 @@ check() {
 package() {
 	cd "${srcdir}/${pkgname}-0.113+git_2919920+js38"
 	make DESTDIR="${pkgdir}" install
+	chown root:27 "${pkgdir}"/{etc,usr/share}/polkit-1/rules.d
+	chmod 750 "${pkgdir}"/{etc,usr/share}/polkit-1/rules.d
 }

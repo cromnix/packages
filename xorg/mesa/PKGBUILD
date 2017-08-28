@@ -1,13 +1,12 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=mesa
-pkgver=17.1.6
+pkgver=17.1.7
 pkgrel=1
 pkgdesc='Mesa is an OpenGL compatible 3D graphics library'
 arch=('x86_64')
 url='https://www.mesa3d.org/'
 license=('custom')
-#depends=('glibc')
 #depends=libelf
 depends=('glibc' 'libdrm' 'libxxf86vm' 'libxdamage' 'libxshmfence' 'libgcrypt' 'elfutils')
 makedepends=('python2' 'libxml2' 'libx11' 'glproto' 'libdrm' 'dri2proto' 'dri3proto' 'presentproto' 'libxshmfence' 'libxxf86vm' 'libxdamage' 'libgcrypt' 'elfutils')
@@ -15,7 +14,7 @@ makedepends+=('mesa')
 provides=('libgl' 'libgles' 'libegl')
 source=("https://mesa.freedesktop.org/archive/${pkgname}-${pkgver}.tar.xz"
 		'http://www.linuxfromscratch.org/patches/blfs/8.0/mesa-13.0.4-add_xdemos-1.patch')
-md5sums=('54758bf842f9ea53c8b57cce4311b87e'
+md5sums=('e40bb428a263bd28cbf6478dae45b207'
          '48cce4c6a8ae116c4e00ae128ba97603')
 
 # todo: A lot of changes are needed to support more graphics cards and settings

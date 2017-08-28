@@ -2,14 +2,16 @@
 
 pkgname=desktop-file-utils
 pkgver=0.23
-pkgrel=1
+pkgrel=2
 pkgdesc='The Desktop File Utils package contains command line utilities for working with Desktop entries'
 arch=('x86_64')
 url='https://www.freedesktop.org/wiki/Software/desktop-file-utils'
 license=('GPL')
 depends=('glib')
-source=("http://freedesktop.org/software/desktop-file-utils/releases/${pkgname}-${pkgver}.tar.xz")
-md5sums=('599133d51cc9a41bfec186414906b6f1')
+source=("http://freedesktop.org/software/desktop-file-utils/releases/${pkgname}-${pkgver}.tar.xz"
+		'update-desktop-database.hook')
+md5sums=('599133d51cc9a41bfec186414906b6f1'
+         '63b2a090a303cbf9e244dc79b40fd81b')
 
 build() {
 	cd "$srcdir/$pkgname-$pkgver"
@@ -20,4 +22,5 @@ build() {
 package() {
 	cd "$srcdir/$pkgname-$pkgver"
 	make DESTDIR="$pkgdir" install
+	install -Dm644 "$srcdir"/update-desktop-database.hook "$pkgdir"/usr/share/libalpm/hooks/update-desktop-database.hook
 }

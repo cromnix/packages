@@ -3,7 +3,7 @@
 pkgname=mate-session-manager
 pkgver=1.18.1
 _pkgver=${pkgver%.*}
-pkgrel=2
+pkgrel=3
 pkgdesc='The MATE Session Handler'
 arch=('x86_64')
 url='http://mate-desktop.org/'
@@ -23,7 +23,8 @@ md5sums=('f7ed15ec600ef96aae1f741eee05e7c8'
 
 prepare() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
-	sed -e "s/#define GSM_MANAGER_PHASE_TIMEOUT 30/#define GSM_MANAGER_PHASE_TIMEOUT 10/" -i mate-session/gsm-manager.c
+	# Use this to make the timeout faster when debugging
+	#sed -e "s/#define GSM_MANAGER_PHASE_TIMEOUT 30/#define GSM_MANAGER_PHASE_TIMEOUT 10/" -i mate-session/gsm-manager.c
 }
 
 build() {
@@ -32,7 +33,9 @@ build() {
 		--libexecdir=/usr/lib/${pkgname} \
 		--sysconfdir=/etc \
 		--localstatedir=/var \
-		--disable-upower
+		--enable-gstreamer \
+		--enable-profiles \
+		--enable-polkit
 
 	make
 }

@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=boost
-pkgver=1.64.0
+pkgver=1.65.0
 _pkgver=${pkgver//./_}
 pkgrel=1
 pkgdesc='Boost provides a set of free peer-reviewed portable C++ source libraries'
@@ -15,7 +15,7 @@ optepends=('python: for python bindings'
 			'python2: for python2 bindings')
 options=('staticlibs')
 source=("http://downloads.sourceforge.net/project/${pkgname}/${pkgname}/${pkgver}/${pkgname}_${_pkgver}.tar.bz2")
-md5sums=('93eecce2abed9d2442c9676914709349')
+md5sums=('5512d3809801b0a1b9dd58447b70915d')
 
 # todo: split and depends, if built with openmpi I beleive there will be a binary included as well
 # rebuild using a staging folder
