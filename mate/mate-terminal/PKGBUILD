@@ -1,0 +1,27 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=mate-terminal
+pkgver=1.18.1
+_pkgver=${pkgver%.*}
+pkgrel=1
+pkgdesc='The MATE Terminal Emulator'
+arch=('x86_64')
+url='http://mate-desktop.org/'
+license=('GPL')
+groups=('mate-extra')
+depends=('libsm' 'mate-desktop' 'vte3')
+makedepends=('intltool' 'itstool' 'atk-dev')
+source=("http://pub.mate-desktop.org/releases/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
+md5sums=('a8a6f39769cb4a4d393220f31e7568cc')
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr
+
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}

@@ -1,0 +1,38 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=pcre2
+pkgver=10.30
+pkgrel=1
+pkgdesc='The PCRE2 package contains a new generation of the Perl Compatible Regular Expression libraries'
+arch=('x86_64')
+url='http://www.pcre.org/'
+license=('BSD')
+depends=('gcc-libs' 'readline' 'zlib' 'bzip2' 'bash')
+source=("https://downloads.sourceforge.net/pcre/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('d3adf4b130eed854a530390f00020a65')
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr \
+		--docdir=/usr/share/doc/${pkgname}-${pkgver} \
+		--enable-unicode \
+		--enable-pcre2-16 \
+		--enable-pcre2-32 \
+		--enable-pcre2grep-libz \
+		--enable-pcre2grep-libbz2 \
+		--enable-pcre2test-libreadline \
+		--disable-static \
+		--enable-jit
+	make
+}
+
+check() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make -j1 check
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+	install -Dm644 LICENCE "${pkgdir}"/usr/share/licenses/${pkgname}/LICENSE
+}

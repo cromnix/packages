@@ -1,0 +1,42 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=vte3
+pkgver=0.48.3
+_pkgver=${pkgver%.*}
+pkgrel=1
+pkgdesc='The VTE package contains a termcap file implementation for terminal emulators'
+arch=('x86_64')
+url='https://wiki.gnome.org/Apps/Terminal/VTE'
+license=('LGPL')
+options=('!emptydirs')
+depends=('gtk3' 'pcre2' 'gnutls')
+makedepends=('intltool' 'gobject-introspection' 'vala' 'gtk-doc' 'gperf' 'atk-dev' 'at-spi2-atk-dev')
+source=("http://ftp.gnome.org/pub/gnome/sources/vte/${_pkgver}/vte-${pkgver}.tar.xz")
+md5sums=('b300675ac5f269aa6eb48fe89a0d726d')
+
+# todo: rebuild with glade
+
+build() {
+	cd "${srcdir}/vte-${pkgver}"
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--disable-static \
+		--enable-introspection \
+		--enable-gtk-doc \
+		--libexecdir=/usr/lib/vte \
+		--localstatedir=/var
+
+	sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
+
+	make
+}
+
+check() {
+	cd "${srcdir}/vte-${pkgver}"
+	make check
+}
+
+package() {
+	cd "${srcdir}/vte-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}
