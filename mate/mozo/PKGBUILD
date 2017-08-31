@@ -1,0 +1,26 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=mozo
+pkgver=1.18.0
+_pkgver=${pkgver%.*}
+pkgrel=1
+pkgdesc='MATE menu editing tool'
+arch=('x86_64')
+url='http://mate-desktop.org/'
+license=('GPL')
+groups=('mate-extra')
+depends=('gtk3' 'mate-menus' 'python2-gobject')
+makedepends=('intltool')
+source=("http://pub.mate-desktop.org/releases/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
+md5sums=('956e008f2d73a36be32dea4f5093a7d7')
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	PYTHON=/usr/bin/python2 ./configure --prefix=/usr
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}

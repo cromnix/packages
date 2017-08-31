@@ -1,0 +1,34 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=engrampa
+pkgver=1.18.2
+_pkgver=${pkgver%.*}
+pkgrel=1
+pkgdesc='Archive manipulator for MATE'
+arch=('x86_64')
+url='http://mate-desktop.org/'
+license=('GPL')
+groups=('mate-extra')
+depends=('gtk3' 'gzip' 'libarchive' 'tar' 'unzip' 'zip')
+makedepends=('caja' 'intltool' 'itstool' 'atk-dev')
+optdepends=('caja: file archiver extension'
+			'p7zip: 7Z and ARJ archive support'
+			'unace: ACE archive support'
+			'unrar: RAR archive support')
+source=("http://pub.mate-desktop.org/releases/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
+md5sums=('a05d315096ef74ba416ae90246ce59e3')
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr \
+		--libexecdir=/usr/lib/${pkgname} \
+		--disable-packagekit
+
+	sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}

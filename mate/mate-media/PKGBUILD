@@ -1,0 +1,29 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=mate-media
+pkgver=1.18.1
+_pkgver=${pkgver%.*}
+pkgrel=1
+pkgdesc='MATE Media Tools'
+arch=('x86_64')
+url='http://mate-desktop.org/'
+license=('GPL')
+groups=('mate-extra')
+depends=('libcanberra' 'libmatemixer' 'mate-desktop')
+makedepends=('intltool' 'atk-dev')
+source=("http://pub.mate-desktop.org/releases/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
+md5sums=('45d4423ba87037bce432759f2547cf8e')
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--libexecdir=/usr/lib/${pkgname} \
+		--localstatedir=/var
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}
