@@ -3,7 +3,7 @@
 pkgname=pango
 pkgver=1.40.11
 _pkgver=${pkgver%.*}
-pkgrel=1
+pkgrel=2
 pkgdesc='Pango is a library for laying out and rendering of text, with an emphasis on internationalization'
 arch=('x86_64')
 url='https://www.pango.org/'

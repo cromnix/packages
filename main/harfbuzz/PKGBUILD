@@ -1,8 +1,8 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=harfbuzz
-pkgver=1.4.8
-pkgrel=2
+pkgver=1.5.0
+pkgrel=1
 pkgdesc='The HarfBuzz package contains an OpenType text shaping engine'
 arch=('x86_64')
 url='http://www.freedesktop.org/wiki/Software/HarfBuzz'
@@ -11,7 +11,7 @@ depends=('glib' 'freetype')
 optdepends=('cairo: hb-view program')
 makedepends=('glib' 'freetype' 'icu' 'python2' 'gobject-introspection' 'gtk-doc' 'cairo')
 source=("http://www.freedesktop.org/software/harfbuzz/release/${pkgname}-${pkgver}.tar.bz2")
-md5sums=('d1aa446e1e65717311c15d9ac0cf31ee')
+md5sums=('a718972f05b28e90a0a661e33377f0e7')
 
 # todo: rebuild split package
 

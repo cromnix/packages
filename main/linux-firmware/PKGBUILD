@@ -78,7 +78,7 @@ pkgname=('linux-firmware-misc'
 		'linux-firmware-ttusb-budget'
 		# end autogen
 		)
-pkgver=r941.7d2c913
+pkgver=r961.9d40a17
 pkgrel=1
 pkgdesc='Linux firmware'
 arch=('any')

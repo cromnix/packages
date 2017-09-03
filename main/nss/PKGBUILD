@@ -3,7 +3,7 @@
 pkgname=nss
 pkgver=3.32
 _pkgver=${pkgver//./_}
-pkgrel=1
+pkgrel=2
 pkgdesc='The Network Security Services (NSS) package is a set of libraries designed to support cross-platform development of security-enabled client and server applications'
 arch=('x86_64')
 url='https://developer.mozilla.org/en-US/docs/Mozilla/Projects/NSS'

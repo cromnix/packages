@@ -2,9 +2,9 @@
 
 pkgbase=gtk3
 pkgname=('gtk3' 'gtk-update-icon-cache')
-pkgver=3.22.18
+pkgver=3.22.19
 _pkgver=${pkgver%.*}
-pkgrel=2
+pkgrel=1
 pkgdesc='The GTK+ 3 package contains libraries used for creating graphical user interfaces for applications'
 arch=('x86_64')
 url='http://www.gtk.org/'
@@ -19,7 +19,7 @@ source=("http://ftp.gnome.org/pub/gnome/sources/gtk+/${_pkgver}/gtk+-${pkgver}.t
 		'gtk-update-icon-cache.hook'
 		'gtk-update-icon-cache.script'
 		'settings.ini')
-md5sums=('5c574a872ef3af67706bd612374ea58b'
+md5sums=('8a4878abe72726b4d33c623c595749bc'
          '47d92cc1080c92e8a022334b620f0629'
          'c792ef5bb74ceba564b4d8ad306a6592'
          '57010c34ddf8d70c2870a81e0313bdf0'

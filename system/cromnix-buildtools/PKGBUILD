@@ -1,17 +1,16 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=cromnix-buildtools
-pkgver=r30.cf55b42
+pkgver=r3.12b1812
 pkgrel=1
 pkgdesc='Tools used to help build cromnix packages'
 arch=('any')
-url='https://www.cromer.cl'
+url='https://www.cromnix.org'
 license=('GPL')
-groups=('cromnix-dev')
 depends=('cromnix' 'pacman' 'pacman-contrib' 'rsync')
 makedepends=('git')
-#source=("git+https://github.com/cromnix/${pkgname}.git")
-source=("git+https://gitlab.com/cromnix/${pkgname}.git")
+source=("git+https://github.com/cromnix/${pkgname}.git")
+#source=("git+https://gitlab.com/cromnix/${pkgname}.git")
 md5sums=('SKIP')
 
 _repos=('main'

@@ -1,0 +1,12 @@
+diff -Naur pacman-5.0.2-orig/scripts/libmakepkg/util/pkgbuild.sh.in pacman-5.0.2/scripts/libmakepkg/util/pkgbuild.sh.in
+--- pacman-5.0.2-orig/scripts/libmakepkg/util/pkgbuild.sh.in	2017-04-28 20:18:01.000000000 -0300
++++ pacman-5.0.2/scripts/libmakepkg/util/pkgbuild.sh.in	2017-09-01 20:12:46.248505938 -0300
+@@ -116,7 +116,7 @@
+ ##
+ get_full_version() {
+ 	if (( epoch > 0 )); then
+-		printf "%s\n" "$epoch:$pkgver-$pkgrel"
++		printf "%s\n" "$epoch-$pkgver-$pkgrel"
+ 	else
+ 		printf "%s\n" "$pkgver-$pkgrel"
+ 	fi

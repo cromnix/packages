@@ -9,7 +9,7 @@ url='http://www.gnu.org/software/libtool'
 license=('GPL')
 groups=('cromnix-dev')
 depends=('sh' 'tar' 'glibc')
-makedepends=('gcc=7.1.0')
+makedepends=('gcc=7.2.0')
 source=("http://ftp.gnu.org/gnu/${pkgname}/${pkgname}-${pkgver}.tar.xz")
 md5sums=('1bfb9b923f2c1339b4d2ce1807064aa5')
 

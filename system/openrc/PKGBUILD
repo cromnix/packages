@@ -2,7 +2,7 @@
 
 pkgname=openrc
 pkgver=0.29
-pkgrel=1
+pkgrel=2
 pkgdesc="An init and service control software"
 arch=('x86_64')
 url="http://www.gentoo.org/proj/en/base/openrc/"

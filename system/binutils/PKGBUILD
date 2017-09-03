@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=binutils
-pkgver=2.28
+pkgver=2.29
 pkgrel=1
 pkgdesc='Linker, assembler, and other tools'
 arch=('x86_64')
@@ -12,7 +12,7 @@ depends=('glibc>=2.25' 'zlib')
 checkdepends=('dejagnu' 'bc')
 options=('staticlibs' '!distcc' '!ccache')
 source=("http://ftp.gnu.org/gnu/${pkgname}/${pkgname}-${pkgver}.tar.bz2")
-md5sums=('9e8340c96626b469a603c15c9d843727')
+md5sums=('23733a26c8276edbb1168c9bee60e40e')
 
 prepare() {
     cd ${srcdir}/${pkgname}-${pkgver}

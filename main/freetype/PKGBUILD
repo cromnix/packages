@@ -2,7 +2,7 @@
 
 pkgname=freetype
 pkgver=2.8
-pkgrel=1
+pkgrel=2
 pkgdesc='The FreeType2 package contains a library which allows applications to properly render TrueType fonts'
 arch=('x86_64')
 url='http://www.freetype.org'

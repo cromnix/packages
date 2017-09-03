@@ -3,14 +3,14 @@
 # toolchain build order: linux-api-headers->glibc->binutils->gcc->binutils->glibc->libtool->valgrind
 
 pkgname=linux-api-headers
-pkgver=4.11.3
+pkgver=4.12.10
 pkgrel=1
 pkgdesc='Kernel headers sanitized for use in userspace'
 arch=('any')
 url='http://www.kernel.org/'
 license=('GPL2')
 source=("http://www.kernel.org/pub/linux/kernel/v4.x/linux-${pkgver}.tar.xz")
-md5sums=('d8f9218277a3f0d2e1703676002be428')
+md5sums=('8cfe8bd3bd00c0bb10171441e1a9c99e')
 
 build() {
 	cd "${srcdir}/linux-${pkgver}"

@@ -3,7 +3,7 @@
 pkgbase=pacman
 pkgname=('pacman' 'pacman-contrib')
 pkgver=5.0.2
-pkgrel=6
+pkgrel=9
 pkgdesc="A library-based package manager with dependency support"
 arch=('x86_64')
 url="http://www.archlinux.org/pacman/"
@@ -15,14 +15,26 @@ source=("https://sources.archlinux.org/other/pacman/$pkgname-$pkgver.tar.gz"
         "pacman.conf"
         "makepkg.conf"
         'pacman.logrotate'
-        'paccache.hook')
+        'paccache.hook'
+        'codename.patch'
+        'epoch.patch')
 md5sums=('f36f5e7e95a89436febe1bcca874fc33'
          '967348a29854b7fd947a496ab582131a'
          '5f978a84b691754a7a1588b8a5414b46'
          'bfed0ae8b6ec38fe6f5a1a6b1fcec871'
-         'cd3b81be6dd7cfc4a441fd75b87f72dc')
+         'cd3b81be6dd7cfc4a441fd75b87f72dc'
+         '680bde49286843272ccdfbea7c3da30b'
+         '16bb3815c60745acaa2e5e2b8d6ec7d2')
          
 # todo: missing depends for check
+
+prepare() {
+    cd "$srcdir/$pkgname-$pkgver"
+    # allow codenames for cromnix
+	patch -Np1 -i "${srcdir}"/codename.patch
+	# use dash for epoch to work with sourceforge
+	patch -Np1 -i "${srcdir}"/epoch.patch
+}
 
 build() {
     cd "$srcdir/$pkgname-$pkgver"
@@ -42,7 +54,7 @@ check() {
 }
 
 package_pacman() {
-	groups=('cromnix-base')
+	groups=('cromnix-base' 'cromnix-dev')
 	depends=('perl' 'bash' 'glibc' 'libarchive' 'curl' 'gpgme' 'libxml2' 'cromnix-mirrorlist' 'cromnix-keyring')
 	optdepends=('pacman-contrib: extra scripts for use with pacman'
 				'bzip2: uncrompess bz2 source files'

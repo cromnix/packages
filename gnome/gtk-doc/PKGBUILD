@@ -1,21 +1,33 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=gtk-doc
-pkgver=1.25
+pkgver=1.26
 pkgrel=1
 pkgdesc='The GTK-Doc package contains a code documenter'
 arch=('any')
 url='https://www.gtk.org/gtk-doc/'
 license=('GPL' 'FDL')
-depends=('docbook-xsl' 'docbook-xml' 'perl' 'python2' 'itstool')
-source=("http://ftp.gnome.org/pub/gnome/sources/${pkgname}/${pkgver}/${pkgname}-${pkgver}.tar.xz")
-md5sums=('0dc6570953112a464a409fb99258ccbc')
+depends=('docbook-xsl' 'docbook-xml' 'glib' 'python-six')
+#makedepends=('dblatex' 'yelp-tools')
+makedepends=('itstool')
+checkdepends=('bc' 'gtk3')
+optdepends=('dblatex: PDF support')
+source=("http://ftp.gnome.org/pub/gnome/sources/${pkgname}/${pkgver}/${pkgname}-${pkgver}.tar.xz"
+		'0001-gtkdoc-Don-t-immediately-choke-on-non-UTF-8-files.patch')
+md5sums=('1ad4a1dbf804889fdc85f8eec45e8696'
+         '1108a0bfd40a682a7cdd500b006172ec')
 
-# todo: missing depends
+# todo: missing depends, and glib-docs
+
+prepare() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	patch -Np1 -i "${srcdir}"/0001-gtkdoc-Don-t-immediately-choke-on-non-UTF-8-files.patch
+}
 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
-	PYTHON=/usr/bin/python2 ./configure --prefix=/usr
+	./configure --prefix=/usr \
+		--disable-static
 	make
 }
 

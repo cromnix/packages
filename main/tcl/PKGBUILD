@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=tcl
-pkgver=8.6.6
+pkgver=8.6.7
 pkgrel=1
 pkgdesc="The Tcl package contains the Tool Command Language, a robust general-purpose scripting language."
 arch=('x86_64')
@@ -11,8 +11,8 @@ depends=('zlib')
 options=('staticlibs')
 source=("http://downloads.sourceforge.net/tcl/$pkgname$pkgver-src.tar.gz"
         "http://downloads.sourceforge.net/tcl/$pkgname$pkgver-html.tar.gz")
-md5sums=('5193aea8107839a79df8ac709552ecb7'
-         '29b28a8c98a97f34bcb92af3222d253f')
+md5sums=('5673aaf45b5de5d8dd80bb3daaeb8838'
+         '0da678eaf3041346030898c23c14e97e')
 
 build() {
     cd "$srcdir/$pkgname$pkgver/unix"
@@ -26,16 +26,16 @@ build() {
         -e "s#$srcdir/$pkgname$pkgver#/usr/include#" \
         -i tclConfig.sh
 
-    sed -e "s#$srcdir/$pkgname$pkgver/unix/pkgs/tdbc1.0.4#/usr/lib/tdbc1.0.4#" \
-        -e "s#$srcdir/$pkgname$pkgver/pkgs/tdbc1.0.4/generic#/usr/include#" \
-        -e "s#$srcdir/$pkgname$pkgver/pkgs/tdbc1.0.4/library#/usr/lib/tcl8.6#" \
-        -e "s#$srcdir/$pkgname$pkgver/pkgs/tdbc1.0.4#/usr/include#" \
-        -i pkgs/tdbc1.0.4/tdbcConfig.sh
+    sed -e "s#$srcdir/$pkgname$pkgver/unix/pkgs/tdbc1.0.5#/usr/lib/tdbc1.0.5#" \
+        -e "s#$srcdir/$pkgname$pkgver/pkgs/tdbc1.0.5/generic#/usr/include#" \
+        -e "s#$srcdir/$pkgname$pkgver/pkgs/tdbc1.0.5/library#/usr/lib/tcl8.6#" \
+        -e "s#$srcdir/$pkgname$pkgver/pkgs/tdbc1.0.5#/usr/include#" \
+        -i pkgs/tdbc1.0.5/tdbcConfig.sh
 
-    sed -e "s#$srcdir/$pkgname$pkgver/unix/pkgs/itcl4.0.5#/usr/lib/itcl4.0.5#" \
-        -e "s#$srcdir/$pkgname$pkgver/pkgs/itcl4.0.5/generic#/usr/include#" \
-        -e "s#$srcdir/$pkgname$pkgver/pkgs/itcl4.0.5#/usr/include#" \
-        -i pkgs/itcl4.0.5/itclConfig.sh
+    sed -e "s#$srcdir/$pkgname$pkgver/unix/pkgs/itcl4.1.0#/usr/lib/itcl4.1.0#" \
+        -e "s#$srcdir/$pkgname$pkgver/pkgs/itcl4.1.0/generic#/usr/include#" \
+        -e "s#$srcdir/$pkgname$pkgver/pkgs/itcl4.1.0#/usr/include#" \
+        -i pkgs/itcl4.1.0/itclConfig.sh
 }
 
 check() {

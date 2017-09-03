@@ -11,6 +11,10 @@ post_install() {
 			sed -e 's/#agetty_options=""/agetty_options="--noclear"/' -i etc/openrc/conf.d/agetty.tty${i}
 		fi
 	done
+	
+	#nox run level
+	mkdir -p etc/openrc/runlevels/nox
+	rc-update -s add default nox
 }
 
 pre_remove() {
@@ -19,4 +23,5 @@ pre_remove() {
 		[[ -f etc/openrc/conf.d/agetty.tty${i} ]] && rm etc/openrc/conf.d/agetty.tty${i}
 		[[ -L etc/openrc/runlevels/default/agetty.tty${i} ]] && rm etc/openrc/runlevels/default/agetty.tty${i}
 	done
+	rm -rf etc/openrc/runlevels/nox
 }

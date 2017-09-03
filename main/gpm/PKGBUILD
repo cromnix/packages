@@ -3,7 +3,7 @@
 pkgbase=gpm
 pkgname=('gpm' 'gpm-openrc')
 pkgver=1.20.7
-pkgrel=4
+pkgrel=5
 pkgdesc="The GPM (General Purpose Mouse daemon) package contains a mouse server for the console and xterm."
 arch=('x86_64')
 url="http://www.nico.schottelius.org/software/gpm/"
@@ -11,10 +11,18 @@ license=('GPL')
 makedepends=('openrc-services')
 source=("http://www.nico.schottelius.org/software/gpm/archives/$pkgbase-$pkgver.tar.bz2"
 		"https://gitweb.gentoo.org/repo/gentoo.git/plain/sys-libs/gpm/files/gpm.rc6-2"
-		"https://gitweb.gentoo.org/repo/gentoo.git/plain/sys-libs/gpm/files/gpm.conf.d")
+		"https://gitweb.gentoo.org/repo/gentoo.git/plain/sys-libs/gpm/files/gpm.conf.d"
+		'gpm-1.20.7-glibc_2.26-1.patch')
 md5sums=('bf84143905a6a903dbd4d4b911a2a2b8'
          '9404f8eb54a47f4129e280a0c199093a'
-         '5968cb47e493e348cf289b0dd1990f4a')
+         '5968cb47e493e348cf289b0dd1990f4a'
+         '802caefec3613f56adf1d8bf4cb15145')
+
+prepare() {
+	cd "$srcdir/$pkgbase-$pkgver"
+	sed -i -e 's:<gpm.h>:"headers/gpm.h":' src/prog/{display-buttons,display-coords,get-versions}.c
+	patch -Np1 -i "${srcdir}"/gpm-1.20.7-glibc_2.26-1.patch
+}
 
 build() {
 	cd "$srcdir/$pkgbase-$pkgver"

@@ -1,0 +1,23 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+_pkgname=dhcpcd
+pkgname=${_pkgname}-runit
+pkgver=20170901
+pkgrel=1
+pkgdesc="runit init scripts for ${_pkgname}"
+arch=('any')
+url='https://cromnix.org'
+license=('BSD3')
+depends=('runit-init')
+provides=("${_pkgname}-init")
+source=('run')
+md5sums=('d28759610794d56409b6b3fd51a016a2')
+
+pkgver() {
+	date +%Y%m%d
+}
+
+package() {
+	install -v -m755 -d "${pkgdir}"/etc/runit/sv/${_pkgname}
+	install -v -m755 "${srcdir}"/run "${pkgdir}"/etc/runit/sv/${_pkgname}/run
+}

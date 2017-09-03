@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=nano
-pkgver=2.8.6
+pkgver=2.8.7
 _pkgver=${pkgver%.*}
 pkgrel=1
 pkgdesc="Pico editor clone with enhancements"
@@ -11,7 +11,7 @@ url="http://www.nano-editor.org"
 depends=('ncurses' 'file' 'sh')
 backup=('etc/nanorc')
 source=(http://www.nano-editor.org/dist/v${_pkgver}/${pkgname}-${pkgver}.tar.gz)
-md5sums=('e05d83c0f1687b733322f806c080d256')
+md5sums=('90020cdacf4a63c16ed122b206e67085')
 
 build() {
 	cd ${pkgname}-${pkgver}

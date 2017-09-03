@@ -3,7 +3,7 @@
 pkgbase=bzip2
 pkgname=('bzip2' 'libbzip2' 'bzip2-doc')
 pkgver=1.0.6
-pkgrel=1
+pkgrel=2
 pkgdesc="Programs for compressing and decompressing files"
 arch=('x86_64')
 url='http://www.bzip.org'
@@ -31,7 +31,6 @@ build() {
 }
 
 package_bzip2() {
-	groups=('cromnix-dev')
 	depends=('glibc' 'libbzip2')
 	optdepends=('bzip2-doc: documentation')
 

@@ -2,11 +2,12 @@
 
 pkgname=which
 pkgver=2.21
-pkgrel=1
+pkgrel=2
 pkgdesc='Utility to find the path of an executable'
 arch=('x86_64')
 url='http://savannah.gnu.org/projects/which'
 license=('GPL3')
+groups=('cromnix-dev')
 depends=('glibc' 'bash')
 source=("http://ftp.gnu.org/gnu/which/${pkgname}-${pkgver}.tar.gz")
 md5sums=('097ff1a324ae02e0a3b0369f07a7544a')

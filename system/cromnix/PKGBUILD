@@ -1,14 +1,14 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=cromnix
-pkgver=17.08
+pkgver=17.09
 _codename='ale'
 _codename_pretty='Ale'
 pkgrel=1
 pkgdesc='Cromnix base filesystem'
 arch=('any')
 license=('GPL')
-url='https://cromer.cl'
+url='https://cromnix.org'
 groups=('cromnix-base')
 depends=('iana-etc')
 backup=('etc/cromnix.conf'
