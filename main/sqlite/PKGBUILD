@@ -1,8 +1,8 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=sqlite
-pkgver=3.20.0
-_srcver=3200000
+pkgver=3.20.1
+_srcver=3200100
 pkgrel=1
 pkgdesc='The SQLite package is a software library that implements a self-contained, serverless, zero-configuration, transactional SQL database engine'
 arch=('x86_64')
@@ -13,8 +13,8 @@ makedepends=('tcl' 'readline')
 options=('!emptydirs' '!makeflags')
 source=("http://sqlite.org/2017/${pkgname}-autoconf-${_srcver}.tar.gz"
 		"http://sqlite.org/2017/${pkgname}-doc-${_srcver}.zip")
-md5sums=('e262a28b73cc330e7e83520c8ce14e4d'
-         'ed8f9d7dfb410853619e195af2e73250')
+md5sums=('369444dbf11895c61949940a6b038f92'
+         'b8a3fed6da7db2d4a6089db1464bf4b1')
 
 # todo: rebuild with libedit and unzip for docs
 
