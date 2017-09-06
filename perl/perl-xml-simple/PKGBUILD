@@ -2,7 +2,7 @@
 
 pkgname=perl-xml-simple
 pkgver=2.24
-pkgrel=1
+pkgrel=2
 pkgdesc='Simple XML parser for perl'
 arch=('x86_64')
 url='http://search.cpan.org/dist/XML-Simple/'

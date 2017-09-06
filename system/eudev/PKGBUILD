@@ -2,20 +2,21 @@
 
 pkgbase=eudev
 pkgname=('eudev' 'eudev-openrc')
-pkgver=3.2.2
+pkgver=3.2.4
 _openrc_pkgver=32
-pkgrel=6
+pkgrel=1
 pkgdesc="The Eudev package contains programs for dynamic creation of device nodes."
 arch=('x86_64')
 url="https://wiki.gentoo.org/wiki/Project:Eudev"
 license=('GPL')
-makedepends=('gperf' 'openrc-services')
+makedepends=('gperf' 'openrc-services' 'kmod' 'util-linux' 'glibc' 'coreutils' 'gobject-introspection' 'gtk-doc' 'intltool')
+options=('!libtool')
 source=("http://dev.gentoo.org/~blueness/eudev/$pkgbase-$pkgver.tar.gz"
 		"https://dev.gentoo.org/~williamh/dist/udev-init-scripts-${_openrc_pkgver}.tar.gz"
 		'udevadm-hwdb.hook')
-md5sums=('41e19b70462692fefd072a3f38818b6e'
-         'a8098437126a0ecdc23f83e923de3644'
-         'cc11561625e862c4f24f964a1015f530')
+md5sums=('66acef4c6094aab4aced7ae83b74b0d2'
+		 'a8098437126a0ecdc23f83e923de3644'
+		 'cc11561625e862c4f24f964a1015f530')
 
 prepare() {
 	cd "$srcdir/$pkgbase-$pkgver"
@@ -34,7 +35,10 @@ build() {
 		--with-rootprefix= \
 		--with-rootlibdir=/usr/lib \
 		--enable-manpages \
+		--enable-introspection \
+		--enable-kmod \
 		--disable-static \
+		--enable-split-usr \
 		--config-cache
 	make
 }
@@ -63,12 +67,12 @@ package_eudev-openrc() {
 	install -v -m755 -d ${pkgdir}/etc/openrc/conf.d
 	install -v -m755 ${srcdir}/udev-init-scripts-${_openrc_pkgver}/init.d/* ${pkgdir}/etc/openrc/init.d
 	install -v -m644 ${srcdir}/udev-init-scripts-${_openrc_pkgver}/conf.d/* ${pkgdir}/etc/openrc/conf.d
-	
+
 	install -Dm644 /usr/share/openrc-services/hooks/svc-openrc-install.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-install.hook
 	install -Dm644 /usr/share/openrc-services/hooks/svc-openrc-upgrade.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-upgrade.hook
 	install -Dm644 /usr/share/openrc-services/hooks/svc-openrc-remove.hook "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-remove.hook
 	install -Dm755 /usr/share/openrc-services/scripts/svc-openrc.script "${pkgdir}"/usr/share/libalpm/scripts/${pkgbase}-openrc
-	
+
 	sed -e "s/@svc@/${pkgbase}/" -i "${pkgdir}"/usr/share/libalpm/hooks/${pkgbase}-openrc-{install,upgrade,remove}.hook
 	sed -e "s/@svc_enable@/'udev' 'udev-trigger'/" \
 		-e "s/@svc_run@/'udev' 'udev-trigger'/" \

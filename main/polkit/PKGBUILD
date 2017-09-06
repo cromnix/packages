@@ -2,7 +2,7 @@
 
 pkgname=polkit
 pkgver=r916.766a2ea
-pkgrel=3
+pkgrel=4
 pkgdesc='Polkit is a toolkit for defining and handling authorizations. It is used for allowing unprivileged processes to communicate with privileged processes'
 arch=('x86_64')
 url='https://www.freedesktop.org/wiki/Software/polkit/'

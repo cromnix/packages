@@ -2,7 +2,7 @@
 
 pkgname=git
 pkgver=2.14.1
-pkgrel=4
+pkgrel=6
 pkgdesc="Git is a free and open source, distributed version control system designed to handle everything from small to very large projects with speed and efficiency."
 arch=('x86_64')
 url="https://git-scm.com/"
@@ -16,10 +16,11 @@ md5sums=('e965a37b3d277f2e7e78f5b04de28e2a')
 
 build() {
     cd "$srcdir/$pkgname-$pkgver"
+    export PYTHON_PATH='/usr/bin/python2'
     make configure
     ./configure --prefix=/usr \
         --with-gitconfig=/etc/gitconfig \
-        --enable-jit \
+        --with-libpcre2 \
         --libexecdir=/usr/lib/git-core
     make
     make html
@@ -34,8 +35,15 @@ check() {
 package() {
     cd "$srcdir/$pkgname-$pkgver"
 
-    make DESTDIR="$pkgdir" install
+    make DESTDIR="$pkgdir" \
+		CFLAGS="$CFLAGS" LDFLAGS="$LDFLAGS" \
+		USE_LIBPCRE2=1 \
+		NO_CROSS_DIRECTORY_HARDLINKS=1 \
+		MAN_BOLD_LITERAL=1 \
+		INSTALLDIRS=vendor \
+		install
     make DESTDIR="$pkgdir" install-man
+    make DESTDIR="$pkgdir" install-doc
     make DESTDIR="$pkgdir" htmldir=/usr/share/doc/${pkgname}-${pkgver} install-html
 
 	find ${pkgdir}/usr/share/locale -type d -exec chmod 755 {} +

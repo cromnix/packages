@@ -2,7 +2,7 @@
 
 pkgname=libxslt
 pkgver=1.1.29
-pkgrel=1
+pkgrel=2
 pkgdesc="The libxslt package contains XSLT libraries used for extending libxml2 libraries to support XSLT files."
 arch=('x86_64')
 url="http://xmlsoft.org/XSLT/"

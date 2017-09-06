@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=xmms2
-pkgver=r7390.1bdccd0d
+pkgver=r7391.dedc33d7
 pkgrel=1
 pkgdesc='X-platform Music Multiplexing System 2'
 arch=('x86_64')

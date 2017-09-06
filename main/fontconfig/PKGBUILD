@@ -2,7 +2,7 @@
 
 pkgname=fontconfig
 pkgver=2.12.4
-pkgrel=1
+pkgrel=2
 pkgdesc='Contains a library and support programs used for configuring and customizing font access'
 arch=('x86_64')
 url='https://www.freedesktop.org/wiki/Software/fontconfig/'

@@ -14,8 +14,6 @@ source=("git+https://github.com/cromnix/${pkgname}.git")
 md5sums=('SKIP')
 
 _repos=('main'
-		'cromnix'
-		'vanilla'
 		'multilib'
 		'openrc'
 		'lfs'

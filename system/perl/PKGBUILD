@@ -2,7 +2,8 @@
 
 pkgname=perl
 pkgver=5.26.0
-pkgrel=1
+_pkgver=${pkgver%.*}
+pkgrel=3
 pkgdesc="The Perl package contains the Practical Extraction and Report Language."
 arch=('x86_64')
 url="http://www.perl.org"
@@ -11,8 +12,14 @@ groups=('cromnix-base')
 depends=('gdbm' 'glibc')
 makedepends=('sh')
 options=('makeflags' '!purge' 'emptydirs')
-source=("http://www.cpan.org/src/5.0/$pkgname-$pkgver.tar.bz2")
-md5sums=('8d34cb5a4eccd66e7a6a80e62b7b4aec')
+source=("http://www.cpan.org/src/5.0/$pkgname-$pkgver.tar.bz2"
+		'detect-old-perl-modules.script'
+		'detect-old-perl-modules.hook'
+		'perlbin.sh')
+md5sums=('8d34cb5a4eccd66e7a6a80e62b7b4aec'
+         '2fa12aa0f924e8dccb4dab84ca3e0db3'
+         '93987302b2bb9d0a3c6d6622f7916cbe'
+         '39a2f909b577451630293a02a1186493')
 
 build() {
     cd "$srcdir/$pkgname-$pkgver"
@@ -21,10 +28,24 @@ build() {
     sh Configure -des \
         -Dprefix=/usr \
         -Dvendorprefix=/usr \
+		-Dprivlib=/usr/share/perl5/core_perl \
+		-Darchlib=/usr/lib/perl5/${_pkgver}/core_perl \
+		-Dsitelib=/usr/share/perl5/site_perl \
+		-Dsitearch=/usr/lib/perl5/${_pkgver}/site_perl \
+		-Dvendorlib=/usr/share/perl5/vendor_perl \
+		-Dvendorarch=/usr/lib/perl5/${_pkgver}/vendor_perl \
+		-Dscriptdir=/usr/bin/core_perl \
+		-Dsitescript=/usr/bin/site_perl \
+		-Dvendorscript=/usr/bin/vendor_perl \
+		-Dinc_version_list=none \
         -Dman1dir=/usr/share/man/man1 \
         -Dman3dir=/usr/share/man/man3 \
         -Dpager="/usr/bin/less -isR" \
         -Duseshrplib \
+        -Doptimize="${CFLAGS}" \
+        -Dlddlflags="-shared ${LDFLAGS}" \
+        -Dldflags="${LDFLAGS}" \
+        -Dcccdlflags='-fPIC' \
         -Dusethreads
     make
 
@@ -38,6 +59,14 @@ check() {
 package() {
     cd "$srcdir/$pkgname-$pkgver"
 
-    make DESTDIR="$pkgdir" install
+    make DESTDIR="$pkgdir" INSTALLDIRS=vendor install
     unset BUILD_ZLIB BUILD_BZIP2
+
+	install -Dm644 "${srcdir}"/detect-old-perl-modules.hook "${pkgdir}"/usr/share/libalpm/hooks/detect-old-perl-modules.hook
+	install -Dm755 "${srcdir}"/detect-old-perl-modules.script "${pkgdir}"/usr/share/libalpm/scripts/detect-old-perl-modules
+
+	install -D -m755 "${srcdir}"/perlbin.sh "${pkgdir}"/etc/profile.d/perlbin.sh
+	
+	install -d -m755 "${pkgdir}/usr/bin/vendor_perl"
+	install -d -m755 "${pkgdir}/usr/bin/site_perl"
 }

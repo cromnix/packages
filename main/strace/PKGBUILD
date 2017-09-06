@@ -1,15 +1,17 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=strace
-pkgver=4.18
+pkgver=4.19
 pkgrel=1
 pkgdesc="The Strace package contains a system call tracer, used for debugging. "
 arch=('x86_64')
 url="http://sourceforge.net/projects/strace/"
-license=('custom')
+license=('BSD')
 depends=('perl')
 source=("http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.xz")
-md5sums=('3579b3266bb096cebaefbe2cdb1a3a78')
+md5sums=('846a9a26e74e797f42d77a0348104072')
+
+# todo: rebuild with libunwind
 
 build() {
     cd "$srcdir/$pkgname-$pkgver"

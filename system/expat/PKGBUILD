@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=expat
-pkgver=2.2.3
+pkgver=2.2.4
 pkgrel=1
 pkgdesc="The Expat package contains a stream oriented C library for parsing XML."
 arch=('x86_64')
@@ -9,7 +9,7 @@ url="http://expat.sourceforge.net/"
 license=('custom')
 depends=('glibc')
 source=("http://prdownloads.sourceforge.net/expat/$pkgname-$pkgver.tar.bz2")
-md5sums=('f053af63ef5f39bd9b78d01fbc203334')
+md5sums=('6e3980aba29a224a9f478d88ac7ec207')
 
 build() {
     cd "$srcdir/$pkgname-$pkgver"

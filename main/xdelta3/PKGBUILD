@@ -2,12 +2,12 @@
 
 pkgname=xdelta3
 pkgver=3.1.0
-pkgrel=1
+pkgrel=2
 pkgdesc="open-source binary diff, delta/differential compression tools"
 arch=('x86_64')
 url="http://xdelta.org/"
 license=('GPL')
-groups=('cromnix-base')
+groups=('cromnix-base' 'cromnix-dev')
 depends=('xz')
 source=("https://github.com/jmacd/xdelta/archive/v$pkgver.tar.gz")
 md5sums=('fa9b598194d82adeaec2f3c30e827dd6')

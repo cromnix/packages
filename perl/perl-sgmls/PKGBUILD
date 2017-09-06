@@ -3,7 +3,7 @@
 _cpanname=SGMLSpm
 pkgname=perl-sgmls
 pkgver=1.1
-pkgrel=3
+pkgrel=4
 pkgdesc='A Post-Processor for SGMLS and NSGMLS'
 arch=('any')
 url='http://search.cpan.org/dist/SGMLSpm'

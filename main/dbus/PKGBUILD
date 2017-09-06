@@ -3,7 +3,7 @@
 pkgbase=dbus
 pkgname=('dbus' 'dbus-openrc')
 pkgver=1.10.22
-pkgrel=2
+pkgrel=3
 pkgdesc='D-Bus is a message bus system, a simple way for applications to talk to one another'
 arch=('x86_64')
 url='https://wiki.freedesktop.org/www/Software/dbus/'
