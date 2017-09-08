@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=initramfs
-pkgver=8.0
+pkgver=8.1
 pkgrel=1
 pkgdesc='The only purpose of an initramfs is to mount the root filesystem'
 arch=('x86_64')
@@ -15,7 +15,7 @@ source=('mkinitramfs'
 		'geninitramfs.in')
 backup=('etc/initramfs.conf')
 install=initramfs.install
-md5sums=('6aad4b1098f86fdc5161a764370e2f00'
+md5sums=('2a5d177e8123b285591fa90ea01862ed'
          'b9f2df1e54e25ca003fb6a21f08f4352'
          '8957787c1e90df8cbe404d2de5fcc716'
          '788a70b2bb7c0c6fc68d2563f9d41009'

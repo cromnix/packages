@@ -1,7 +1,7 @@
 #!/bin/bash
 # This file based in part on the mkinitramfs script for the LFS LiveCD
 # written by Alexander E. Patrakov and Jeremy Huntwork.
-# modified by Chris Cromer for use in Cromnix GNU/Linux.
+# modified by Chris Cromer for use in Cromnix.
 
 copy()
 {

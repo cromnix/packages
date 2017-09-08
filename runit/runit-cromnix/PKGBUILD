@@ -1,7 +1,7 @@
 # Maintainer:
 
 pkgname=runit-cromnix
-pkgver=20170818
+pkgver=20170908
 pkgrel=1
 pkgdesc='Runit initscripts for Cromnix'
 conflicts=('runit-cromnix-openrc')
@@ -9,13 +9,12 @@ provides=('runit-init')
 url='https://github.com/cromnix/runit-cromnix/'
 license=('custom:CC0')
 arch=('i686' 'x86_64')
-install='runit-cromnix.install'
 depends=('procps-ng' 'gawk' 'sh' 'eudev')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/cromnix/runit-cromnix/archive/${pkgver}.tar.gz")
 backup=('etc/runit/rc.conf'
         'etc/runit/rc.local'
         'etc/runit/rc.shutdown')
-sha256sums=('b561df4ccc362f2c5c1d70b72efe222131b730526cd227150eb883aad8e56963')
+sha256sums=('86d2abfa391a9d82c490a8598b55cffbff7bd237b29c6e4c17be90fa128ddc61')
 
 # todo: change gawk depends to awk later
 
