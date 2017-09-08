@@ -1,0 +1,33 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=parted
+pkgver=3.2
+pkgrel=1
+pkgdesc='The Parted package is a disk partitioning and partition resizing tool'
+arch=('x86_64')
+url='http://www.gnu.org/software/parted/parted.html'
+license=('GPL3')
+depends=('device-mapper')
+makedepends=('pkg-config')
+source=("https://ftp.gnu.org/gnu/${pkgname}/${pkgname}-${pkgver}.tar.xz")
+md5sums=('0247b6a7b314f8edeb618159fa95f9cb')
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr \
+		--disable-static \
+		--sbindir=/usr/bin \
+		--disable-debug \
+		--disable-rpath
+	make
+}
+
+check() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make check
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}

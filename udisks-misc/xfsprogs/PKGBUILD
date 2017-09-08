@@ -1,0 +1,37 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=xfsprogs
+pkgver=4.12.0
+pkgrel=1
+pkgdesc='The xfsprogs package contains administration and debugging tools for the XFS file system'
+arch=('x86_64')
+url='http://oss.sgi.com/projects/xfs/'
+license=('LGPL')
+groups=('cromnix-base')
+depends=('sh' 'libutil-linux' 'readline')
+options=('!makeflags')
+source=("https://www.kernel.org/pub/linux/utils/fs/xfs/${pkgname}/${pkgname}-${pkgver}.tar.xz")
+md5sums=('e348b0e1d7bd1cd82d64b91ff37e727e')
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	export OPTIMIZER="-march=${CARCH/_/-} -O1"
+	./configure --prefix=/usr \
+		--sbindir=/usr/bin \
+		--enable-readline
+	make DEBUG=-DNDEBUG \
+		INSTALL_USER=root \
+		INSTALL_GROUP=root \
+		LOCAL_CONFIGURE_OPTIONS="--enable-readline"
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make PKG_DOC_DIR=/usr/share/doc/${pkgname}-${pkgver} DIST_ROOT="${pkgdir}" PKG_ROOT_SBIN_DIR="/usr/bin" install
+	make PKG_DOC_DIR=/usr/share/doc/${pkgname}-${pkgver} DIST_ROOT="${pkgdir}" PKG_ROOT_SBIN_DIR="/usr/bin" install-dev
+	
+	chown -R root "${pkgdir}"
+	chgrp -R root "${pkgdir}"
+	mv "${pkgdir}"/lib/libhandle.so* "${pkgdir}/usr/lib/"
+	rm -rf "${pkgdir}"/lib
+}

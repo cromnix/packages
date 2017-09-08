@@ -1,0 +1,28 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=libgudev
+pkgver=231
+pkgrel=1
+pkgdesc='The libgudev package contains GObject bindings for libudev'
+arch=('x86_64')
+url='https://wiki.gnome.org/Projects/libgudev'
+license=('LGPL2.1')
+depends=('glib' 'eudev')
+makedepends=('gobject-introspection' 'gtk-doc' 'eudev')
+source=("http://ftp.gnome.org/pub/gnome/sources/${pkgname}/${pkgver}/${pkgname}-${pkgver}.tar.xz")
+md5sums=('916c10c51ec61131e244c3936bbb2e0c')
+
+# todo: libeudev for depends
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr \
+		--enable-gtk-doc \
+		--disable-umockdev
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}

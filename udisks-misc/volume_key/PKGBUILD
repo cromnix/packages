@@ -1,0 +1,38 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=volume_key
+pkgver=0.3.9
+pkgrel=1
+pkgdesc='The volume_key package provides a library for manipulating storage volume encryption keys and storing them separately from volumes to handle forgotten passphrases'
+arch=('x86_64')
+url='https://pagure.io/volume_key'
+license=('GPL')
+depends=('cryptsetup' 'nss' 'gpgme' 'python' 'glib')
+makedepends=('swig')
+source=("https://releases.pagure.org/${pkgname}/${pkgname}-${pkgver}.tar.xz")
+md5sums=('a2d14931177c660e1f3ebbcf5f47d8e2')
+
+prepare() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	sed -i '/config.h/d' lib/libvolume_key.h
+	sed -e 's/-lpython\$(PYTHON_VERSION)/-lpython$(PYTHON_VERSION)m/' -i Makefile.am
+	autoreconf -i
+
+	find . -name ".pyc" -delete
+}
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr
+	make PYTHON_CPPFLAGS="$(pkg-config --cflags python3)"
+}
+
+check() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make check
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}

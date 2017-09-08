@@ -1,0 +1,31 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=lzo
+pkgver=2.10
+pkgrel=1
+pkgdesc='LZO is a data compression library which is suitable for data decompression and compression in real-time'
+arch=('x86_64')
+url='http://www.oberhumer.com/opensource/lzo'
+license=('GPL')
+depends=('glibc')
+source=("http://www.oberhumer.com/opensource/${pkgname}/download/${pkgname}-${pkgver}.tar.gz")
+md5sums=('39d3f3f9c55c87b1e5d6888e1420f4b5')
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr \
+		--enable-shared \
+		--disable-static \
+		--docdir=/usr/share/doc/${pkgname}-${pkgver}
+	make
+}
+
+check() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make check
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}

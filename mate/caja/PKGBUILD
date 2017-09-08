@@ -3,13 +3,13 @@
 pkgname=caja
 pkgver=1.18.3
 _pkgver=${pkgver%.*}
-pkgrel=3
+pkgrel=4
 pkgdesc='File manager for the MATE desktop'
 arch=('x86_64')
 url='http://mate-desktop.org/'
 license=('GPL')
 groups=('mate')
-depends=('exempi' 'libexif' 'libsm' 'mate-desktop' 'libnotify')
+depends=('exempi' 'gvfs' 'libexif' 'libsm' 'mate-desktop' 'libnotify')
 makedepends=('intltool' 'atk-dev' 'python' 'gobject-introspection' 'gtk-doc')
 optdepends=('gstreamer: automatic media playback when mouseover')
 source=("http://pub.mate-desktop.org/releases/${_pkgver}/${pkgname}-${pkgver}.tar.xz")

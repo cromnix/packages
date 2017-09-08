@@ -1,0 +1,44 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=udisks
+pkgver=2.7.3
+pkgrel=1
+pkgdesc='The UDisks package provides a daemon, tools and libraries to access and manipulate disks and storage devices'
+arch=('x86_64')
+url='http://www.freedesktop.org/wiki/Software/udisks'
+license=('GPL2')
+depends=('polkit' 'libatasmart' 'libgudev' 'libblockdev')
+makedepends=('docbook-xsl' 'gobject-introspection' 'intltool' 'gtk-doc' 'parted')
+optdepends=('gptfdisk: GUID partition table support'
+			'ntfs-3g: NTFS filesystem management support'
+			'dosfstools: VFAT filesystem management support'
+			'libiscsi: iSCSI support')
+source=("https://github.com/storaged-project/${pkgname}/releases/download/${pkgname}-${pkgver}/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('6d99136123116e2a99e733276ff37a98')
+
+# todo: rebuild with depends
+#'libiscsi'
+# add udevdir
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--sbindir=/usr/bin \
+		--libexecdir=/usr/lib \
+		--localstatedir=/var \
+		--disable-static \
+		--enable-gtk-doc \
+		--enable-available-modules
+	make
+}
+
+check() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make check
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" bash_completiondir=/usr/share/bash-completion/completions install
+}

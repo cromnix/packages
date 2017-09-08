@@ -1,0 +1,31 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=libblockdev
+pkgver=2.12
+pkgrel=1
+pkgdesc='libblockdev is a C library supporting GObject introspection for manipulation of block devices'
+arch=('x86_64')
+url='https://github.com/storaged-project/libblockdev'
+license=('LGPL')
+groups=('cromnix-example')
+depends=('btrfs-progs' 'dosfstools' 'gptfdisk' 'libbytesize' 'lvm2' 'mdadm' 'parted'
+		 'volume_key' 'xfsprogs' 'kmod')
+makedepends=('gobject-introspection' 'python')
+source=("${pkgname}-${pkgver}-1.tar.gz::https://github.com/storaged-project/${pkgname}/archive/${pkgver}-1.tar.gz")
+md5sums=('701f9f182ef39cc1540a03651d31b1ff')
+
+# todo: rebuild with dmraid
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}-1"
+	sh autogen.sh
+	./configure --prefix=/usr \
+		--without-dm  \
+		--sysconfdir=/etc
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}-1"
+	make DESTDIR="${pkgdir}" install
+}

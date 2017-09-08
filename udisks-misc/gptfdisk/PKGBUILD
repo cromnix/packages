@@ -1,0 +1,39 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=gptfdisk
+pkgver=1.0.3
+pkgrel=1
+pkgdesc='The gptfdisk package is a set of programs for creation and maintenance of GUID Partition Table (GPT) disk drives'
+arch=('x86_64')
+url='http://www.rodsbooks.com/gdisk/'
+license=('GPL2')
+depends=('gcc-libs' 'popt' 'libutil-linux' 'ncurses')
+makedepends=('icu')
+optdepends=('icu: Unicode partition names')
+source=("https://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.gz"
+		'gptfdisk-convenience.patch')
+md5sums=('07b625a583b66c8c5840be5923f3e3fe'
+         'd21db7941c4a1992cebdf3603fe4233e')
+
+prepare() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	patch -Np1 -i "${srcdir}"/gptfdisk-convenience.patch
+}
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make POPT=1 ICU=1
+}
+
+check() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make check
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	mkdir -p "${pkgdir}"/usr/bin
+	ln -sv "${pkgdir}"/usr/bin "${pkgdir}"/sbin
+	make POPT=1 ICU=1 DESTDIR="${pkgdir}" install
+	rm "${pkgdir}"/sbin
+}

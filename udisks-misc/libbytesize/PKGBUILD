@@ -1,0 +1,30 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=libbytesize
+pkgver=0.11
+pkgrel=1
+pkgdesc='The libbytesize package is a library facilitates the common operations with sizes in bytes'
+arch=('x86_64')
+url='https://github.com/storaged-project/libbytesize'
+license=('LGPL')
+depends=('mpfr' 'pcre')
+makedepends=('python')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/storaged-project/${pkgname}/archive/${pkgver}.tar.gz")
+md5sums=('8214752e38f37df48da7c408332f33ac')
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./autogen.sh
+	./configure --prefix=/usr
+	make
+}
+
+check() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make check
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}

@@ -1,0 +1,36 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=mdadm
+pkgver=4.0
+pkgrel=1
+pkgdesc='The mdadm package contains administration tools for software RAID'
+arch=('x86_64')
+url='http://neil.brown.name/blog/mdadm'
+license=('GPL')
+groups=('cromnix-base')
+depends=('glibc')
+source=("https://www.kernel.org/pub/linux/utils/raid/${pkgname}/${pkgname}-${pkgver}.tar.xz")
+md5sums=('2cb4feffea9167ba71b5f346a0c0a40d')
+
+prepare() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	# fix problem with GCC 7.1
+	sed 's@-Werror@@' -i Makefile
+}
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make
+}
+
+check() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	sed -i 's# if.* == "1"#& -a -e $targetdir/log#' test
+	make test
+	./test --keep-going --logdir=test-logs --save-logs
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make INSTALL=/usr/bin/install BINDIR=/usr/bin DESTDIR="${pkgdir}" UDEVDIR=/usr/lib/udev install
+}

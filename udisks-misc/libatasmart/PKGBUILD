@@ -1,0 +1,28 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=libatasmart
+pkgver=0.19
+pkgrel=1
+pkgdesc='The libatasmart package is a disk reporting library'
+arch=('x86_64')
+url='http://0pointer.de/blog/projects/being-smart.html'
+license=('LGPL')
+depends=('eudev')
+makedepends=('eudev')
+source=("http://0pointer.de/public/${pkgname}-${pkgver}.tar.xz")
+md5sums=('53afe2b155c36f658e121fe6def33e77')
+
+# todo: rebuild with depends libeudev
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr \
+		--sbindir=/usr/bin \
+		--disable-static
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" docdir=/usr/share/doc/${pkgname}-${pkgver} install
+}

@@ -1,0 +1,36 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=swig
+pkgver=3.0.12
+pkgrel=1
+pkgdesc='SWIG (Simplified Wrapper and Interface Generator) is a compiler that integrates C and C++ with languages including Perl, Python, Tcl, Ruby, PHP, Java, C#, D, Go, Lua, Octave, R, Scheme, Ocaml, Modula-3, Common Lisp, and Pike'
+arch=('x86_64')
+url='http://www.swig.org/'
+license=('custom')
+depends=('pcre' 'gcc-libs')
+checkdepends=('ruby' 'python2' 'java-environment' 'tcl' 'php' 'lua' 'ocaml' 'r' 'go' 'python2-cffi' 'camlp4')
+source=("https://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.gz")
+md5sums=('82133dfa7bba75ff9ad98a7046be687c')
+
+prepare() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+}
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr \
+		--without-maximum-compile-warnings
+	make
+}
+
+check() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make check || warning "Tests failed"
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+	install -v -m755 -d "${pkgdir}"/usr/share/doc/${pkgname}-${pkgver}
+	cp -v -R Doc/* "${pkgdir}"/usr/share/doc/${pkgname}-${pkgver}
+}
