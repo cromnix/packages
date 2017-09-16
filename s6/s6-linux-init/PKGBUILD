@@ -23,7 +23,6 @@ build() {
 }
 
 package() {
-	groups=('init')
     cd "$srcdir/$pkgname-$pkgver"
     make DESTDIR="$pkgdir" install
 

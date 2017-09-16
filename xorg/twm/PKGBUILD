@@ -38,7 +38,6 @@ build() {
 }
 
 package_twm() {
-	groups=('wm')
 	backup=('usr/share/X11/twm/system.twmrc')
 	depends=('libxmu')
 	cd ${srcdir}/${pkgbase}-${pkgver}

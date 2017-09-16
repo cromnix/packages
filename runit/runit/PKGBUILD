@@ -34,7 +34,6 @@ check() {
 package_runit() {
 	depends=('bash' 'runit-init' 'util-linux')
 	optdepends=('runit-doc: documentation')
-	groups=('init')
 	# commands
 	mkdir -p "${pkgdir}/usr/bin"
 	install -Dm755 ${srcdir}/admin/${pkgbase}-${pkgver}/command/* "${pkgdir}/usr/bin"
@@ -51,7 +50,6 @@ package_runit() {
 }
 
 package_runit-doc() {
-	groups=('init-doc')
 	arch=('any')
 	install -v -m755 -d "${pkgdir}/usr/share/doc"
 	cp -r "${srcdir}/admin/${pkgbase}-${pkgver}/doc" "${pkgdir}/usr/share/doc/${pkgbase}-${pkgver}"

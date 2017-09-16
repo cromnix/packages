@@ -1,0 +1,46 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=gnome-keyring
+pkgver=3.20.1
+_pkgver=${pkgver%.*}
+pkgrel=1
+pkgdesc='The GNOME Keyring package contains a daemon that keeps passwords and other secrets for users'
+arch=('x86_64')
+url='https://wiki.gnome.org/Projects/GnomeKeyring'
+license=('GPL' 'LGPL')
+depends=('gcr' 'libcap')
+makedepends=('intltool' 'gtk-doc' 'python' 'atk-dev')
+install=gnome-keyring.install
+source=("http://ftp.gnome.org/pub/gnome/sources/${pkgname}/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
+md5sums=('9b4b2c59dc1db3a1309cbe1fa1f2c2e7')
+
+#todo: rebuild with depends
+
+prepare() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	sed -i -r 's:"(/desktop):"/org/gnome\1:' schema/*.xml
+}
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--localstatedir=/var \
+		--disable-static \
+		--libexecdir=/usr/lib/gnome-keyring \
+		--with-pam-dir=/usr/lib/security \
+		--with-root-certs=/etc/ssl/certs \
+		--disable-schemas-compile
+	sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
+	make
+}
+
+check() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make check
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}

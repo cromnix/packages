@@ -1,0 +1,39 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=upower
+pkgver=0.99.5
+pkgrel=1
+pkgdesc='The UPower package provides an interface to enumerating power devices, listening to device events and querying history and statistics'
+arch=('x86_64')
+url='http://upower.freedesktop.org'
+license=('GPL')
+depends=('libgudev' 'libusb')
+makedepends=('intltool' 'docbook-xsl' 'gobject-introspection' 'python2' 'gtk-doc')
+backup=('etc/UPower/UPower.conf')
+source=("https://upower.freedesktop.org/releases/${pkgname}-${pkgver}.tar.xz")
+md5sums=('ec57b4b7bf0af568f9a7a5603c921d97')
+
+# todo: rebuild with deps
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--localstatedir=/var \
+		--enable-deprecated \
+		--enable-gtk-doc \
+		--disable-static \
+		--libexecdir=/usr/lib/${pkgname} \
+		--disable-static
+	make
+}
+
+check() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make check
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}

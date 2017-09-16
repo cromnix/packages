@@ -7,16 +7,26 @@ pkgdesc='A modern, fast, and secure web browser'
 arch=('x86_64')
 url='https://www.mozilla.org/firefox/'
 license=('MPL' 'GPL' 'LGPL')
-depends=('libxt' 'libpng' 'alsa-lib' 'gtk2' 'gtk3' 'nss' 'icu' 'libvpx' 'libevent' 'sqlite' 'libatk' 'dbus-glib')
-makedepends=('python2' 'which' 'unzip' 'zip' 'autoconf2.13' 'yasm' 'diffutils' 'mesa' 'inetutils' 'xorg-server' 'alsa-lib-dev' 'atk-dev' 'startup-notification')
+depends=('libxt' 'libpng' 'alsa-lib' 'gtk2' 'gtk3' 'startup-notification' 'nss' 'icu' 'libvpx' 'libevent' 'sqlite' 'libatk' 'dbus-glib')
+makedepends=('python2' 'which' 'unzip' 'zip' 'autoconf2.13' 'yasm' 'diffutils' 'mesa' 'inetutils' 'xorg-server' 'alsa-lib-dev' 'atk-dev' 'wireless_tools')
+optdepends=('networkmanager: Location detection via available WiFi networks'
+			'libnotify: Notification integration'
+			'pulseaudio: Audio support'
+			'speech-dispatcher: Text-to-Speech'
+			'wireless_tools: Geolocation web services')
+options=('!emptydirs' '!makeflags' '!strip')
 source=("https://ftp.mozilla.org/pub/mozilla.org/${pkgname}/releases/${pkgver}/source/${pkgname}-${pkgver}.source.tar.xz"
 		'mozconfig'
 		'firefox.desktop'
-		'install-dir.patch')
+		'install-dir.patch'
+		'mozilla-key'
+		'google-key')
 md5sums=('16be3d9774f1e3bf74e2c4e198652d19'
-         '522c2c36efcb312a4b24c5202000097d'
-         'c828db7c566f26ed3d60cab7dfd55ea2'
-         'dbf14588e85812ee769bd735823a0146')
+         '7420a35515815034a1d3f41b5f297c18'
+         '6aa9f410d182185b3cb2900d0201029d'
+         'dbf14588e85812ee769bd735823a0146'
+         '9c2c2c1afaee368765e21b9cf7be58d4'
+         'ca364d4c9b68942b094ad109732e08a3')
 
 prepare() {
 	cd ${srcdir}/${pkgname}-${pkgver}
@@ -51,10 +61,35 @@ build() {
 package() {
 	cd ${srcdir}/${pkgname}-${pkgver}
 	make -f client.mk DESTDIR="${pkgdir}" INSTALL_SDK= install
-	chown -R 0:0 ${pkgdir}/usr/lib/${pkgname}
 
-	mkdir -pv ${pkgdir}/usr/lib/mozilla/plugins
-	ln -sfv ../../mozilla/plugins ${pkgdir}/usr/lib/${pkgname}/browser
+	_vendorjs="${pkgdir}/usr/lib/${pkgname}/browser/defaults/preferences/vendor.js"
+	install -Dm644 /dev/stdin "${_vendorjs}" <<END
+// Use LANG environment variable to choose locale
+pref("intl.locale.matchOS", true);
+
+// Disable default browser checking.
+pref("browser.shell.checkDefaultBrowser", false);
+
+// Don't disable our bundled extensions in the application directory
+pref("extensions.autoDisableScopes", 11);
+pref("extensions.shownSelectionUI", true);
+
+// Opt all of us into e10s, instead of just 50%
+pref("browser.tabs.remote.autostart", true);
+END
+
+	_distini="${pkgdir}/usr/lib/${pkgname}/distribution/distribution.ini"
+	install -Dm644 /dev/stdin "${_distini}" <<END
+[Global]
+id=cromnix
+version=1.0
+about=Mozilla Firefox for Cromnix
+
+[Preferences]
+app.distributor=cromnix
+app.distributor.channel=${pkgname}
+app.partner.cromnix=cromnix
+END
 
 	mkdir -pv ${pkgdir}/usr/share/applications
 	mkdir -pv ${pkgdir}/usr/share/pixmaps
@@ -62,4 +97,11 @@ package() {
 	install -Dm644 ${srcdir}/firefox.desktop ${pkgdir}/usr/share/applications/firefox.desktop
 
 	ln -sfv /usr/lib/${pkgname}/browser/icons/mozicon128.png ${pkgdir}/usr/share/pixmaps/firefox.png
+	
+	install -Dm755 /dev/stdin "${pkgdir}/usr/bin/${pkgname}" <<END
+#!/bin/sh
+exec /usr/lib/${pkgname}/firefox "\$@"
+END
+
+	ln -srf "${pkgdir}/usr/bin/${pkgname}" "${pkgdir}/usr/lib/${pkgname}/firefox-bin"
 }

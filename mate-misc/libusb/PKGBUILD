@@ -1,0 +1,31 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=libusb
+pkgver=1.0.21
+pkgrel=1
+pkgdesc='The libusb package contains a library used by some applications for USB device access'
+arch=('x86_64')
+url='http://libusb.info/'
+license=('LGPL')
+depends=('glibc')
+# todo: libeudev
+makedepends=('eudev')
+options=('!makeflags')
+source=("https://github.com/${pkgname}/${pkgname}/releases/download/v${pkgver}/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('1da9ea3c27b3858fa85c5f4466003e44')
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr
+	make
+}
+
+check() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make check
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}

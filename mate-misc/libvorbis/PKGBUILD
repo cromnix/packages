@@ -7,7 +7,6 @@ pkgdesc='The libvorbis package contains a general purpose audio and music encodi
 arch=('x86_64')
 url='http://www.xiph.org/vorbis/'
 license=('BSD')
-groups=('cromnix-example')
 depends=('libogg')
 source=("http://downloads.xiph.org/releases/vorbis/${pkgname}-${pkgver}.tar.xz")
 md5sums=('28cb28097c07a735d6af56e598e1c90f')

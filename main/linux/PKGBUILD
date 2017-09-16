@@ -1,22 +1,20 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgbase=linux
-pkgname=('linux' 'linux-doc')
-pkgver=4.9.46
-pkgrel=1
+pkgname=('linux' 'linux-headers' 'linux-doc')
+pkgver=4.9.50
+pkgrel=2
 pkgdesc="This package contain the long term linux kernel"
 arch=('x86_64')
 url="http://www.kernel.org/"
 license=('GPL2')
-makedepends=('docbook-xsl' 'kmod' 'inetutils' 'bc')
+makedepends=('xmlto' 'kmod' 'inetutils' 'bc')
 options=('!strip')
 source=("https://www.kernel.org/pub/linux/kernel/v4.x/linux-$pkgver.tar.xz"
         "config"
-        "usb.conf"
         "linux-lib-path.patch")
-md5sums=('63d42c710466091e0dc9f2a59aef3c75'
-         '34c1b9dc51a5449f48f0ecc6306d3402'
-         '30994cd9cba3aa218b3afa33d34eb649'
+md5sums=('40c081c8bf5f06a55e1d995f2db4aa8b'
+         'af7d05dda333f6ffcd977799c3be62e7'
          '9d34da065c7c15ab5aa73fa4b44f4c21')
 
 prepare() {
@@ -39,7 +37,6 @@ build() {
 }
 
 package_linux() {
-	groups=('kernel')
 	optdepends=('linux-doc: linux documentation')
 
     cd "$srcdir/linux-$pkgver"
@@ -59,9 +56,9 @@ package_linux() {
     cp -v .config ${pkgdir}/boot/config-${pkgver}-${pkgrel}-cromnix
 
     install -vd -m755 ${pkgdir}/etc/modprobe.d
-    install -m644 ${srcdir}/usb.conf ${pkgdir}/etc/modprobe.d/
 
-	#rm -rf "${pkgdir}/usr/lib/firmware"
+	rm -rf "${pkgdir}"/usr/lib/firmware
+	rm -rf "${pkgdir}"/usr/lib/modules/${_kernelversion}/{build,source}
 
     cd ${pkgdir}/boot
 
@@ -73,8 +70,78 @@ package_linux() {
     rm -v ${pkgdir}/lib
 }
 
+package_linux-headers() {
+	pkgdesc="Header files and scripts for building modules for the long term support kernel"
+
+	cd "$srcdir/linux-$pkgver"
+	local _builddir="${pkgdir}/usr/lib/modules/${_kernelversion}/build"
+
+	install -Dt "${_builddir}" -m644 Makefile .config Module.symvers
+	install -Dt "${_builddir}/kernel" -m644 kernel/Makefile
+
+	mkdir "${_builddir}/.tmp_versions"
+
+	cp -t "${_builddir}" -a include scripts
+
+	install -Dt "${_builddir}/arch/x86" -m644 arch/x86/Makefile
+	install -Dt "${_builddir}/arch/x86/kernel" -m644 arch/x86/kernel/asm-offsets.s
+
+	cp -t "${_builddir}/arch/x86" -a arch/x86/include
+
+	install -Dt "${_builddir}/drivers/md" -m644 drivers/md/*.h
+	install -Dt "${_builddir}/net/mac80211" -m644 net/mac80211/*.h
+
+	# http://bugs.archlinux.org/task/9912
+	install -Dt "${_builddir}/drivers/media/dvb-core" -m644 drivers/media/dvb-core/*.h
+
+	# http://bugs.archlinux.org/task/13146
+	install -Dt "${_builddir}/drivers/media/dvb-frontends" -m644 drivers/media/dvb-frontends/lgdt330x.h
+	install -Dt "${_builddir}/drivers/media/i2c" -m644 drivers/media/i2c/msp3400-driver.h
+
+	# http://bugs.archlinux.org/task/20402
+	install -Dt "${_builddir}/drivers/media/usb/dvb-usb" -m644 drivers/media/usb/dvb-usb/*.h
+	install -Dt "${_builddir}/drivers/media/dvb-frontends" -m644 drivers/media/dvb-frontends/*.h
+	install -Dt "${_builddir}/drivers/media/tuners" -m644 drivers/media/tuners/*.h
+
+	# add xfs and shmem for aufs building
+	mkdir -p "${_builddir}"/{fs/xfs,mm}
+
+	# copy in Kconfig files
+	find . -name Kconfig\* -exec install -Dm644 {} "${_builddir}/{}" \;
+
+	# add objtool for external module building and enabled VALIDATION_STACK option
+	if [[ -e tools/objtool/objtool ]]; then
+		install -Dt "${_builddir}/tools/objtool" tools/objtool/objtool
+	fi
+
+	# remove unneeded architectures
+	local _arch
+	for _arch in "${_builddir}"/arch/*/; do
+		if [[ ${_arch} != */x86/ ]]; then
+			rm -r "${_arch}"
+		fi
+	done
+
+	# remove files already in linux-docs package
+	rm -r "${_builddir}/Documentation"
+
+	# Fix permissions
+	chmod -R u=rwX,go=rX "${_builddir}"
+
+	# strip scripts directory
+	local _binary _strip
+	while read -rd '' _binary; do
+		case "$(file -bi "${_binary}")" in
+			*application/x-sharedlib*)  _strip="${STRIP_SHARED}"   ;; # Libraries (.so)
+			*application/x-archive*)    _strip="${STRIP_STATIC}"   ;; # Libraries (.a)
+			*application/x-executable*) _strip="${STRIP_BINARIES}" ;; # Binaries
+			*) continue ;;
+		esac
+		/usr/bin/strip ${_strip} "${_binary}"
+	done < <(find "${_builddir}/scripts" -type f -perm -u+w -print0 2>/dev/null)
+}
+
 package_linux-doc() {
-	groups=('kernel-doc')
 	arch=('any')
 
     cd "$srcdir/linux-$pkgver"

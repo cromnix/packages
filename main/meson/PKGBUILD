@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=meson
-pkgver=0.40.0
+pkgver=0.42.0
 pkgrel=1
 pkgdesc='High productivity build system'
 arch=('any')
@@ -9,7 +9,7 @@ url='http://mesonbuild.com/'
 license=('Apache')
 depends=('ninja' 'python')
 source=("https://github.com/mesonbuild/meson/releases/download/${pkgver}/${pkgname}-${pkgver}.tar.gz")
-md5sums=('08e27d8c0c4e139783877d209d7386c8')
+md5sums=('b2518db2c56348f17a65d5edb04e0c60')
 
 check() {
 	cd "${srcdir}/${pkgname}-${pkgver}"

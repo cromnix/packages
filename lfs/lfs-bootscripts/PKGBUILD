@@ -23,7 +23,7 @@ source=("http://www.linuxfromscratch.org/lfs/downloads/development/${pkgname}-${
 		'network'
 		'rc.site'
 		'boot.logrotate')
-md5sums=('9cc13b6a9b655efb39a4e9fb7fe227cf'
+md5sums=('b93bca1078c97404e9f5d67b26d02c83'
          'bc70d748bf51679f0d0d94037e14cfa6'
          '680723f0829e4b76845859f984dc878a'
          'ab1eb4f041944eba15d5643e224369a3'
@@ -39,7 +39,6 @@ prepare() {
 }
 
 package() {
-	groups=('rc')
 	cd "${srcdir}/${pkgname}-${pkgver}"
 	make DESTDIR="${pkgdir}" install
 

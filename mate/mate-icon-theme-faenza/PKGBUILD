@@ -1,0 +1,26 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=mate-icon-theme-faenza
+pkgver=1.18.1
+_pkgver=${pkgver%.*}
+pkgrel=1
+pkgdesc='Faenza icon theme for MATE'
+arch=('any')
+url='http://mate-desktop.org/'
+license=('GPL')
+groups=('mate-extra')
+makedepends=('mate-common')
+source=("http://pub.mate-desktop.org/releases/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
+md5sums=('93ca26f03154d60c3d22ded51ece965f')
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./autogen.sh
+	./configure --prefix=/usr
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}

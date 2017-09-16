@@ -1,0 +1,39 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=libgnome-keyring
+pkgver=3.12.0
+_pkgver=${pkgver%.*}
+pkgrel=1
+pkgdesc='The libgnome-keyring is used by applications to integrate with the GNOME Keyring system'
+arch=('x86_64')
+url='http://www.gnome.org'
+license=('GPL' 'LGPL')
+depends=('dbus' 'glib' 'libgcrypt')
+makedepends=('intltool' 'gobject-introspection' 'vala' 'python2')
+optdepends=('gnome-keyring: key storage service (or use any other service implementing org.freedesktop.secrets)')
+options=('!emptydirs')
+source=("https://download.gnome.org/sources/$pkgname/${_pkgver}/$pkgname-$pkgver.tar.xz")
+md5sums=('6696e4f2e9aed4625cdc3af30bd8c238')
+
+# todo: gtk-doc is broken
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--localstatedir=/var \
+		--disable-static \
+		--libexecdir=/usr/lib/libgnome-keyring
+		#--enable-gtk-doc
+	make
+}
+
+check() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make check
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}

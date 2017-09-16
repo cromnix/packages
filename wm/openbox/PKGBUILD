@@ -32,7 +32,6 @@ build() {
 }
 
 package_openbox() {
-	groups=('wm')
 	depends=('libxml2' 'libxinerama' 'libxrandr' 'libxcursor' 'pango' 'libsm')
 	optdepends=('tint2: panel'
 				'spacefm-ng: desktop'

@@ -1,27 +1,28 @@
 # Maintainer: Chris Cromer <chris@cromer.cl>
-# Contributor: Guillaume Benoit <guillaume@manjaro.org>
 
 pkgbase=pamac
 pkgname=('pamac')
-pkgver=5.0.0
-pkgrel=1
+pkgver=5.1.1
+pkgrel=2
 pkgdesc="A Gtk3 frontend for libalpm"
 arch=('i686' 'x86_64')
 url="https://github.com/manjaro/pamac"
 license=('GPL3')
-depends=('glib' 'json-glib' 'libsoup' 'dbus-glib' 'polkit' 'vte' 'gtk3'
+depends=('glib' 'json-glib' 'libsoup' 'dbus-glib' 'polkit' 'vte3' 'gtk3'
          'libnotify' 'desktop-file-utils' 'pacman>=5.0' 'pacman<5.1' 'gnutls')
-makedepends=('gettext' 'itstool' 'vala>=0.36')
+makedepends=('gettext' 'itstool' 'vala>=0.36' 'atk-dev')
 options=(!emptydirs)
 
-source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
-sha256sums=('9089b33ec2b351a7125668375706622a6d36244161c05b98d0cd4d8c04c7b2f6')
+source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz"
+		'disable-aur.patch')
+sha256sums=('edb3cf635ae94da9ae87f9feafd836e264b24bdf1e7a07396abd4e062f29b0f1'
+            '8922d0acffbb8e183982990e77ea3ec100b29f5013bbc247f44fd559e43a4a78')
 
 prepare() {
   # adjust version string
   cd "$srcdir/$pkgname-$pkgver"
-  sed -i -e "s|\"$pkgver\"|\"$pkgver-$pkgrel\"|g" src/transaction.vala
   # patches here
+  patch -Np1 -i "${srcdir}"/disable-aur.patch
 }
 
 build() {
@@ -33,11 +34,13 @@ build() {
 
 package_pamac() {
   optdepends=('polkit-gnome: needed for authentification in Cinnamon, Gnome'
+              'polkit-mate: need for authentification in Mate'
               'lxsession: needed for authentification in Xfce, LXDE etc.'
               'pamac-tray-appindicator: tray icon for KDE')
   backup=('etc/pamac.conf')
-  replaces=('pamac-aur')
   cd "$srcdir/$pkgname-$pkgver"
   make prefix="$pkgdir"/usr sysconfdir="$pkgdir"/etc install
+  
+  rm -rf "${pkgdir}"/usr/lib/systemd
 }
 # vim:set ts=2 sw=2 et:

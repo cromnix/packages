@@ -4,7 +4,7 @@ pkgbase=eudev
 pkgname=('eudev' 'eudev-openrc')
 pkgver=3.2.4
 _openrc_pkgver=32
-pkgrel=1
+pkgrel=3
 pkgdesc="The Eudev package contains programs for dynamic creation of device nodes."
 arch=('x86_64')
 url="https://wiki.gentoo.org/wiki/Project:Eudev"
@@ -22,6 +22,11 @@ prepare() {
 	cd "$srcdir/$pkgbase-$pkgver"
 
 	sed -r -i 's|/usr(/bin/test)|\1|' test/udev-test.pl
+
+	sed -e 's/GROUP="dialout"/GROUP="uucp"/' \
+		-e 's/GROUP="tape"/GROUP="storage"/' \
+		-e 's/GROUP="cdrom"/GROUP="optical"/' \
+		-i rules/*.rules
 }
 
 build() {
@@ -32,7 +37,7 @@ build() {
 		--libdir=/usr/lib \
 		--sysconfdir=/etc \
 		--libexecdir=/usr/lib \
-		--with-rootprefix= \
+		--with-rootprefix=/usr \
 		--with-rootlibdir=/usr/lib \
 		--enable-manpages \
 		--enable-introspection \

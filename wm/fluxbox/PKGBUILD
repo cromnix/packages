@@ -31,7 +31,6 @@ package_fluxbox-session() {
 }
 
 package_fluxbox() {
-	groups=('wm')
 	depends=('libxft' 'libxpm' 'libxinerama' 'libxrandr')
 	cd ${srcdir}/${pkgbase}-${pkgver}
 	make DESTDIR=${pkgdir} install

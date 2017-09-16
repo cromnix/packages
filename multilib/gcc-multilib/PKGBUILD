@@ -1,17 +1,17 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=('gcc-multilib')
-pkgver=7.1.0
+pkgver=7.2.0
 pkgrel=1
 pkgdesc="The GNU Compiler Collection"
 arch=('x86_64')
 url="http://gcc.gnu.org"
 license=('GPL' 'LGPL' 'FDL' 'custom')
-makedepends=('lib32-glibc' 'binutils>=2.28' 'mpc')
+makedepends=('lib32-glibc' 'binutils>=2.29' 'mpc')
 checkdepends=('dejagnu' 'inetutils')
-options=('!emptydirs')
-source=("ftp://ftp.gnu.org/gnu/gcc/gcc-${pkgver}/gcc-${pkgver}.tar.bz2")
-md5sums=('6bf56a2bca9dac9dbbf8e8d1036964a8')
+options=('staticlibs' '!emptydirs' '!strip')
+source=("https://ftp.gnu.org/gnu/gcc/gcc-${pkgver}/gcc-${pkgver}.tar.xz")
+md5sums=('ff370482573133a7fcdd96cd2f552292')
 CHOST=x86_64-pc-linux-gnu
 
 prepare() {
@@ -37,14 +37,14 @@ build() {
 		_bootstrap=""
     fi
 
-    ../configure \
-        --prefix=/usr \
+    ../configure --prefix=/usr \
         --libdir=/usr/lib \
         --libexecdir=/usr/lib \
         --enable-multilib \
 		${_bootstrap} \
         --with-system-zlib \
         --enable-languages=c,c++,fortran,go,objc,obj-c++
+	#make
     make bootstrap-lean
 }
 
@@ -57,8 +57,8 @@ check() {
 
 package_gcc-multilib() {
     pkgdesc="GCC compiler"
-    depends=('binutils>=2.28' 'mpc')
-    options=('staticlibs' '!strip')
+    depends=('binutils' 'mpc')
+    options=('staticlibs')
     provides=("gcc=$pkgver-$pkgrel" "gcc-libs=$pkgver-$pkgrel")
     conflicts=('gcc')
 
@@ -67,6 +67,7 @@ package_gcc-multilib() {
     make DESTDIR="$pkgdir" install
 
     ln -sv gcc ${pkgdir}/usr/bin/cc
+    ln -sv /usr/bin/cpp ${pkgdir}/usr/lib/cpp
     install -v -dm755 ${pkgdir}/usr/lib/bfd-plugins
     ln -sfv ../../lib/gcc/${CHOST}/${pkgver}/liblto_plugin.so ${pkgdir}/usr/lib/bfd-plugins/
 

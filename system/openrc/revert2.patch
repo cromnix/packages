@@ -1,0 +1,23 @@
+diff -urNp openrc-0.29/src/rc/supervise-daemon.c openrc-0.30/src/rc/supervise-daemon.c
+--- openrc-0.29/src/rc/supervise-daemon.c	2017-08-16 18:38:37.000000000 +0200
++++ openrc-0.30/src/rc/supervise-daemon.c	2017-09-07 00:31:01.000000000 +0200
+@@ -414,7 +414,6 @@ int main(int argc, char **argv)
+ 	char *exec = NULL;
+ 	char *pidfile = NULL;
+ 	char *retry = NULL;
+-	int nkilled;
+ 	int sig = SIGTERM;
+ 	char *home = NULL;
+ 	int tid = 0;
+@@ -753,10 +753,7 @@ int main(int argc, char **argv)
+ 			wait(&i);
+ 			if (exiting) {
+ 				syslog(LOG_INFO, "stopping %s, pid %d", exec, child_pid);
+-				nkilled = run_stop_schedule(applet, exec, NULL, child_pid,
+-						0, false, false, true);
+-				if (nkilled > 0)
+-					syslog(LOG_INFO, "killed %d processes", nkilled);
++				kill(child_pid, SIGTERM);
+ 			} else {
+ 				sleep(respawn_delay);
+ 				if (respawn_max > 0 && respawn_period > 0) {

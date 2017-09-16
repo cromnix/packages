@@ -1,12 +1,12 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=cromnix-multilib
-pkgver=17.06
+pkgver=17.09
 pkgrel=1
 pkgdesc='cromnix multilib base system'
 arch=('any')
-license=('GPL')
-url='https://cromer.cl'
+license=('BSD3')
+url='https://cromnix.org'
 depends=('cromnix' 'gcc-multilib' 'lib32-glibc')
 backup=('etc/ld.so.conf.d/multilib-ld.so.conf')
 source=('multilib-ld.so.conf')

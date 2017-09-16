@@ -1,0 +1,34 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=mate-utils
+pkgver=1.18.2
+_pkgver=${pkgver%.*}
+pkgrel=1
+pkgdesc='Common MATE utilities for viewing disk usage, logs and fonts, taking screenshots, managing dictionaries and searching files'
+arch=('x86_64')
+url='http://mate-desktop.org/'
+license=('GPL')
+groups=('mate-extra')
+depends=('mate-desktop' 'libcanberra' 'libgtop' 'libsm')
+makedepends=('intltool' 'itstool' 'mate-panel' 'atk-dev')
+optdepends=('mate-panel: Look up words in dictionaries from the panel')
+source=("http://pub.mate-desktop.org/releases/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
+md5sums=('76f2e840dc4746ea313dc44d3c902d5b')
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure \
+		--prefix=/usr \
+		--libexecdir=/usr/lib/${pkgname} \
+		--sysconfdir=/etc \
+		--disable-maintainer-flags
+
+	#https://bugzilla.gnome.org/show_bug.cgi?id=656231
+	sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}

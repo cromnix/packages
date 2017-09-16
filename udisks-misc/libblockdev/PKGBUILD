@@ -7,7 +7,6 @@ pkgdesc='libblockdev is a C library supporting GObject introspection for manipul
 arch=('x86_64')
 url='https://github.com/storaged-project/libblockdev'
 license=('LGPL')
-groups=('cromnix-example')
 depends=('btrfs-progs' 'dosfstools' 'gptfdisk' 'libbytesize' 'lvm2' 'mdadm' 'parted'
 		 'volume_key' 'xfsprogs' 'kmod')
 makedepends=('gobject-introspection' 'python')

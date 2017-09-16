@@ -32,7 +32,6 @@ package_icewm-session() {
 
 
 package_icewm() {
-	groups=('wm')
 	depends=('libxrandr' 'libxft' 'libsm' 'libxinerama' 'gdk-pixbuf')
 	cd "${srcdir}/${pkgbase}-${pkgver}"
 	make DESTDIR="${pkgdir}" install

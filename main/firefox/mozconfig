@@ -9,7 +9,15 @@
 # If you have installed dbus-glib, and you have installed (or will install)
 # wireless-tools, and you wish to use geolocation web services, comment out
 # this line
-ac_add_options --disable-necko-wifi
+#ac_add_options --disable-necko-wifi
+
+# API Keys for geolocation APIs - necko-wifi (above) is required for MLS
+# Uncomment the following line if you wish to use Mozilla Location Service
+ac_add_options --with-mozilla-api-keyfile=$PWD/../mozilla-key
+
+# Uncomment the following line if you wish to use Google's geolocaton API
+# (needed for use with saved maps with Google Maps)
+ac_add_options --with-google-api-keyfile=$PWD/../google-key
 
 # Uncomment these lines if you have installed optional dependencies:
 #ac_add_options --enable-system-hunspell
@@ -50,14 +58,13 @@ ac_add_options --enable-gold
 ac_add_options --prefix=/usr
 ac_add_options --enable-application=browser
 
-#ac_add_options --disable-crashreporter
+ac_add_options --disable-crashreporter
 ac_add_options --disable-updater
 ac_add_options --disable-tests
 
 # Full optimization is broken with gcc7
 ac_add_options --enable-optimize="-O2"
 
-ac_add_options --enable-gio
 ac_add_options --enable-official-branding
 ac_add_options --enable-safe-browsing
 ac_add_options --enable-url-classifier

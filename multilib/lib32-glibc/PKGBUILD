@@ -2,23 +2,23 @@
 
 pkgname=lib32-glibc
 _pkgname=glibc
-pkgver=2.25
+pkgver=2.26
 pkgrel=1
 pkgdesc="The main C library."
 arch=('x86_64')
 url="https://www.gnu.org/software/libc/"
 license=('GPL' 'LGPL')
-depends=('linux-api-headers>=4.11' 'cromnix' 'tzdata')
-makedepends=('gcc-multilib>=7.1.0')
-options=('!strip' 'staticlibs')
+depends=('linux-api-headers>=4.12' 'cromnix' 'tzdata')
+makedepends=('gcc-multilib')
+options=('!strip' 'staticlibs' '!emptydirs')
 source=("https://ftp.gnu.org/gnu/$_pkgname/$_pkgname-$pkgver.tar.xz"
-        "http://www.linuxfromscratch.org/patches/lfs/8.0/$_pkgname-$pkgver-fhs-1.patch")
-md5sums=('1496c3bf41adf9db0ebd0af01f202eed'
+        "glibc-fhs.patch")
+md5sums=('102f637c3812f81111f48f2427611be1'
          '9a5997c3452909b1769918c759eff8a2')
 
 prepare() {
     cd "$srcdir/$_pkgname-$pkgver"
-    patch -Np1 -i "$srcdir/glibc-${pkgver}-fhs-1.patch"
+	patch -Np1 -i ${srcdir}/glibc-fhs.patch
 
     mkdir -pv "$srcdir/$_pkgname-$pkgver/build"
 }

@@ -1,0 +1,55 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=gcr
+pkgver=3.20.0
+_pkgver=${pkgver%.*}
+pkgrel=1
+pkgdesc='The Gcr package contains libraries used for displaying certificates and accessing key stores. It also provides the viewer for crypto files on the GNOME Desktop'
+arch=('x86_64')
+url='https://git.gnome.org/browse/gcr'
+license=('GPL2')
+depends=('dconf' 'gtk3' 'libgcrypt' 'p11-kit')
+makedepends=('intltool' 'gobject-introspection' 'python' 'vala' 'libxslt' 'gtk-doc' 'atk-dev')
+checkdepends=('python2')
+source=("http://ftp.gnome.org/pub/gnome/sources/${pkgname}/${_pkgver}/${pkgname}-${pkgver}.tar.xz"
+		'10-gcr.conf')
+md5sums=('4314bf89eac293dd0a9d806593ff1b35'
+         '588f6646462ccde13a68d7b7a7b3fe98')
+
+# todo: rebuild with depends
+
+prepare() {
+	mkdir "${srcdir}"/path
+	ln -s /usr/bin/python2 path/python
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	sed -i -r 's:"(/desktop):"/org/gnome\1:' schema/*.xml
+}
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr \
+		--sysconfdir=/etc \
+		--libexecdir=/usr/lib/gcr \
+		--enable-gtk-doc \
+		--disable-static \
+		--disable-update-mime \
+		--disable-schemas-compile
+
+	sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
+	make
+}
+
+check() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	PATH="$srcdir/path:$PATH" dbus-run-session make -k check || :
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+
+	# gcr wants to lock some memory to prevent swapping out private keys
+	# https://bugs.archlinux.org/task/32616
+	# https://bugzilla.gnome.org/show_bug.cgi?id=688161
+	install -Dm644 "${srcdir}"/10-gcr.conf "${pkgdir}"/etc/security/limits.d/10-gcr.conf
+}

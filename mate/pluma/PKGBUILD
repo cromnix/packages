@@ -1,0 +1,36 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=pluma
+pkgver=1.18.2
+_pkgver=${pkgver%.*}
+pkgrel=1
+pkgdesc='A powerful text editor for MATE'
+arch=('x86_64')
+url='http://mate-desktop.org/'
+license=('GPL')
+groups=('mate-extra')
+depends=('iso-codes' 'mate-desktop' 'zenity' 'gtksourceview' 'libpeas')
+makedepends=('intltool' 'itstool' 'gobject-introspection' 'libsm' 'atk-dev')
+source=("http://pub.mate-desktop.org/releases/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
+md5sums=('f1cbd0ae1dc3fb1036b8c966a84af88d')
+
+# todo: rebuild with spellcheck
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	PYTHON=/usr/bin/python2 ./configure \
+		--prefix=/usr \
+		--libexecdir=/usr/lib/${pkgname} \
+		--enable-gtk-doc=no \
+		--enable-python \
+		--disable-spell
+
+	#https://bugzilla.gnome.org/show_bug.cgi?id=656231
+	sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}

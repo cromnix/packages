@@ -1,0 +1,69 @@
+diff --git a/src/rc/rc-schedules.c b/src/rc/rc-schedules.c
+index 0390ef9c..7eb28372 100644
+--- a/src/rc/rc-schedules.c
++++ b/src/rc/rc-schedules.c
+@@ -297,7 +297,7 @@ int do_stop(const char *applet, const char *exec, const char *const *argv,
+ 
+ int run_stop_schedule(const char *applet,
+ 		const char *exec, const char *const *argv,
+-		pid_t pid, uid_t uid,
++		const char *pidfile, uid_t uid,
+     bool test, bool progress, bool quiet)
+ {
+ 	SCHEDULEITEM *item = TAILQ_FIRST(&schedule);
+@@ -306,13 +306,14 @@ int run_stop_schedule(const char *applet,
+ 	int nrunning = 0;
+ 	long nloops, nsecs;
+ 	struct timespec ts;
++	pid_t pid = 0;
+ 	const char *const *p;
+ 	bool progressed = false;
+ 
+ 	if (exec)
+ 		einfov("Will stop %s", exec);
+-	if (pid > 0)
+-		einfov("Will stop PID %d", pid);
++	if (pidfile)
++		einfov("Will stop PID in pidfile `%s'", pidfile);
+ 	if (uid)
+ 		einfov("Will stop processes owned by UID %d", uid);
+ 	if (argv && *argv) {
+@@ -327,6 +328,12 @@ int run_stop_schedule(const char *applet,
+ 		}
+ 	}
+ 
++	if (pidfile) {
++		pid = get_pid(applet, pidfile);
++		if (pid == -1)
++			return 0;
++	}
++
+ 	while (item) {
+ 		switch (item->type) {
+ 		case SC_GOTO:
+diff --git a/src/rc/rc-schedules.h b/src/rc/rc-schedules.h
+index 6bed7916..0a10b381 100644
+--- a/src/rc/rc-schedules.h
++++ b/src/rc/rc-schedules.h
+@@ -21,7 +21,7 @@ int do_stop(const char *applet, const char *exec, const char *const *argv,
+ 		pid_t pid, uid_t uid,int sig, bool test);
+ int run_stop_schedule(const char *applet,
+ 		const char *exec, const char *const *argv,
+-		pid_t pid, uid_t uid,
++		const char *pidfile, uid_t uid,
+ 		bool test, bool progress, bool quiet);
+ 
+ #endif
+diff --git a/src/rc/start-stop-daemon.c b/src/rc/start-stop-daemon.c
+index df5b3184..4cda6102 100644
+--- a/src/rc/start-stop-daemon.c
++++ b/src/rc/start-stop-daemon.c
+@@ -657,7 +657,7 @@ int main(int argc, char **argv)
+ 		else
+ 			parse_schedule(applet, NULL, sig);
+ 		i = run_stop_schedule(applet, exec, (const char *const *)margv,
+-		    get_pid(applet, pidfile), uid, test, progress, false);
++		    pidfile, uid, test, progress, false);
+ 
+ 		if (i < 0)
+ 			/* We failed to stop something */
