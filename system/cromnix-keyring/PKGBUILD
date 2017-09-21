@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <chris@cromer.cl>
 
 pkgname=cromnix-keyring
-pkgver=20170809
+pkgver=20170921
 pkgrel=1
 pkgdesc='Cromnix PGP keyring'
 arch=('any')
@@ -9,9 +9,8 @@ url='https://github.com/cromnix/cromnix-keyring/'
 license=('GPL')
 install="${pkgname}.install"
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/cromnix/cromnix-keyring/archive/${pkgver}.tar.gz")
-md5sums=('a157930c9c75ee43700e056c8b37612b')
-validpgpkeys=('A55C3F1BA61CAA63036D82BAFA91071797BEEEC2' # cromer
-				'D9B757B7195A485D06A3043932F4AD774C40536B') # artoo
+md5sums=('cc6323b64e5fe3b6600cadb34d9a06e0')
+validpgpkeys=('ACE1F5ABAA6CFAE41C02659F48BB7B748AC4A644')
 
 package() {
 	cd "${srcdir}/${pkgname}-${pkgver}"

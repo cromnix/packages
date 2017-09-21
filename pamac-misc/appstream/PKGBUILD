@@ -1,0 +1,37 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=appstream
+pkgver=0.11.5
+pkgrel=1
+pkgdesc='Provides a standard for creating app stores across distributions'
+arch=('x86_64')
+url='http://distributions.freedesktop.org/wiki/AppStream'
+license=('GPL')
+depends=('libyaml' 'libxml2' 'libstemmer' 'glib')
+makedepends=('meson' 'xmlto' 'gobject-introspection' 'python2' 'gtk-doc' 'itstool' 'vala')
+# qt5-base
+source=("https://www.freedesktop.org/software/${pkgname}/releases/AppStream-${pkgver}.tar.xz"
+		'update-appstream-cache.hook')
+md5sums=('e4a2d1e89d676846017dc7aabb1b9a4f'
+         'b305bb1b642b3637065e93bf3f33b6c3')
+
+# todo: split package qt
+
+prepare() {
+	mkdir -p build
+}
+
+build() {
+	cd build
+
+	meson ../AppStream-${pkgver} \
+		--prefix=/usr \
+		-Denable-vapi=true
+	ninja
+}
+
+package() {
+	cd build
+	DESTDIR="${pkgdir}" ninja install
+	install -Dm644 "${srcdir}"/update-appstream-cache.hook "${pkgdir}"/usr/share/libalpm/hooks/update-appstream-cache.hook
+}

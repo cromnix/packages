@@ -1,0 +1,443 @@
+diff -Naur appstream-generator-0.6.5-orig/meson.build appstream-generator-0.6.5/meson.build
+--- appstream-generator-0.6.5-orig/meson.build	2017-07-02 10:46:06.000000000 -0400
++++ appstream-generator-0.6.5/meson.build	2017-09-20 14:18:46.693044857 -0300
+@@ -58,6 +58,11 @@
+     'src/asgen/backends/archlinux/alpkg.d',
+     'src/asgen/backends/archlinux/alpkgindex.d',
+     'src/asgen/backends/archlinux/listfile.d',
++    
++    'src/asgen/backends/cromnix/package.d',
++    'src/asgen/backends/cromnix/alpkg.d',
++    'src/asgen/backends/cromnix/alpkgindex.d',
++    'src/asgen/backends/cromnix/listfile.d',
+ 
+     'src/asgen/backends/debian/package.d',
+     'src/asgen/backends/debian/debpkg.d',
+diff -Naur appstream-generator-0.6.5-orig/src/asgen/backends/cromnix/alpkg.d appstream-generator-0.6.5/src/asgen/backends/cromnix/alpkg.d
+--- appstream-generator-0.6.5-orig/src/asgen/backends/cromnix/alpkg.d	1969-12-31 21:00:00.000000000 -0300
++++ appstream-generator-0.6.5/src/asgen/backends/cromnix/alpkg.d	2017-09-20 14:08:51.300015204 -0300
+@@ -0,0 +1,100 @@
++/*
++ * Copyright (C) 2016 Matthias Klumpp <matthias@tenstral.net>
++ *
++ * Licensed under the GNU Lesser General Public License Version 3
++ *
++ * This program is free software: you can redistribute it and/or modify
++ * it under the terms of the GNU Lesser General Public License as published by
++ * the Free Software Foundation, either version 3 of the license, or
++ * (at your option) any later version.
++ *
++ * This software is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public License
++ * along with this software.  If not, see <http://www.gnu.org/licenses/>.
++ */
++
++module asgen.backends.cromnix.alpkg;
++
++import std.stdio;
++import std.string;
++import std.array : empty;
++
++import asgen.logging;
++import asgen.zarchive;
++import asgen.backends.interfaces;
++
++
++final class CromnixPackage : Package
++{
++private:
++    string pkgname;
++    string pkgver;
++    string pkgarch;
++    string pkgmaintainer;
++    string[string] desc;
++    string pkgFname;
++
++    string[] contentsL;
++
++    ArchiveDecompressor archive;
++
++public:
++    override
++    @property string name () const { return pkgname; }
++    @property void   name (string val) { pkgname = val; }
++
++    override
++    @property string ver () const { return pkgver; }
++    @property void   ver (string val) { pkgver = val; }
++
++    override
++    @property string arch () const { return pkgarch; }
++    @property void   arch (string val) { pkgarch = val; }
++
++    override
++    @property const(string[string]) description () const { return desc; }
++
++    override
++    @property string filename () const { return pkgFname; }
++    @property void filename (string fname) { pkgFname = fname; }
++
++    override
++    @property string maintainer () const { return pkgmaintainer; }
++    @property void maintainer (string maint) { pkgmaintainer = maint; }
++
++    void setDescription (string text, string locale)
++    {
++        desc[locale] = text;
++    }
++
++    override
++    const(ubyte)[] getFileData (string fname)
++    {
++        if (!archive.isOpen ()) {
++            archive.open (this.filename);
++        }
++
++        return archive.readData (fname);
++    }
++
++    @property override
++    string[] contents ()
++    {
++        return contentsL;
++    }
++
++    @property
++    void contents (string[] c)
++    {
++        contentsL = c;
++    }
++
++    override
++    void close ()
++    {
++    }
++}
+diff -Naur appstream-generator-0.6.5-orig/src/asgen/backends/cromnix/alpkgindex.d appstream-generator-0.6.5/src/asgen/backends/cromnix/alpkgindex.d
+--- appstream-generator-0.6.5-orig/src/asgen/backends/cromnix/alpkgindex.d	1969-12-31 21:00:00.000000000 -0300
++++ appstream-generator-0.6.5/src/asgen/backends/cromnix/alpkgindex.d	2017-09-20 14:28:46.411074724 -0300
+@@ -0,0 +1,153 @@
++/*
++ * Copyright (C) 2016 Matthias Klumpp <matthias@tenstral.net>
++ *
++ * Licensed under the GNU Lesser General Public License Version 3
++ *
++ * This program is free software: you can redistribute it and/or modify
++ * it under the terms of the GNU Lesser General Public License as published by
++ * the Free Software Foundation, either version 3 of the license, or
++ * (at your option) any later version.
++ *
++ * This software is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public License
++ * along with this software.  If not, see <http://www.gnu.org/licenses/>.
++ */
++
++module asgen.backends.cromnix.alpkgindex;
++
++import std.stdio;
++import std.path;
++import std.string;
++import std.algorithm : canFind;
++import std.array : appender;
++static import std.file;
++
++import asgen.logging;
++import asgen.zarchive;
++import asgen.backends.interfaces;
++import asgen.backends.cromnix.alpkg;
++import asgen.backends.cromnix.listfile;
++
++
++final class CromnixPackageIndex : PackageIndex
++{
++
++private:
++    string rootDir;
++    Package[][string] pkgCache;
++
++public:
++
++    this (string dir)
++    {
++        this.rootDir = dir;
++        if (!std.file.exists (dir))
++            throw new Exception ("Directory '%s' does not exist.", dir);
++    }
++
++    void release ()
++    {
++        pkgCache = null;
++    }
++
++    private void setPkgDescription (CromnixPackage pkg, string pkgDesc)
++    {
++        if (pkgDesc is null)
++            return;
++
++        auto desc = "<p>%s</p>".format (pkgDesc);
++        pkg.setDescription (desc, "C");
++    }
++
++    private Package[] loadPackages (string suite, string section, string arch)
++    {
++        auto pkgRoot = buildPath (rootDir, suite, section, arch);
++        auto listsTarFname = buildPath (pkgRoot, format ("%s.files.tar.xz", section));
++        if (!std.file.exists (listsTarFname)) {
++            logWarning ("Package lists tarball '%s' does not exist.", listsTarFname);
++            return [];
++        }
++
++        auto ad = new ArchiveDecompressor ();
++        ad.open (listsTarFname);
++        logDebug ("Opened: %s", listsTarFname);
++
++        CromnixPackage[string] pkgsMap;
++        foreach (ref entry; ad.read ()) {
++
++            auto cromnixPkid = dirName (entry.fname);
++            CromnixPackage pkg;
++            if (cromnixPkid in pkgsMap) {
++                pkg = pkgsMap[cromnixPkid];
++            } else {
++                pkg = new CromnixPackage ();
++                pkgsMap[cromnixPkid] = pkg;
++            }
++
++            auto infoBaseName = baseName (entry.fname);
++            if (infoBaseName == "desc") {
++                // we have the description file, add information to this package
++                auto descF = new ListFile ();
++                descF.loadData (entry.data);
++                pkg.name = descF.getEntry ("NAME");
++                pkg.ver  = descF.getEntry ("VERSION");
++                pkg.arch = descF.getEntry ("ARCH");
++
++                pkg.maintainer = descF.getEntry ("PACKAGER");
++                pkg.filename = buildPath (pkgRoot, descF.getEntry ("FILENAME"));
++                setPkgDescription (pkg, descF.getEntry ("DESC"));
++            } else if (infoBaseName == "files") {
++                // we found a content index, add content information to the package
++                auto filesF = new ListFile ();
++                filesF.loadData (entry.data);
++
++                auto filesStr = filesF.getEntry ("FILES");
++                if (filesStr is null) {
++                    if (!pkg.name.canFind ("-meta")) {
++                        logWarning ("Package '%s' has no file list set. Ignoring it.", pkg.toString ());
++                        continue;
++                    }
++                }
++
++                auto contents = appender!(string[]);
++                foreach (l; filesStr.splitLines ())
++                    contents ~= "/" ~ l;
++                pkg.contents = contents.data;
++            }
++        }
++
++        // perform a sanity check, so we will never emit invalid packages
++        auto pkgs = appender!(Package[]);
++        foreach (ref pkg; pkgsMap.byValue ()) {
++            if (pkg.isValid)
++                pkgs ~= pkg;
++            else
++                logError ("Found an invalid package (name, architecture or version is missing). This is a bug.");
++        }
++
++        return pkgs.data;
++    }
++
++    Package[] packagesFor (string suite, string section, string arch)
++    {
++        if ((suite == "arch") || (suite == "cromnix"))
++            suite = "";
++
++        immutable id = "%s-%s-%s".format (suite, section, arch);
++        if (id !in pkgCache) {
++            auto pkgs = loadPackages (suite, section, arch);
++            synchronized (this) pkgCache[id] = pkgs;
++        }
++
++        return pkgCache[id];
++    }
++
++    bool hasChanges (DataStore dstore, string suite, string section, string arch)
++    {
++        return true;
++    }
++}
+diff -Naur appstream-generator-0.6.5-orig/src/asgen/backends/cromnix/listfile.d appstream-generator-0.6.5/src/asgen/backends/cromnix/listfile.d
+--- appstream-generator-0.6.5-orig/src/asgen/backends/cromnix/listfile.d	1969-12-31 21:00:00.000000000 -0300
++++ appstream-generator-0.6.5/src/asgen/backends/cromnix/listfile.d	2017-09-20 14:12:33.995026295 -0300
+@@ -0,0 +1,111 @@
++/*
++ * Copyright (C) 2016 Matthias Klumpp <matthias@tenstral.net>
++ *
++ * Licensed under the GNU Lesser General Public License Version 3
++ *
++ * This program is free software: you can redistribute it and/or modify
++ * it under the terms of the GNU Lesser General Public License as published by
++ * the Free Software Foundation, either version 3 of the license, or
++ * (at your option) any later version.
++ *
++ * This software is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public License
++ * along with this software.  If not, see <http://www.gnu.org/licenses/>.
++ */
++
++module asgen.backends.cromnix.listfile;
++
++import std.stdio;
++import std.string;
++
++
++final class ListFile
++{
++
++private:
++    string[string] entries;
++
++public:
++
++    this ()
++    {
++    }
++
++    void loadData (const(ubyte)[] data)
++    {
++        string[] content;
++        auto dataStr = cast(string) data;
++        content = dataStr.splitLines ();
++
++        string blockName = null;
++        foreach (l; content) {
++            if ((l.startsWith ("%")) && (l.endsWith ("%"))) {
++                blockName = l[1..$-1];
++                continue;
++            }
++
++            if (l == "") {
++                blockName = null;
++                continue;
++            }
++
++            if (blockName !is null) {
++                if (blockName in entries)
++                    entries[blockName] ~= "\n" ~ l;
++                else
++                    entries[blockName] = l;
++                continue;
++            }
++        }
++    }
++
++    string getEntry (string name)
++    {
++        auto resP = name in entries;
++
++        if (resP is null)
++            // we found nothing
++            return null;
++        return *resP;
++    }
++}
++
++unittest
++{
++    writeln ("TEST: ", "Backend::Cromnix - ListFile");
++
++    string data = """%FILENAME%
++a2ps-4.14-6-x86_64.pkg.tar.xz
++
++%NAME%
++a2ps
++
++%VERSION%
++4.14-6
++
++%DESC%
++An Any to PostScript filter
++
++%CSIZE%
++629320
++
++%MULTILINE%
++Blah1
++BLUBB2
++EtcEtcEtc3
++
++%SHA256SUM%
++a629a0e0eca0d96a97eb3564f01be495772439df6350600c93120f5ac7f3a1b5""";
++
++    auto lf = new ListFile ();
++    lf.loadData (cast(ubyte[]) data);
++
++    assert (lf.getEntry ("FILENAME") == "a2ps-4.14-6-x86_64.pkg.tar.xz");
++    assert (lf.getEntry ("VERSION") == "4.14-6");
++    assert (lf.getEntry ("MULTILINE") == "Blah1\nBLUBB2\nEtcEtcEtc3");
++    assert (lf.getEntry ("SHA256SUM") == "a629a0e0eca0d96a97eb3564f01be495772439df6350600c93120f5ac7f3a1b5");
++}
+diff -Naur appstream-generator-0.6.5-orig/src/asgen/backends/cromnix/package.d appstream-generator-0.6.5/src/asgen/backends/cromnix/package.d
+--- appstream-generator-0.6.5-orig/src/asgen/backends/cromnix/package.d	1969-12-31 21:00:00.000000000 -0300
++++ appstream-generator-0.6.5/src/asgen/backends/cromnix/package.d	2017-09-20 14:12:48.817027033 -0300
+@@ -0,0 +1,5 @@
++
++module asgen.backends.cromnix;
++
++public import asgen.backends.cromnix.alpkg;
++public import asgen.backends.cromnix.alpkgindex;
+diff -Naur appstream-generator-0.6.5-orig/src/asgen/config.d appstream-generator-0.6.5/src/asgen/config.d
+--- appstream-generator-0.6.5-orig/src/asgen/config.d	2017-07-02 10:46:06.000000000 -0400
++++ appstream-generator-0.6.5/src/asgen/config.d	2017-09-20 14:16:53.315039210 -0300
+@@ -68,6 +68,7 @@
+     Debian,
+     Ubuntu,
+     Archlinux,
++    Cromnix,
+     RpmMd
+ }
+ 
+@@ -318,6 +319,10 @@
+                 this.backend = Backend.Archlinux;
+                 this.metadataType = DataType.XML;
+                 break;
++            case "cromnix":
++                this.backend = Backend.Cromnix;
++                this.metadataType = DataType.XML;
++                break;
+             case "mageia":
+             case "rpmmd":
+                 this.backend = Backend.RpmMd;
+diff -Naur appstream-generator-0.6.5-orig/src/asgen/engine.d appstream-generator-0.6.5/src/asgen/engine.d
+--- appstream-generator-0.6.5-orig/src/asgen/engine.d	2017-07-02 10:46:06.000000000 -0400
++++ appstream-generator-0.6.5/src/asgen/engine.d	2017-09-20 14:17:50.595042063 -0300
+@@ -45,6 +45,7 @@
+ import asgen.backends.debian;
+ import asgen.backends.ubuntu;
+ import asgen.backends.archlinux;
++import asgen.backends.cromnix;
+ import asgen.backends.rpmmd;
+ 
+ import asgen.handlers.iconhandler;
+@@ -81,6 +82,9 @@
+             case Backend.Archlinux:
+                 pkgIndex = new ArchPackageIndex (conf.archiveRoot);
+                 break;
++            case Backend.Cromnix:
++                pkgIndex = new CromnixPackageIndex (conf.archiveRoot);
++                break;
+             case Backend.RpmMd:
+                 pkgIndex = new RPMPackageIndex (conf.archiveRoot);
+                 break;

@@ -1,0 +1,41 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=lmdb
+pkgver=0.9.21
+pkgrel=1
+pkgdesc='The lmdb package is a fast, compact, key-value embedded data store'
+arch=('x86_64')
+url='http://symas.com/mdb'
+license=('custom:OpenLDAP')
+depends=('glibc')
+options=('!emptydirs')
+source=("https://github.com/LMDB/${pkgname}/archive/LMDB_${pkgver}.tar.gz"
+		'lmdb.pc')
+md5sums=('41a4f7b63212a00e53fabd8159008201'
+         'a2398a20d85c7b090523601f98c0ba83')
+
+prepare() {
+	cd "${srcdir}"/lmdb-LMDB_${pkgver}/libraries/liblmdb
+	sed -e "s|@PKGVER@|$pkgver|" -i "${srcdir}"/lmdb.pc
+}
+
+build() {
+	cd "${srcdir}"/lmdb-LMDB_${pkgver}/libraries/liblmdb
+	make prefix=/usr
+}
+
+check() {
+	cd "${srcdir}"/lmdb-LMDB_${pkgver}/libraries/liblmdb
+	make test
+}
+
+package() {
+	cd "${srcdir}"/lmdb-LMDB_${pkgver}/libraries/liblmdb
+	install -dm755 "${pkgdir}"/usr/{bin,lib,include,man/man1,share}
+	make DESTDIR="${pkgdir}" prefix=/usr install
+
+	mv "${pkgdir}"/usr/man "${pkgdir}"/usr/share/man
+
+	install -Dm644 LICENSE "${pkgdir}"/usr/share/licenses/${pkgname}/LICENSE
+	install -Dm644 "${srcdir}"/lmdb.pc "${pkgdir}"/usr/lib/pkgconfig/lmdb.pc
+}

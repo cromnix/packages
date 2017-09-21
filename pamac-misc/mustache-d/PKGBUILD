@@ -1,0 +1,30 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=mustache-d
+pkgver=0.1.3
+pkgrel=1
+pkgdesc='Moustache template engine for D'
+arch=('x86_64')
+url='https://github.com/repeatedly/mustache-d'
+license=('custom:boost')
+makedepends=('meson' 'dmd')
+source=("${pkgname}-${pkgver}::https://github.com/repeatedly/${pkgname}/archive/v$pkgver.tar.gz"
+		'http://www.boost.org/LICENSE_1_0.txt')
+md5sums=('eb6a81f822308d7955f20483f1ceb893'
+         'e4224ccaecb14d942c71d31bef20d78c')
+
+prepare() {
+	mkdir -p build
+}
+
+build() {
+	cd build
+	meson ../${pkgname}-${pkgver} --prefix=/usr
+	ninja
+}
+
+package() {
+	cd build
+	DESTDIR="${pkgdir}" ninja install
+	install -Dm644 "${srcdir}"/LICENSE_1_0.txt "${pkgdir}"/usr/share/licenses/${pkgname}/LICENSE
+}

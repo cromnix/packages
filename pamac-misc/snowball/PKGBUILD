@@ -1,0 +1,55 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgbase=snowball
+pkgname=('snowball' 'libstemmer')
+pkgver=r461.5137019
+pkgrel=1
+pkgdesc="String processing language for creating stemming algorithms"
+arch=('x86_64')
+url="http://snowballstem.org/"
+license=('BSD')
+depends=('glibc')
+makedepends=('git')
+source=("git+https://github.com/snowballstem/${pkgbase}.git"
+		'dynamiclib.patch')
+md5sums=('SKIP'
+         '70e9965a8c2b415d5de3593d0728e517')
+
+pkgver() {
+	cd "${pkgbase}"
+	#printf "r%s.%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)" "$(date +%Y%m%d)"
+	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+	cd "${pkgbase}"
+	patch -Np1 -i "${srcdir}"/dynamiclib.patch
+}
+
+build() {
+	cd "${pkgbase}"
+	make
+}
+
+check() {
+	cd "${pkgbase}"
+	# Disabled - needs external test data
+	#make check
+}
+
+package_snowball() {
+	cd "${pkgbase}"
+	install -d "${pkgdir}"/usr/bin
+	install -t "${pkgdir}/usr/bin" snowball stemwords
+	install -Dm644 COPYING "${pkgdir}"/usr/share/licenses/snowball/LICENSE
+}
+
+package_libstemmer() {
+	pkgdesc="Stemming library supporting several languages"
+	cd "${pkgbase}"
+	install -Dm644 {.,"${pkgdir}"/usr}/include/libstemmer.h
+	install -D {.,"${pkgdir}"/usr/lib}/libstemmer.so.0.0.0
+	ln -s libstemmer.so.0.0.0 "${pkgdir}/usr/lib/libstemmer.so.0"
+	ln -s libstemmer.so.0 "${pkgdir}/usr/lib/libstemmer.so"
+	install -Dm644 COPYING "${pkgdir}/usr/share/licenses/libstemmer/LICENSE"
+}

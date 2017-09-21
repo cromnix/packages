@@ -1,0 +1,31 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=gcab
+pkgver=0.7
+pkgrel=1
+pkgdesc='The Gcab package contains a program and a library used to create Microsoft cabinet (.cab) archives'
+arch=('x86_64')
+url='https://wiki.gnome.org/msitools'
+license=('LGPL')
+depends=('glib')
+makedepends=('gobject-introspection' 'vala' 'zlib' 'gtk-doc' 'intltool')
+source=("http://ftp.gnome.org/pub/gnome/sources/${pkgname}/${pkgver}/${pkgname}-${pkgver}.tar.xz")
+md5sums=('d8c54c340e56d0b6a8fe082fd04d8090')
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr \
+		--disable-static \
+		--enable-gtk-doc
+	make
+}
+
+check() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make check
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}

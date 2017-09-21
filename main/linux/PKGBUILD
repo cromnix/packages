@@ -2,8 +2,8 @@
 
 pkgbase=linux
 pkgname=('linux' 'linux-headers' 'linux-doc')
-pkgver=4.9.50
-pkgrel=2
+pkgver=4.9.51
+pkgrel=1
 pkgdesc="This package contain the long term linux kernel"
 arch=('x86_64')
 url="http://www.kernel.org/"
@@ -13,8 +13,8 @@ options=('!strip')
 source=("https://www.kernel.org/pub/linux/kernel/v4.x/linux-$pkgver.tar.xz"
         "config"
         "linux-lib-path.patch")
-md5sums=('40c081c8bf5f06a55e1d995f2db4aa8b'
-         'af7d05dda333f6ffcd977799c3be62e7'
+md5sums=('a3b59ac3f7838cff845ac636686c8b48'
+         'd5ed637dfe7d501d0417ea8b08524506'
          '9d34da065c7c15ab5aa73fa4b44f4c21')
 
 prepare() {

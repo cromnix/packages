@@ -1,0 +1,37 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=appstream-generator
+pkgver=0.6.5
+pkgrel=1
+pkgdesc='A fast AppStream metadata generator'
+arch=('x86_64')
+url='https://github.com/ximion/appstream-generator'
+license=('GPL3')
+depends=('appstream' 'libarchive' 'librsvg' 'lmdb')
+makedepends=('dmd=2.075.0' 'meson' 'ninja' 'mustache-d' 'curl' 'gir-to-d' 'gobject-introspection')
+options=('!makeflags')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/ximion/${pkgname}/archive/v${pkgver}.tar.gz"
+		'appstream-cromnix.patch')
+md5sums=('5ef91ca1219630a70def083e82dd2570'
+         'b2dd129b087fe579d8cbf1f6a6eb4ec4')
+
+prepare() {
+	mkdir -p build
+	mkdir -p "${srcdir}"/${pkgname}-${pkgver}/src/asgen/backends/cromnix
+	cd "${srcdir}"/${pkgname}-${pkgver}
+	patch -Np1 -i "${srcdir}"/appstream-cromnix.patch
+}
+
+build() {
+	cd build
+	meson ../${pkgname}-${pkgver} \
+		-Ddownload_js=false \
+		--prefix=/usr \
+		--buildtype=release
+	ninja -j1
+}
+
+package() {
+	cd build
+	DESTDIR="${pkgdir}" ninja install
+}

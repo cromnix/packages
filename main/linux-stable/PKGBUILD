@@ -2,7 +2,7 @@
 
 pkgbase=linux-stable
 pkgname=('linux-stable' 'linux-stable-headers' 'linux-stable-doc')
-pkgver=4.13.2
+pkgver=4.13.3
 pkgrel=1
 pkgdesc="This package contain the stable linux kernel, support for this kernel is not guaranteed and may end up EOL(End of Life)"
 arch=('x86_64')
@@ -13,8 +13,8 @@ options=('!strip')
 source=("https://www.kernel.org/pub/linux/kernel/v4.x/linux-$pkgver.tar.xz"
         "config"
         "linux-lib-path.patch")
-md5sums=('110c836a123bca14c2999471ae0f1b8a'
-         '23441d9641aa24fc3fc7bc47a8165e77'
+md5sums=('ab0ffc872db83b7fd2f5ffa089c81ca9'
+         'f33314914ad78ec4da524ff03b9f1c8a'
          '9d34da065c7c15ab5aa73fa4b44f4c21')
 
 prepare() {

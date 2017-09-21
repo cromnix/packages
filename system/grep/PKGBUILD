@@ -2,20 +2,21 @@
 
 pkgname=grep
 pkgver=3.1
-pkgrel=1
+pkgrel=2
 pkgdesc="The Grep package contains programs for searching through files."
 arch=('x86_64')
 license=('GPL3')
 url='http://www.gnu.org/software/grep/grep.html'
 groups=('cromnix-base' 'cromnix-dev')
-depends=('glibc' 'perl')
+depends=('glibc' 'pcre')
 makedepends=('texinfo')
 source=("http://ftp.gnu.org/gnu/grep/$pkgname-$pkgver.tar.xz")
 md5sums=('feca7b3e7c7f4aab2b42ecbfc513b070')
 
 build() {
     cd "$srcdir/$pkgname-$pkgver"
-    ./configure --prefix=/usr
+    ./configure --prefix=/usr \
+		--without-included-regex
     make
 }
 

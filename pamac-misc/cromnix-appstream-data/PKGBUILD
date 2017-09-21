@@ -1,0 +1,18 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=cromnix-appstream-data
+pkgver=20170921
+pkgrel=1
+pkgdesc='Cromnix application database for AppStream-based software centers'
+arch=('any')
+url='https://cromnix.org'
+license=('BSD3')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/cromnix/${pkgname}/archive/${pkgver}.tar.gz")
+md5sums=('e6e8254a3c5f7c9b6858453f44e2084d')
+
+package() {
+	mkdir -p "${pkgdir}"/usr/share/app-info/{icons/cromnix-main/{64x64,128x128},xmls}
+	tar -xzf "${srcdir}"/${pkgname}-${pkgver}/export/data/packages/main/icons-64x64.tar.gz -C "${pkgdir}"/usr/share/app-info/icons/cromnix-main/64x64
+	tar -xzf "${srcdir}"/${pkgname}-${pkgver}/export/data/packages/main/icons-128x128.tar.gz -C "${pkgdir}"/usr/share/app-info/icons/cromnix-main/128x128
+	cp "${srcdir}"/${pkgname}-${pkgver}/export/data/packages/main/Components-x86_64.xml.gz "${pkgdir}"/usr/share/app-info/xmls/cromnix-main.xml.gz
+}

@@ -1,46 +1,42 @@
 # Maintainer: Chris Cromer <chris@cromer.cl>
 
-pkgbase=pamac
-pkgname=('pamac')
-pkgver=5.1.1
-pkgrel=2
+pkgname=pamac
+pkgver=6.0.1
+pkgrel=1
 pkgdesc="A Gtk3 frontend for libalpm"
 arch=('i686' 'x86_64')
 url="https://github.com/manjaro/pamac"
 license=('GPL3')
 depends=('glib' 'json-glib' 'libsoup' 'dbus-glib' 'polkit' 'vte3' 'gtk3'
-         'libnotify' 'desktop-file-utils' 'pacman>=5.0' 'pacman<5.1' 'gnutls')
+         'libnotify' 'desktop-file-utils' 'pacman>=5.0' 'gnutls'
+         'appstream-glib' 'cromnix-appstream-data')
 makedepends=('gettext' 'itstool' 'vala>=0.36' 'atk-dev')
+optdepends=('polkit-gnome: needed for authentification in Cinnamon, Gnome'
+			'polkit-mate: needed for authentification in Mate'
+			'lxsession: needed for authentification in Xfce, LXDE etc.'
+			'pamac-tray-appindicator: tray icon for KDE')
+backup=('etc/pamac.conf')
 options=(!emptydirs)
-
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz"
 		'disable-aur.patch')
-sha256sums=('edb3cf635ae94da9ae87f9feafd836e264b24bdf1e7a07396abd4e062f29b0f1'
-            '8922d0acffbb8e183982990e77ea3ec100b29f5013bbc247f44fd559e43a4a78')
+md5sums=('98869851a3b7010ab45798a057953541'
+         '98f3907136a72c02712399c9c88d544b')
 
 prepare() {
-  # adjust version string
-  cd "$srcdir/$pkgname-$pkgver"
-  # patches here
-  patch -Np1 -i "${srcdir}"/disable-aur.patch
+	cd "$srcdir/$pkgname-$pkgver"
+	# patches here
+	#patch -Np1 -i "${srcdir}"/disable-aur.patch
+	sed -e "s|archlinux-arch-|cromnix-|" -i src/user_daemon.vala
 }
 
 build() {
-  cd "$srcdir/$pkgname-$pkgver"
-
-  # build
-  make all
+	cd "$srcdir/$pkgname-$pkgver"
+	make all
 }
 
-package_pamac() {
-  optdepends=('polkit-gnome: needed for authentification in Cinnamon, Gnome'
-              'polkit-mate: need for authentification in Mate'
-              'lxsession: needed for authentification in Xfce, LXDE etc.'
-              'pamac-tray-appindicator: tray icon for KDE')
-  backup=('etc/pamac.conf')
-  cd "$srcdir/$pkgname-$pkgver"
-  make prefix="$pkgdir"/usr sysconfdir="$pkgdir"/etc install
-  
-  rm -rf "${pkgdir}"/usr/lib/systemd
+package() {
+	cd "$srcdir/$pkgname-$pkgver"
+	make prefix="$pkgdir"/usr sysconfdir="$pkgdir"/etc install
+
+	rm -rf "${pkgdir}"/usr/lib/systemd
 }
-# vim:set ts=2 sw=2 et:

@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=openrc
-pkgver=0.31
+pkgver=0.31.2
 pkgrel=1
 pkgdesc="An init and service control software"
 arch=('x86_64')
@@ -30,16 +30,12 @@ backup=('etc/openrc/rc.conf'
         'etc/openrc/conf.d/urandom')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/OpenRC/openrc/archive/$pkgver.tar.gz"
 		'openrc.logrotate'
-		'quiet.patch'
-		'revert1.patch'
-		'revert2.patch')
+		'quiet.patch')
 install=openrc.install
 #options=('debug' 'strip')
-md5sums=('66346a6f436627a9ec1b1f32a460571f'
+md5sums=('10c282b21c7f436c1e6eaaf68857bb5f'
          '0d8a00d30812ec460ef8c32a96372c31'
-         'c0ec3c5adb0e3ede01213727a26e5015'
-         '2cc15fd6b1aacec9a55cf16e303916b5'
-         '106730f674cda5638190814cca214edb')
+         'c0ec3c5adb0e3ede01213727a26e5015')
 
 _args=(
     SYSCONFDIR=/etc/openrc
@@ -52,8 +48,6 @@ _args=(
 prepare() {
     cd "$srcdir/$pkgname-$pkgver"
 	patch -Np1 -i "${srcdir}"/quiet.patch
-	patch -Np1 -i "${srcdir}"/revert1.patch
-	patch -Np1 -i "${srcdir}"/revert2.patch
 }
 
 build() {
