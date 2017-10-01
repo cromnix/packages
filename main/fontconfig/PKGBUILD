@@ -1,8 +1,8 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=fontconfig
-pkgver=2.12.4
-pkgrel=2
+pkgver=2.12.6
+pkgrel=1
 pkgdesc='Contains a library and support programs used for configuring and customizing font access'
 arch=('x86_64')
 url='https://www.freedesktop.org/wiki/Software/fontconfig/'
@@ -10,7 +10,7 @@ license=('custom')
 depends=('expat' 'freetype')
 makedepends=('python2' 'gperf')
 source=("http://www.freedesktop.org/software/fontconfig/release/${pkgname}-${pkgver}.tar.bz2")
-md5sums=('29105662c7d319720e0088a0ac53f494')
+md5sums=('733f5e2371ca77b69707bd7b30cc2163')
 
 build() {
 	cd "$srcdir/$pkgname-$pkgver"

@@ -1,0 +1,9 @@
+post_upgrade() {
+	rm -f boot/initramfs-${2}-cromnix-stable.img
+	rm -f boot/initramfs-${2}-cromnix-stable-fallback.img
+}
+
+post_remove() {
+	rm -f boot/initramfs-${1}-cromnix-stable.img
+	rm -f boot/initramfs-${1}-cromnix-stable-fallback.img
+}

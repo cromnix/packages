@@ -1,21 +1,25 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgbase=linux
-pkgname=('linux' 'linux-headers' 'linux-doc')
-pkgver=4.9.51
+pkgname=('linux' 'linux-headers' 'linux-doc' 'linux-mkinitcpio')
+pkgver=4.9.52
 pkgrel=1
-pkgdesc="This package contain the long term linux kernel"
+pkgdesc='This package contains the long term linux kernel'
 arch=('x86_64')
-url="http://www.kernel.org/"
+url='http://www.kernel.org/'
 license=('GPL2')
 makedepends=('xmlto' 'kmod' 'inetutils' 'bc')
 options=('!strip')
-source=("https://www.kernel.org/pub/linux/kernel/v4.x/linux-$pkgver.tar.xz"
-        "config"
-        "linux-lib-path.patch")
-md5sums=('a3b59ac3f7838cff845ac636686c8b48'
-         'd5ed637dfe7d501d0417ea8b08524506'
-         '9d34da065c7c15ab5aa73fa4b44f4c21')
+source=("https://www.kernel.org/pub/linux/kernel/v4.x/linux-${pkgver}.tar.xz"
+        'config'
+        'linux-lib-path.patch'
+        'linux.hook'
+        'linux.preset')
+md5sums=('3752317fdacdb9b341ae3e500481eb3a'
+         '8c28ade1c3183e0abd8c6c1f20f2ab54'
+         '9d34da065c7c15ab5aa73fa4b44f4c21'
+         '5fce21bf4bd1f696db5da5917e370ce1'
+         '812cfe4f70fa1a4710cfde1593bac39b')
 
 prepare() {
     cd "$srcdir/linux-$pkgver"
@@ -29,6 +33,8 @@ prepare() {
     sed -i '2iexit 0' scripts/depmod.sh
 
 	sed -ri "s|^(EXTRAVERSION =).*|\1 -${pkgrel}|" Makefile
+	
+	sed -e "s|@VERSION@|${pkgver}-${pkgrel}|g" -i "${srcdir}"/linux.hook "${srcdir}"/linux.preset
 }
 
 build() {
@@ -37,14 +43,15 @@ build() {
 }
 
 package_linux() {
+	depends=('linux-common' 'initramfs')
 	optdepends=('linux-doc: linux documentation')
 
     cd "$srcdir/linux-$pkgver"
 
 	_kernelversion=$(make LOCALVERSION= kernelrelease)
-	sed -e "s|@VERSION@|${_kernelversion}|g" \
-		"${startdir}/linux.in" > "${startdir}/linux.install"
-		true && install=linux.install
+	_basekernel=${_kernelversion%%-*}
+	_basekernel=${_basekernel%.*}
+	install=linux.install
 
     ln -sv ${pkgdir}/usr/lib ${pkgdir}/lib
 
@@ -59,11 +66,12 @@ package_linux() {
 
 	rm -rf "${pkgdir}"/usr/lib/firmware
 	rm -rf "${pkgdir}"/usr/lib/modules/${_kernelversion}/{build,source}
+	
+	ln -s "../extramodules-${_basekernel}-cromnix" "${pkgdir}/lib/modules/${_kernelversion}/extramodules"
+	echo "${_kernelversion}" |
+		install -Dm644 /dev/stdin "${pkgdir}/usr/lib/modules/extramodules-${_basekernel}-cromnix/version"
 
     cd ${pkgdir}/boot
-
-    # Remove this in the future at some point, but it's useful for now
-    ln -sv vmlinuz-${pkgver}-${pkgrel}-cromnix ${pkgdir}/boot/vmlinuz
 
     depmod -b "${pkgdir}" -F "${pkgdir}/boot/System.map-${pkgver}-${pkgrel}-cromnix" "${_kernelversion}"
 
@@ -148,4 +156,15 @@ package_linux-doc() {
 
 	mkdir -pv ${pkgdir}/usr/share/doc/${pkgbase}-${pkgver}
     cp -r Documentation/* ${pkgdir}/usr/share/doc/${pkgbase}-${pkgver}
+}
+
+package_linux-mkinitcpio() {
+	arch=('any')
+	depends=('mkinitcpio')
+	backup=('etc/mkinitcpio.d/linux.preset')
+	pkgdesc='This package contains a hook and preset for mkinitcpio'
+	install=linux-mkinitcpio.install
+
+	install -Dm644 "${srcdir}"/linux.preset "${pkgdir}"/etc/mkinitcpio.d/linux.preset
+	install -Dm644 "${srcdir}"/linux.hook "${pkgdir}"/usr/share/libalpm/hooks/60-linux.hook
 }

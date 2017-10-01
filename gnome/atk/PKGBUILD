@@ -2,16 +2,16 @@
 
 pkgbase=atk
 pkgname=('libatk' 'atk-dev' 'atk-doc')
-pkgver=2.24.0
+pkgver=2.26.0
 _pkgver=${pkgver%.*}
-pkgrel=2
+pkgrel=1
 pkgdesc='ATK provides the set of accessibility interfaces that are implemented by other toolkits and applications'
 arch=('x86_64')
 url='https://developer.gnome.org/atk/'
 license=('LGPL')
 makedepends=('glib' 'gobject-introspection' 'gtk-doc')
 source=("http://ftp.gnome.org/pub/gnome/sources/${pkgbase}/${_pkgver}/${pkgbase}-${pkgver}.tar.xz")
-md5sums=('3747a80089dfa3c0bbcf21adfff9968b')
+md5sums=('ee9c329784dead6e386e8b2e0d4d8d6f')
 
 # todo: split gir package
 

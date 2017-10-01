@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=iana-etc
-pkgver=20170515
+pkgver=20171001
 pkgrel=1
 pkgdesc="The Iana-Etc package provides data for network services and protocols."
 arch=('any')
@@ -14,8 +14,8 @@ source=('https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xml'
         'https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xml'
         'protocols.gawk'
         'services.gawk')
-md5sums=('b95018631d52d12433c96b3cc5a14fc3'
-         '6156b2f0e304424e081d82464bbc64b1'
+md5sums=('b3f208214603509a994161836aa480fb'
+         'eb37efc761ebb3b9ec4db5e29f462c35'
          '944c5f0a33ba6d88093e923b2468251f'
          '55c6d305473fabb1ec9da9fb6fad9626')
 

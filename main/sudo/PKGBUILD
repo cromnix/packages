@@ -1,8 +1,8 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=sudo
-pkgver=1.8.20.p2
-_pkgver=1.8.20p2
+pkgver=1.8.21.p2
+_pkgver=1.8.21p2
 pkgrel=2
 pkgdesc="The Sudo package allows a system administrator to give certain users (or groups of users) the ability to run some (or all) commands as root or another user while logging the commands and arguments."
 arch=('x86_64')
@@ -13,7 +13,7 @@ depends=('glibc')
 backup=('etc/sudoers')
 install=sudo.install
 source=("http://www.sudo.ws/dist/$pkgname-$_pkgver.tar.gz")
-md5sums=('03da8e711caca6fd93e57751bfb74adc')
+md5sums=('cd3993d910c713ae72e94beebd230b22')
 
 build() {
     cd "$srcdir/$pkgname-$_pkgver"

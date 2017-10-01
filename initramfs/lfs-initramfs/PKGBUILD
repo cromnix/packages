@@ -1,0 +1,33 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=lfs-initramfs
+pkgver=8.1
+pkgrel=2
+pkgdesc='Intramfs generator based on LFS'
+arch=('x86_64')
+url='http://www.linuxfromscratch.org/blfs/view/stable/postlfs/initramfs.html'
+license=('GPL')
+depends=('cpio' 'eudev')
+optdepends=('cryptsetup: Part of the Crypto setup'
+	'dmraid: Part of the Raid setup'
+	'lvm2: Part of the LVM setup'
+	'mdadm: Part of the MDadmin thing')
+conflicts=('dracut' 'mkinitcpio')
+provides=('initramfs')
+source=('mkinitramfs'
+		'init.in'
+		'lfs-initramfs.hook'
+		'lfs-initramfs.script')
+install=lfs-initramfs.install
+md5sums=('2a5d177e8123b285591fa90ea01862ed'
+         'b9f2df1e54e25ca003fb6a21f08f4352'
+         'd049f173a079e8bb9bfb803ae856043c'
+         '3ea69866bb5182b23ce9a1b0b110b211')
+
+package() {
+	install -Dm755 ${srcdir}/init.in ${pkgdir}/usr/share/mkinitramfs/init.in
+	install -Dm755 ${srcdir}/mkinitramfs ${pkgdir}/usr/bin/mkinitramfs
+
+	install -Dm644 "${srcdir}"/lfs-initramfs.hook "${pkgdir}"/usr/share/libalpm/hooks/60-lfs-initramfs.hook
+	install -Dm755 "${srcdir}"/lfs-initramfs.script "${pkgdir}"/usr/share/libalpm/scripts/lfs-initramfs
+}

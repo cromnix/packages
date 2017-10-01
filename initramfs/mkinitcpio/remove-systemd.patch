@@ -1,0 +1,165 @@
+diff -Naur mkinitcpio-23-orig/init_functions mkinitcpio-23/init_functions
+--- mkinitcpio-23-orig/init_functions	2017-03-11 15:09:10.000000000 -0300
++++ mkinitcpio-23/init_functions	2017-09-25 15:40:37.109913466 -0300
+@@ -298,17 +298,6 @@
+         elif bitfield_has_bit "$fsckret" 128; then
+             err "fatal error invoking fsck"
+         fi
+-
+-        # ensure that root is going to be mounted rw. Otherwise, systemd
+-        # might fsck the device again. Annoy the user so that they fix this.
+-        if [ "${rwopt:-ro}" != 'rw' ]; then
+-            echo "********************** WARNING **********************"
+-            echo "*                                                   *"
+-            echo "*  The root device is not configured to be mounted  *"
+-            echo "*  read-write! It may be fsck'd again later.        *"
+-            echo "*                                                   *"
+-            echo "*****************************************************"
+-        fi
+     fi
+ }
+ 
+diff -Naur mkinitcpio-23-orig/install/sd-shutdown mkinitcpio-23/install/sd-shutdown
+--- mkinitcpio-23-orig/install/sd-shutdown	2017-03-11 15:09:10.000000000 -0300
++++ mkinitcpio-23/install/sd-shutdown	1969-12-31 21:00:00.000000000 -0300
+@@ -1,18 +0,0 @@
+-#!/bin/bash
+-
+-build() {
+-    add_binary /usr/lib/systemd/systemd-shutdown /shutdown
+-
+-    if type -P kexec >/dev/null; then
+-        add_binary kexec
+-    fi
+-}
+-
+-help() {
+-    cat <<HELPEOF
+-This hook adds systemd-shutdown to the initramfs. This is only
+-if the image is extracted to /run/initramfs before shutdown.
+-HELPEOF
+-}
+-
+-# vim: set ft=sh ts=4 sw=4 et:
+diff -Naur mkinitcpio-23-orig/install/sd-vconsole mkinitcpio-23/install/sd-vconsole
+--- mkinitcpio-23-orig/install/sd-vconsole	2017-03-11 15:09:10.000000000 -0300
++++ mkinitcpio-23/install/sd-vconsole	1969-12-31 21:00:00.000000000 -0300
+@@ -1,69 +0,0 @@
+-#!/bin/bash
+-
+-get_decompressor() {
+-    case "$1" in
+-        *.gz)
+-            cat=zcat
+-            of=${1%.gz}
+-            ;;
+-        *.bz2)
+-            cat=bzcat
+-            of=${1%.bz2}
+-            ;;
+-        *)
+-            cat=cat
+-            of=$1
+-            ;;
+-    esac
+-}
+-
+-add_keymap_file() {
+-    local cat cmd rest f of
+-
+-    while read f; do
+-        get_decompressor "$f"
+-        while read -r cmd rest; do
+-            if [[ $cmd == include ]]; then
+-                eval set $rest
+-                add_keymap_file "$1"
+-            fi
+-        done < <($cat "$f")
+-        add_dir "${of%/*}"
+-        $cat "$f" > "$BUILDROOT/$of"
+-    done < <(find /usr/share/kbd/keymaps/ -type f -regex ".*/$1\(\.inc\)?\(\.gz\|\.bz2\)?")
+-}
+-
+-build() {
+-    add_binary /usr/lib/systemd/systemd-vconsole-setup
+-    add_binary loadkeys
+-    add_binary setfont
+-    add_file /etc/vconsole.conf
+-    add_udev_rule 90-vconsole.rules
+-
+-    # subshell to avoid namespace pollution
+-    (
+-        shopt -s nullglob
+-
+-        [[ -s /etc/vconsole.conf ]] && . /etc/vconsole.conf
+-
+-        [[ $KEYMAP ]] && add_keymap_file $KEYMAP.map
+-        [[ $KEYMAP_TOGGLE ]] && add_keymap_file $KEYMAP_TOGGLE.map
+-
+-        if [[ $FONT ]]; then
+-            for file in "/usr/share/kbd/consolefonts/$FONT".@(fnt|psf?(u))?(.gz); do
+-                get_decompressor "$file"
+-                add_dir "${of%/*}"
+-                $cat "$file" > "$BUILDROOT/$of"
+-            done
+-        fi
+-    )
+-}
+-
+-help() {
+-    cat <<HELPEOF
+-This hook adds the keymap(s) and font specified in vconsole.conf to the image and
+-loads them during early userspace.
+-HELPEOF
+-}
+-
+-# vim: set ft=sh ts=4 sw=4 et:
+diff -Naur mkinitcpio-23-orig/Makefile mkinitcpio-23/Makefile
+--- mkinitcpio-23-orig/Makefile	2017-03-11 15:09:10.000000000 -0300
++++ mkinitcpio-23/Makefile	2017-09-25 15:41:12.605912830 -0300
+@@ -16,9 +16,7 @@
+ 	/usr/share/man/man8 \
+ 	/usr/share/man/man5 \
+ 	/usr/share/man/man1 \
+-	/usr/share/mkinitcpio \
+-	/usr/lib/systemd/system/shutdown.target.wants \
+-	/usr/lib/tmpfiles.d
++	/usr/share/mkinitcpio
+ 
+ BASH_SCRIPTS = \
+ 	mkinitcpio \
+@@ -55,11 +53,6 @@
+ 
+ 	cp -at $(DESTDIR)/usr/lib/initcpio hooks install
+ 	install -m644 -t $(DESTDIR)/usr/share/mkinitcpio mkinitcpio.d/*
+-	install -m644 systemd/mkinitcpio-generate-shutdown-ramfs.service \
+-			$(DESTDIR)/usr/lib/systemd/system/mkinitcpio-generate-shutdown-ramfs.service
+-	ln -s ../mkinitcpio-generate-shutdown-ramfs.service \
+-			$(DESTDIR)/usr/lib/systemd/system/shutdown.target.wants/mkinitcpio-generate-shutdown-ramfs.service
+-	install -m644 tmpfiles/mkinitcpio.conf $(DESTDIR)/usr/lib/tmpfiles.d/mkinitcpio.conf
+ 
+ 	install -m755 50-mkinitcpio.install $(DESTDIR)/usr/lib/kernel/install.d/50-mkinitcpio.install
+ 
+diff -Naur mkinitcpio-23-orig/systemd/mkinitcpio-generate-shutdown-ramfs.service mkinitcpio-23/systemd/mkinitcpio-generate-shutdown-ramfs.service
+--- mkinitcpio-23-orig/systemd/mkinitcpio-generate-shutdown-ramfs.service	2017-03-11 15:09:10.000000000 -0300
++++ mkinitcpio-23/systemd/mkinitcpio-generate-shutdown-ramfs.service	1969-12-31 21:00:00.000000000 -0300
+@@ -1,12 +0,0 @@
+-[Unit]
+-Description=Generate shutdown-ramfs
+-DefaultDependencies=no
+-Before=shutdown.target
+-ConditionFileIsExecutable=!/run/initramfs/shutdown
+-
+-[Service]
+-Type=oneshot
+-# /tmp could be umounted at this point
+-# use /run as temporary directory
+-Environment=TMPDIR=/run
+-ExecStart=/usr/bin/mkinitcpio -A sd-shutdown -k none -c /dev/null -d /run/initramfs
+diff -Naur mkinitcpio-23-orig/tmpfiles/mkinitcpio.conf mkinitcpio-23/tmpfiles/mkinitcpio.conf
+--- mkinitcpio-23-orig/tmpfiles/mkinitcpio.conf	2017-03-11 15:09:10.000000000 -0300
++++ mkinitcpio-23/tmpfiles/mkinitcpio.conf	1969-12-31 21:00:00.000000000 -0300
+@@ -1,3 +0,0 @@
+-# Create /run/initramfs for shutdown
+-
+-d /run/initramfs 0755 root root

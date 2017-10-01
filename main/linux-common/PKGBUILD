@@ -1,0 +1,23 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=linux-common
+pkgver=20170928
+pkgrel=1
+pkgdesc='Hook and script to symlink the linux kernel'
+arch=('any')
+url='https://cromnix.org'
+license=('BSD3')
+install=linux-common.install
+source=('linux-common.hook'
+		'linux-common.script')
+md5sums=('35050bb96eb0f0292150bd97b0c0476e'
+         '5ceaa18b78f472165f3f727f2350693f')
+
+pkgver() {
+	date +%Y%m%d
+}
+
+package() {
+	install -Dm644 "${srcdir}"/linux-common.hook "${pkgdir}"/usr/share/libalpm/hooks/60-linux-common.hook
+	install -Dm755 "${srcdir}"/linux-common.script "${pkgdir}"/usr/share/libalpm/scripts/linux-common
+}

@@ -2,27 +2,42 @@
 
 pkgname=grub
 pkgver=2.02
-pkgrel=3
+pkgrel=5
 pkgdesc="The GRUB package contains the GRand Unified Bootloader"
 arch=('x86_64')
 url="https://www.gnu.org/software/grub/"
 license=('GPL3')
 backup=('boot/grub/grub.cfg' 'etc/default/grub' 'etc/grub.d/40_custom')
-depends=('sh' 'xz' 'gettext')
-makedepends=('xz' 'python' 'texinfo' 'gettext')
+depends=('sh' 'xz' 'gettext' 'device-mapper')
+makedepends=('xz' 'python' 'texinfo' 'gettext' 'rsync' 'freetype' 'ttf-dejavu'
+			 'help2man' 'device-mapper')
+optdepends=('freetype: For grub-mkfont usage'
+            'fuse2: For grub-mount usage'
+            'dosfstools: For grub-mkrescue FAT FS and EFI support'
+            'efibootmgr: For grub-install EFI support'
+            'libisoburn: Provides xorriso for generating grub rescue iso using grub-mkrescue'
+            'os-prober: To detect other OSes when generating grub.cfg in BIOS systems'
+            'mtools: For grub-mkrescue FAT FS support')
 source=("http://ftp.gnu.org/gnu/$pkgname/$pkgname-$pkgver.tar.xz"
 		'grub'
 		'intel-ucode.patch'
+		'mkinitcpio-fallback.patch'
 		'grub.hook')
 md5sums=('8a4a2a95aac551fb0fba860ceabfa1d3'
          '7415d89464e00f9468394d6ebffaf9fc'
          '34cca1ad2da6db58823f17e04e6cdef9'
+         '7225194a1f551987b55a6ce00f724922'
          '780405fe5d5fa9af82401f8c7d9d0d03')
 
 prepare() {
 	cd "$srcdir/$pkgname-$pkgver"
 	patch -Np1 -i "${srcdir}/intel-ucode.patch"
+	patch -Np1 -i "${srcdir}/mkinitcpio-fallback.patch"
 	sed 's| GNU/Linux||' -i util/grub.d/10_linux.in
+	sed 's|/usr/share/fonts/dejavu|/usr/share/fonts/dejavu /usr/share/fonts/TTF|g' -i "configure.ac"
+	sed 's| ro | rw |g' -i "util/grub.d/10_linux.in"
+	./linguas.sh
+	sed -e 's#en@cyrillic en@greek##g' -i "po/LINGUAS"
 }
 
 build() {
@@ -34,12 +49,30 @@ build() {
 	unset LDFLAGS
 	unset MAKEFLAGS
 
-    ./configure --prefix=/usr \
-		--sbindir=/usr/bin \
-        --sysconfdir=/etc \
-        --disable-efiemu \
-        --disable-werror
+	./autogen.sh
+    ./configure \
+		--with-platform="pc" \
+		--target="i386" \
+		--enable-mm-debug \
+		--enable-nls \
+		--enable-device-mapper \
+		--enable-cache-stats \
+		--enable-boot-time \
+		--enable-grub-mkfont \
+		--prefix="/usr" \
+		--bindir="/usr/bin" \
+		--sbindir="/usr/bin" \
+		--mandir="/usr/share/man" \
+		--infodir="/usr/share/info" \
+		--datarootdir="/usr/share" \
+		--sysconfdir="/etc" \
+	 	--program-prefix="" \
+		--with-bootdir="/boot" \
+		--with-grubdir="grub" \
+		--disable-silent-rules \
+		--disable-werror
     make
+    # 		--enable-grub-mount needs fuse
 }
 
 package() {

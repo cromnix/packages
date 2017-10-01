@@ -2,13 +2,14 @@
 
 pkgname=po4a
 pkgver=0.48
-pkgrel=1
+pkgrel=2
 pkgdesc="Tools to help translate documentation."
 arch=('any')
 url="http://po4a.alioth.debian.org/"
 license=('GPL')
 depends=('perl' 'gettext')
-makedepends=('perl-module-build' 'docbook-xsl')
+makedepends=('perl-module-build' 'docbook-xsl' 'perl-sgmls')
+options=('!emptydirs')
 source=("https://alioth.debian.org/frs/download.php/file/4176/$pkgname-$pkgver.tar.gz")
 md5sums=('5c8fa9b6a23586d3860d0767bed65148')
 
@@ -16,16 +17,13 @@ md5sums=('5c8fa9b6a23586d3860d0767bed65148')
 
 build() {
     cd "$srcdir/$pkgname-$pkgver"
-	# remove this later!!!
-	#perl Build installdeps
-
+    PERL_USE_UNSAFE_INC=1 \
 	perl Build.PL installdirs=vendor create_packlist=0
-	perl Build
+	LC_ALL=en_US.UTF-8 perl Build
 }
 
 package() {
     cd "$srcdir/$pkgname-$pkgver"
-
-	perl Build destdir=${pkgdir} install
-	find ${pkgdir} -name .packlist -o -name perllocal.pod -delete
+	perl Build destdir="${pkgdir}" install
+	find "${pkgdir}" -name .packlist -o -name perllocal.pod -delete
 }

@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=vte3
-pkgver=0.48.3
+pkgver=0.50.0
 _pkgver=${pkgver%.*}
 pkgrel=1
 pkgdesc='The VTE package contains a termcap file implementation for terminal emulators'
@@ -12,7 +12,7 @@ options=('!emptydirs')
 depends=('gtk3' 'pcre2' 'gnutls')
 makedepends=('intltool' 'gobject-introspection' 'vala' 'gtk-doc' 'gperf' 'atk-dev' 'at-spi2-atk-dev')
 source=("http://ftp.gnome.org/pub/gnome/sources/vte/${_pkgver}/vte-${pkgver}.tar.xz")
-md5sums=('b300675ac5f269aa6eb48fe89a0d726d')
+md5sums=('0387b4a0c5765808c24a018a49d61b76')
 
 # todo: rebuild with glade
 

@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=btrfs-progs
-pkgver=4.12.1
+pkgver=4.13
 pkgrel=1
 pkgdesc='The btrfs-progs package contains administration and debugging tools for the B-tree file system (btrfs)'
 arch=('x86_64')
@@ -11,7 +11,7 @@ depends=('glibc' 'libutil-linux' 'e2fsprogs' 'lzo' 'zlib')
 makedepends=('asciidoc' 'xmlto')
 options=('!staticlibs')
 source=("https://www.kernel.org/pub/linux/kernel/people/kdave/${pkgname}/${pkgname}-v${pkgver}.tar.xz")
-md5sums=('ef6dc0caff8b51daf4bed5f25ed003d5')
+md5sums=('321c0161f0f26db0cbda73e6ca4d9056')
 
 # todo: rebuild with init and hooks
 

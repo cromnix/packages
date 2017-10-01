@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=fakeroot
-pkgver=1.21
+pkgver=1.22
 pkgrel=1
 pkgdesc="Tool for simulating superuser privileges."
 arch=('x86_64')
@@ -11,9 +11,9 @@ groups=('cromnix-dev')
 depends=('glibc' 'cromnix' 'sed' 'util-linux' 'sh' 'libacl' 'libattr')
 makedepends=('po4a' 'acl-dev')
 install=fakeroot.install
-source=("http://ftp.debian.org/debian/pool/main/f/$pkgname/${pkgname}_${pkgver}.orig.tar.gz"
+source=("http://ftp.debian.org/debian/pool/main/f/$pkgname/${pkgname}_${pkgver}.orig.tar.bz2"
         "silence-dlerror.patch")
-md5sums=('be5c9a0e516869fca4a6758105968e5a'
+md5sums=('fae64c9aeb2c895ead8e1b99bf50c631'
          '5fba0b541b5af39d804265223fda525c')
 
 # todo: backup

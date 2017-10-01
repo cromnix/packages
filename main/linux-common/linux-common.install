@@ -1,0 +1,9 @@
+post_remove() {
+	for file in $(find boot -maxdepth 1 -type f -name 'vmlinuz-*'); do
+		file="$(basename "$(test -L "${file}" && readlink "${file}" || echo "${file}")")"
+		rm boot/"${file}"
+	done
+	if [ -h boot/vmlinuz ]; then
+		rm boot/vmlinuz
+	fi
+}

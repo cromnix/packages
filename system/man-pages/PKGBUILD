@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=man-pages
-pkgver=4.12
+pkgver=4.13
 pkgrel=1
 pkgdesc="Linux manual pages"
 arch=('any')
@@ -9,7 +9,7 @@ url="http://man7.org/linux/man-pages/index.html"
 license=('GPL' 'custom')
 groups=('cromnix-base')
 source=("https://www.kernel.org/pub/linux/docs/man-pages/${pkgname}-${pkgver}.tar.xz")
-md5sums=('a87cdf43ddc1844e7edc8950a28a51f0')
+md5sums=('24b3657e4e8874b29326d2fd6f77b2d5')
 
 package() {
     cd "$srcdir/$pkgname-$pkgver"

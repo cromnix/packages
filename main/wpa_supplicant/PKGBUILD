@@ -3,12 +3,12 @@
 pkgbase=wpa_supplicant
 pkgname=('wpa_supplicant' 'wpa_supplicant-openrc')
 pkgver=2.6
-pkgrel=5
+pkgrel=6
 pkgdesc="WPA Supplicant is a Wi-Fi Protected Access (WPA) client and IEEE 802.1X supplicant."
 arch=('x86_64')
 url="https://w1.fi/wpa_supplicant/"
 license=('GPL')
-makedepends=('libnl' 'dbus' 'openrc-services')
+makedepends=('openssl' 'libnl' 'dbus' 'openrc-services' 'libxml2')
 source=("https://w1.fi/releases/$pkgbase-$pkgver.tar.gz"
 		"https://gitweb.gentoo.org/repo/gentoo.git/plain/net-wireless/wpa_supplicant/files/wpa_supplicant-init.d"
 		"https://gitweb.gentoo.org/repo/gentoo.git/plain/net-wireless/wpa_supplicant/files/wpa_supplicant-conf.d"
@@ -28,7 +28,9 @@ prepare() {
 
 build() {
 	cd "$srcdir/$pkgbase-$pkgver/wpa_supplicant"
-	make BINDIR=/bin LIBDIR=/lib
+	export CFLAGS="${CPPFLAGS} ${CFLAGS}"
+	make BINDIR=/usr/bin LIBDIR=/usr/lib
+	make BINDIR=/usr/bin LIBDIR=/usr/lib eapol_test
 }
 
 package_wpa_supplicant() {
@@ -36,16 +38,24 @@ package_wpa_supplicant() {
 	backup=('etc/wpa_supplicant/wpa_supplicant.conf')
 	cd "$srcdir/$pkgbase-$pkgver/wpa_supplicant"
 
+	make BINDIR=/usr/bin LIBDIR=/usr/lib DESTDIR="${pkgdir}" install
+
 	install -v -m755 -d ${pkgdir}/usr/bin
 	install -v -m755 -d ${pkgdir}/usr/share/man/man5
 	install -v -m755 -d ${pkgdir}/usr/share/man/man8
 	install -v -m755 wpa_{cli,passphrase,supplicant} ${pkgdir}/usr/bin/
+	install -v -m755 eapol_test ${pkgdir}/usr/bin/
 	install -v -m644 doc/docbook/wpa_supplicant.conf.5 ${pkgdir}/usr/share/man/man5/
 	install -v -m644 doc/docbook/wpa_{cli,passphrase,supplicant}.8 ${pkgdir}/usr/share/man/man8/
 
 	install -v -m755 -d ${pkgdir}/etc/wpa_supplicant
 	install -v -m644 ${srcdir}/wpa_supplicant.conf ${pkgdir}/etc/wpa_supplicant/wpa_supplicant.conf
 	install -v -m644 wpa_supplicant.conf ${pkgdir}/etc/wpa_supplicant/wpa_supplicant.conf.example
+
+	install -v -m755 -d ${pkgdir}/usr/share/dbus-1/system-services
+	install -v -m644 dbus/fi.{epitest.hostap.WPASupplicant,w1.wpa_supplicant1}.service ${pkgdir}/usr/share/dbus-1/system-services
+	install -v -d -m755 ${pkgdir}/etc/dbus-1/system.d
+	install -v -d -m644 dbus/dus-wpa_supplicant.conf ${pkgdir}/etc/dbus-1/system.d/wpa_supplicant.conf
 
 	install -v -m755 ${srcdir}/wpa_cli.sh ${pkgdir}/etc/wpa_supplicant/wpa_cli.sh
 }

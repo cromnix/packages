@@ -1,0 +1,14 @@
+# mkinitcpio preset file for the 'linux-stable' package
+
+ALL_config="/etc/mkinitcpio.conf"
+ALL_kver="/boot/vmlinuz-@VERSION@-cromnix-stable"
+
+PRESETS=('default' 'fallback')
+
+#default_config="/etc/mkinitcpio.conf"
+default_image="/boot/initramfs-@VERSION@-cromnix-stable.img"
+#default_options=""
+
+#fallback_config="/etc/mkinitcpio.conf"
+fallback_image="/boot/initramfs-@VERSION@-cromnix-stable-fallback.img"
+fallback_options="-S autodetect"

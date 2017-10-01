@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=coreutils
-pkgver=8.27
+pkgver=8.28
 pkgrel=1
 pkgdesc='Contains utilities for showing and setting the basic system characteristics'
 arch=('x86_64')
@@ -11,7 +11,7 @@ groups=('cromnix-base')
 depends=('glibc' 'libacl' 'libattr' 'gmp' 'libcap' 'openssl')
 makedepends=('acl-dev')
 source=("ftp://ftp.gnu.org/gnu/${pkgname}/${pkgname}-${pkgver}.tar.xz")
-md5sums=('502795792c212932365e077946d353ae')
+md5sums=('e7cb20d0572cc40d9f47ede6454406d1')
 
 build() {
 	cd ${srcdir}/${pkgname}-${pkgver}

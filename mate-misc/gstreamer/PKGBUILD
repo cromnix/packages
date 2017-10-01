@@ -1,8 +1,8 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=gstreamer
-pkgver=1.12.2
-pkgrel=2
+pkgver=1.12.3
+pkgrel=1
 pkgdesc='gstreamer is a streaming media framework that enables applications to share a common set of plugins for things like video encoding and decoding, audio encoding and decoding, audio and video filters, audio visualisation, web streaming and anything else that streams in real-time or otherwise'
 arch=('x86_64')
 url='https://gstreamer.freedesktop.org/'
@@ -10,7 +10,7 @@ license=('LGPL')
 depends=('libxml2' 'glib' 'libcap' 'elfutils')
 makedepends=('intltool' 'gtk-doc' 'bash-completion' 'gobject-introspection')
 source=("https://${pkgname}.freedesktop.org/src/${pkgname}/${pkgname}-${pkgver}.tar.xz")
-md5sums=('4748860621607ffd96244fb79c86c238')
+md5sums=('33dfcb690304fccdaff178440de13334')
 
 # todo: rebuild with full depends
 

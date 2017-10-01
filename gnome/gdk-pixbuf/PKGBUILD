@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=gdk-pixbuf
-pkgver=2.36.9
+pkgver=2.36.10
 _pkgver=${pkgver%.*}
 pkgrel=1
 pkgdesc='The Gdk Pixbuf package is a toolkit for image loading and pixel buffer manipulation'
@@ -13,7 +13,7 @@ makedepends=('gtk-doc' 'gobject-introspection')
 install=gdk-pixbuf.install
 source=("http://ftp.gnome.org/pub/gnome/sources/gdk-pixbuf/${_pkgver}/${pkgname}-${pkgver}.tar.xz"
 		'gdk-pixbuf-query-loaders.hook')
-md5sums=('2f4bd2dd2a7b6c7234b177e4503ffa94'
+md5sums=('1b20c1d82ae01e8b949cfd9ca3f9c27e'
          '6f0b295e93b2c599622e9af078583e01')
 
 prepare() {

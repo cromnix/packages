@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=libgudev
-pkgver=231
+pkgver=232
 pkgrel=1
 pkgdesc='The libgudev package contains GObject bindings for libudev'
 arch=('x86_64')
@@ -10,7 +10,7 @@ license=('LGPL2.1')
 depends=('glib' 'eudev')
 makedepends=('gobject-introspection' 'gtk-doc' 'eudev')
 source=("http://ftp.gnome.org/pub/gnome/sources/${pkgname}/${pkgver}/${pkgname}-${pkgver}.tar.xz")
-md5sums=('916c10c51ec61131e244c3936bbb2e0c')
+md5sums=('6914852377156665567abf8a38d89236')
 
 # todo: libeudev for depends
 

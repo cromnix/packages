@@ -1,0 +1,29 @@
+pkgname=mkinitcpio-busybox
+pkgver=1.26.1
+pkgrel=1
+pkgdesc='Base initramfs tools for mkinitcpio'
+arch=('x86_64')
+url='http://www.busybox.net/'
+license=('GPL')
+depends=('glibc')
+options=('!buildflags')
+source=("https://busybox.net/downloads/busybox-${pkgver}.tar.bz2"
+        'config')
+md5sums=('044684cb9e4e3253fc31c84f66a5bd9a'
+         '9c0976a168bf75ae8b7189c335c12e7b')
+
+prepare() {
+	cd "busybox-${pkgver}"
+
+	local safeflags="-march=${CARCH/_/-} -mtune=generic -Os -pipe -fno-strict-aliasing"
+
+	sed 's|^\(CONFIG_EXTRA_CFLAGS\)=.*|\1="'"$safeflags"'"|' "$srcdir/config" >.config
+}
+
+build() {
+	make -C "busybox-${pkgver}"
+}
+
+package() {
+	install -Dm755 "${srcdir}"/busybox-${pkgver}/busybox "${pkgdir}"/usr/lib/initcpio/busybox
+}

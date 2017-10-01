@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=nspr
-pkgver=4.16
+pkgver=4.17
 pkgrel=1
 pkgdesc='Netscape Portable Runtime (NSPR) provides a platform-neutral API for system level and libc like functions'
 arch=('x86_64')
@@ -11,7 +11,7 @@ depends=('glibc')
 makedepends=('zip')
 options=('!emptydirs')
 source=("https://ftp.mozilla.org/pub/mozilla.org/${pkgname}/releases/v${pkgver}/src/${pkgname}-${pkgver}.tar.gz")
-md5sums=('42fd8963a4b394f62d43ba604f03fab7')
+md5sums=('0534d9ac45dca251655b9b240670eab4')
 
 prepare() {
 	cd "${srcdir}/${pkgname}-${pkgver}/${pkgname}"

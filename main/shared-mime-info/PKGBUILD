@@ -1,8 +1,8 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=shared-mime-info
-pkgver=1.8
-pkgrel=2
+pkgver=1.9
+pkgrel=1
 pkgdesc='The Shared Mime Info package contains a MIME database'
 arch=('x86_64')
 url='https://www.gnu.org/software/patch/patch.html'
@@ -13,7 +13,7 @@ options=(!makeflags)
 install=shared-mime-info.install
 source=("http://freedesktop.org/~hadess/${pkgname}-${pkgver}.tar.xz"
 		'update-mime-database.hook')
-md5sums=('f6dcadce764605552fc956563efa058c'
+md5sums=('45103889b91242850aa47f09325e798b'
          'fc48155d8fb2147b8fc72597e79936b4')
 
 build() {

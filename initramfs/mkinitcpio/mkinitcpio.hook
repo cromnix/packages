@@ -8,5 +8,5 @@ Target = usr/lib/modules/*/
 [Action]
 Description = Updating initramfs
 When = PostTransaction
-Exec = /usr/bin/geninitramfs
+Exec = /usr/share/libalpm/scripts/mkinitcpio
 NeedsTargets

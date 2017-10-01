@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=e2fsprogs
-pkgver=1.43.5
+pkgver=1.43.6
 pkgrel=1
 pkgdesc="The E2fsprogs package contains the utilities for handling the ext2 file system. It also supports the ext3 and ext4 journaling file systems."
 arch=('x86_64')
@@ -13,7 +13,7 @@ makedepends=('bc' 'util-linux')
 backup=('etc/mke2fs.conf')
 options=('staticlibs')
 source=("http://downloads.sourceforge.net/project/e2fsprogs/e2fsprogs/v$pkgver/$pkgname-$pkgver.tar.gz")
-md5sums=('40aa1b7d7d6bd9c71db0fbf325a7c199')
+md5sums=('94fb7105284474a71cf5dd0e03b92661')
 
 prepare() {
     cd "$srcdir/$pkgname-$pkgver"

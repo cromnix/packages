@@ -2,7 +2,7 @@
 
 pkgbase=python-setuptools
 pkgname=('python-setuptools' 'python2-setuptools')
-pkgver=36.3.0
+pkgver=36.4.0
 pkgrel=1
 pkgdesc='Easily download, build, install, upgrade, and uninstall Python packages'
 arch=('any')
@@ -15,7 +15,7 @@ checkdepends=('python-pytest-runner' 'python2-pytest-runner' 'python-pytest-flak
 			  'python2-pytest-fixture-config' 'python-pytest-virtualenv' 'python2-pytest-virtualenv'
 			  'git')
 source=("$pkgbase-$pkgver.tar.gz::https://github.com/pypa/setuptools/archive/v$pkgver.tar.gz")
-md5sums=('33858c4e42f75e64294ebb633b5162f3')
+md5sums=('255889a7048fb6b42483187d420cbe74')
 
 # todo: cleanup depends, there are circular dependencies for python modules
 

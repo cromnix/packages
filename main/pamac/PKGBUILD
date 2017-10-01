@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <chris@cromer.cl>
 
 pkgname=pamac
-pkgver=6.0.1
+pkgver=6.0.2
 pkgrel=1
 pkgdesc="A Gtk3 frontend for libalpm"
 arch=('i686' 'x86_64')
@@ -18,14 +18,17 @@ optdepends=('polkit-gnome: needed for authentification in Cinnamon, Gnome'
 backup=('etc/pamac.conf')
 options=(!emptydirs)
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz"
-		'disable-aur.patch')
-md5sums=('98869851a3b7010ab45798a057953541'
-         '98f3907136a72c02712399c9c88d544b')
+		'disable-aur.patch'
+		'category-fix.patch::https://github.com/manjaro/pamac/commit/a2bd9f9ea864490e18995ba3ed8617ce0090343f.patch')
+md5sums=('228a5cfd846753a527f7c7a53a0907cf'
+         'af51d90497a411473b099256f8ba6309'
+         '0081da75c2ea7dce383adb679f690947')
 
 prepare() {
 	cd "$srcdir/$pkgname-$pkgver"
 	# patches here
-	#patch -Np1 -i "${srcdir}"/disable-aur.patch
+	patch -Np1 -i "${srcdir}"/disable-aur.patch
+	patch -Np1 -i "${srcdir}"/category-fix.patch
 	sed -e "s|archlinux-arch-|cromnix-|" -i src/user_daemon.vala
 }
 

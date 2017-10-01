@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=libbytesize
-pkgver=0.11
+pkgver=1.0
 pkgrel=1
 pkgdesc='The libbytesize package is a library facilitates the common operations with sizes in bytes'
 arch=('x86_64')
@@ -10,7 +10,7 @@ license=('LGPL')
 depends=('mpfr' 'pcre')
 makedepends=('python')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/storaged-project/${pkgname}/archive/${pkgver}.tar.gz")
-md5sums=('8214752e38f37df48da7c408332f33ac')
+md5sums=('4b65ae65a534ca20fb65b8e880436515')
 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"

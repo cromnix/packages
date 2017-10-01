@@ -1,18 +1,18 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=pango
-pkgver=1.40.11
+pkgver=1.40.12
 _pkgver=${pkgver%.*}
-pkgrel=2
+pkgrel=1
 pkgdesc='Pango is a library for laying out and rendering of text, with an emphasis on internationalization'
 arch=('x86_64')
 url='https://www.pango.org/'
 license=('LGPL')
 depends=('cairo' 'libxft' 'harfbuzz')
 makedepends=('cairo' 'harfbuzz' 'fontconfig' 'libxft' 'help2man' 'gobject-introspection')
-checkdepends=('ttf-dejavu')
+checkdepends=('ttf-dejavu' 'cantarell-fonts')
 source=("http://ftp.gnome.org/pub/gnome/sources/${pkgname}/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
-md5sums=('eee00ed5d0ea50d5cd9e819d25ef5037')
+md5sums=('9aae7dd5ecc1c2ade4e6951b85004cee')
 
 # todo: rebuild with missing depends
 

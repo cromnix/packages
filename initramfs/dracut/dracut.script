@@ -1,0 +1,52 @@
+#!/bin/bash
+
+if [ -f /etc/cromnix.conf ]; then
+	. /etc/cromnix.conf
+	if [ -z "$KERNEL" ]; then
+		KERNEL=cromnix
+	fi
+else
+	KERNEL=cromnix
+fi
+
+cd /boot
+prev_line=""
+while read line; do
+	line=${line/usr\/lib\/modules\//}
+	line=${line%%\/*}
+	if [ $(echo ${line} | cut -d'-' -f 1) == "extramodules" ]; then
+		continue
+	fi
+	if [ ! "${prev_line}" = "${line}" ]; then
+		prev_line=${line}
+		if [ -d /usr/lib/modules/${line} ]; then
+			echo "Generating /boot/initramfs-${line}.img..."
+			dracut -q --force initramfs-${line}.img ${line}
+			kernel_name=${line#*-[0-9]*-}
+			if [ "${kernel_name}" == "${KERNEL}" ]; then 
+				# Create symlink if default kernel is being installed
+				ln -svf initramfs-${line}.img initramfs.img
+			fi
+		else
+			echo "Removing /boot/initramfs-${line}.img..."
+			file=$(file initramfs.img | awk '{print $5}')
+			if [ "${file}" == "initramfs-${line}.img" ]; then
+				rm initramfs.img
+			fi
+			rm initramfs-${line}.img
+		fi
+	fi
+done < "${1:-/dev/stdin}"
+
+# if the symlink is broken remove it
+if [ ! -e initramfs.img ] && [ -L initramfs.img ]; then
+	rm initramfs.img
+fi
+
+# if there isn't an initramfs symlink and an initramfs exists, change it to the first one found
+if [ ! -L initramfs.img ]; then
+	for file in $(find /boot -maxdepth 1 -type f -name 'initramfs-*' -print -quit); do
+		file="$(basename "$(test -L "${file}" && readlink "${file}" || echo "${file}")")"
+		ln -svf ${file} initramfs.img
+	done
+fi

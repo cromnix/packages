@@ -1,9 +1,9 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=nss
-pkgver=3.32
+pkgver=3.33
 _pkgver=${pkgver//./_}
-pkgrel=2
+pkgrel=1
 pkgdesc='The Network Security Services (NSS) package is a set of libraries designed to support cross-platform development of security-enabled client and server applications'
 arch=('x86_64')
 url='https://developer.mozilla.org/en-US/docs/Mozilla/Projects/NSS'
@@ -13,7 +13,7 @@ makedepends=('perl' 'python2' 'xmlto' 'docbook-xsl')
 options=('!strip' '!makeflags' 'staticlibs')
 source=("https://ftp.mozilla.org/pub/mozilla.org/security/${pkgname}/releases/NSS_${_pkgver}_RTM/src/${pkgname}-${pkgver}.tar.gz"
 		'standalone.patch')
-md5sums=('076abf8ed88b6bb28f3396b072d252ed'
+md5sums=('43663c850e2b2ed48ecb8910b055f5a9'
          'b82eb6b3b36640a85c07014dceaef15d')
 
 # todo: change variables to export style

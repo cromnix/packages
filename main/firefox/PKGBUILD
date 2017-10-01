@@ -2,12 +2,12 @@
 
 pkgname=firefox
 pkgver=53.0.3
-pkgrel=2
+pkgrel=3
 pkgdesc='A modern, fast, and secure web browser'
 arch=('x86_64')
 url='https://www.mozilla.org/firefox/'
 license=('MPL' 'GPL' 'LGPL')
-depends=('libxt' 'libpng' 'alsa-lib' 'gtk2' 'gtk3' 'startup-notification' 'nss' 'icu' 'libvpx' 'libevent' 'sqlite' 'libatk' 'dbus-glib')
+depends=('libxt' 'libpng' 'alsa-lib' 'gtk2' 'gtk3' 'startup-notification' 'nss' 'icu' 'libvpx' 'libevent' 'sqlite' 'libatk' 'dbus-glib' 'ttf-font')
 makedepends=('python2' 'which' 'unzip' 'zip' 'autoconf2.13' 'yasm' 'diffutils' 'mesa' 'inetutils' 'xorg-server' 'alsa-lib-dev' 'atk-dev' 'wireless_tools')
 optdepends=('networkmanager: Location detection via available WiFi networks'
 			'libnotify: Notification integration'

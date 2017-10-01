@@ -1,0 +1,35 @@
+# Maintainer: Chris Cromer <cromer@cromnix.org>
+
+pkgname=libgksu
+pkgver=2.0.12
+pkgrel=1
+pkgdesc='gksu authorization library'
+arch=('x86_64')
+url='http://www.nongnu.org/gksu/index.html'
+license=('GPL')
+depends=('gconf' 'gtk2' 'libgnome-keyring' 'libgtop' 'startup-notification')
+makedepends=('intltool' 'gtk-doc')
+options=('!emptydirs')
+source=("http://people.debian.org/~kov/gksu/${pkgname}-${pkgver}.tar.gz")
+md5sums=('c7154c8806f791c10e7626ff123049d3')
+
+prepare() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+}
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr \
+	--sysconfdir=/etc \
+		--localstatedir=/var \
+		--disable-static \
+		--disable-schemas-install \
+		--disable-gtk-doc
+	sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}

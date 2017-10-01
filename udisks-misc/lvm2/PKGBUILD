@@ -2,7 +2,7 @@
 
 pkgbase=lvm2
 pkgname=('lvm2' 'device-mapper')
-pkgver=2.02.173
+pkgver=2.02.174
 pkgrel=1
 arch=('x86_64')
 url='http://sourceware.org/lvm2/'
@@ -10,7 +10,7 @@ license=('GPL2' 'LGPL2.1')
 groups=('cromnix-base')
 makedepends=('eudev' 'thin-provisioning-tools')
 source=("https://mirrors.kernel.org/sourceware/${pkgbase}/releases/LVM2.${pkgver}.tgz")
-md5sums=('61cba056ac552f2d362600d494b1b8d9')
+md5sums=('d871377bce3eb5200b48426f330714ef')
 
 prepare() {
 	cd "${srcdir}"/LVM2.${pkgver}

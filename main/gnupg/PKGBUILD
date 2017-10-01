@@ -1,15 +1,15 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=gnupg
-pkgver=2.2.0
-pkgrel=2
+pkgver=2.2.1
+pkgrel=1
 pkgdesc="The GnuPG package is GNU's tool for secure communication and data storage. It can be used to encrypt data and to create digital signatures. It includes an advanced key management facility and is compliant with the proposed OpenPGP Internet standard as described in RFC2440 and the S/MIME standard as described by several RFCs. GnuPG 2 is the stable version of GnuPG integrating support for OpenPGP and S/MIME."
 arch=('x86_64')
 url="https://www.gnupg.org/index.html"
 license=('GPL3')
 depends=('libassuan' 'libgcrypt' 'libgpg-error' 'libksba' 'npth' 'pinentry' 'libbzip2' 'readline' 'gnutls')
 source=("https://gnupg.org/ftp/gcrypt/gnupg/$pkgname-$pkgver.tar.bz2")
-md5sums=('789f16949fae2d003d387f49e9da4b74')
+md5sums=('f781efae8756f6cf5d500aad8e4b33e2')
 
 # todo: needs major cleanup
 

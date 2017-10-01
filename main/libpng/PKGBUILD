@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=libpng
-pkgver=1.6.32
+pkgver=1.6.34
 pkgrel=1
 pkgdesc='The libpng package contains libraries used by other programs for reading and writing PNG files'
 arch=('x86_64')
@@ -10,8 +10,8 @@ license=('custom')
 depends=('zlib' 'sh')
 source=("http://downloads.sourceforge.net/libpng/${pkgname}-${pkgver}.tar.xz"
 		"http://downloads.sourceforge.net/project/apng/libpng/libpng16/${pkgname}-${pkgver}-apng.patch.gz")
-md5sums=('e01be057a9369183c959b793a685ad15'
-         '86b44700cfcf5000b99bfff7d28f4345')
+md5sums=('c05b6ca7190a5e387b78657dbe5536b2'
+         '68b2811fed88359ab295ca906c4f4a96')
 
 prepare() {
 	cd ${srcdir}/${pkgname}-${pkgver}

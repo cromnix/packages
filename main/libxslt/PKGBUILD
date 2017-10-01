@@ -1,8 +1,8 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=libxslt
-pkgver=1.1.29
-pkgrel=2
+pkgver=1.1.30
+pkgrel=1
 pkgdesc="The libxslt package contains XSLT libraries used for extending libxml2 libraries to support XSLT files."
 arch=('x86_64')
 url="http://xmlsoft.org/XSLT/"
@@ -11,7 +11,7 @@ depends=('libxml2' 'libgcrypt')
 makedepends=('python2')
 checkdepends=('docbook-xml' 'python')
 source=("http://xmlsoft.org/sources/$pkgname-$pkgver.tar.gz")
-md5sums=('a129d3c44c022de3b9dcf6d6f288d72e')
+md5sums=('70becbbcb1dad55f14de0b84171b91d5')
 
 prepare() {
     cd "$srcdir/$pkgname-$pkgver"
