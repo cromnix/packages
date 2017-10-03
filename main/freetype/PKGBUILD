@@ -1,8 +1,8 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=freetype
-pkgver=2.8
-pkgrel=2
+pkgver=2.8.1
+pkgrel=1
 pkgdesc='The FreeType2 package contains a library which allows applications to properly render TrueType fonts'
 arch=('x86_64')
 url='http://www.freetype.org'
@@ -11,8 +11,8 @@ depends=('zlib' 'bzip2' 'sh' 'libpng' 'harfbuzz')
 makedepends=('zlib' 'bzip2' 'sh' 'libpng' 'harfbuzz')
 source=("http://downloads.sourceforge.net/freetype/${pkgname}-${pkgver}.tar.bz2"
 		"http://downloads.sourceforge.net/freetype/${pkgname}-doc-${pkgver}.tar.bz2")
-md5sums=('2413ac3eaf508ada019c63959ea81a92'
-         '961d5802bb6085ad91e0ab9fa99fbf39')
+md5sums=('bf0a210b6fe781228fa0e4a80691a521'
+         '341929cd7ecf9602c73befa9e5d37025')
 
 prepare() {
 	cd "$srcdir/$pkgname-$pkgver"

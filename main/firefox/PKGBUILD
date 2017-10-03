@@ -1,8 +1,8 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=firefox
-pkgver=53.0.3
-pkgrel=3
+pkgver=52.4.0
+pkgrel=1
 pkgdesc='A modern, fast, and secure web browser'
 arch=('x86_64')
 url='https://www.mozilla.org/firefox/'
@@ -15,13 +15,13 @@ optdepends=('networkmanager: Location detection via available WiFi networks'
 			'speech-dispatcher: Text-to-Speech'
 			'wireless_tools: Geolocation web services')
 options=('!emptydirs' '!makeflags' '!strip')
-source=("https://ftp.mozilla.org/pub/mozilla.org/${pkgname}/releases/${pkgver}/source/${pkgname}-${pkgver}.source.tar.xz"
+source=("https://archive.mozilla.org/pub/${pkgname}/releases/${pkgver}esr/source/${pkgname}-${pkgver}esr.source.tar.xz"
 		'mozconfig'
 		'firefox.desktop'
 		'install-dir.patch'
 		'mozilla-key'
 		'google-key')
-md5sums=('16be3d9774f1e3bf74e2c4e198652d19'
+md5sums=('5a192e26a22325e26f15e2aed4d5b17c'
          '7420a35515815034a1d3f41b5f297c18'
          '6aa9f410d182185b3cb2900d0201029d'
          'dbf14588e85812ee769bd735823a0146'
@@ -29,7 +29,7 @@ md5sums=('16be3d9774f1e3bf74e2c4e198652d19'
          'ca364d4c9b68942b094ad109732e08a3')
 
 prepare() {
-	cd ${srcdir}/${pkgname}-${pkgver}
+	cd ${srcdir}/${pkgname}-${pkgver}esr
 	cp ${srcdir}/mozconfig .mozconfig
 	
 	patch -Np1 -i ${srcdir}/install-dir.patch
@@ -42,7 +42,7 @@ prepare() {
 }
 
 build() {
-	cd ${srcdir}/${pkgname}-${pkgver}
+	cd ${srcdir}/${pkgname}-${pkgver}esr
 
 	# _FORTIFY_SOURCE causes configure failures
 	CPPFLAGS+=" -O2"
@@ -59,7 +59,7 @@ build() {
 }
 
 package() {
-	cd ${srcdir}/${pkgname}-${pkgver}
+	cd ${srcdir}/${pkgname}-${pkgver}esr
 	make -f client.mk DESTDIR="${pkgdir}" INSTALL_SDK= install
 
 	_vendorjs="${pkgdir}/usr/lib/${pkgname}/browser/defaults/preferences/vendor.js"

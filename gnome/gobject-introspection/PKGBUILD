@@ -2,7 +2,7 @@
 
 pkgbase=gobject-introspection
 pkgname=('gobject-introspection' 'gobject-introspection-runtime')
-pkgver=1.54.0
+pkgver=1.54.1
 _pkgver=${pkgver%.*}
 pkgrel=1
 pkgdesc='The GObject Introspection is used to describe the program APIs and collect them in a uniform, machine readable format'
@@ -13,7 +13,7 @@ depends=('python' 'python-mako')
 makedepends=('cairo' 'gtk-doc' "glib>=${pkgver}")
 options=('!emptydirs')
 source=("http://ftp.gnome.org/pub/gnome/sources/${pkgbase}/${_pkgver}/${pkgbase}-${pkgver}.tar.xz")
-md5sums=('57a260c24eb798422639c51e04cc28ff')
+md5sums=('126c29e4d54adbed2ed4e2b04483de41')
 
 # todo: rebuild with python-mako and cairo
 

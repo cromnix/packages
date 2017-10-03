@@ -1,41 +1,39 @@
-# Maintainer: Chris Cromer <cromer@cromnix.org>
+# Maintainer: Chris Cromer <chris@cromer.cl>
 
-pkgname=pamac
-pkgver=6.0.3
+pkgname=pamac-classic
+pkgver=5.1.2
 pkgrel=1
 pkgdesc="A Gtk3 frontend for libalpm"
 arch=('x86_64')
-url="https://github.com/manjaro/pamac"
+url="https://github.com/cromnix/pamac"
 license=('GPL3')
 depends=('glib' 'json-glib' 'libsoup' 'dbus-glib' 'polkit' 'vte3' 'gtk3'
-         'libnotify' 'desktop-file-utils' 'pacman>=5.0' 'gnutls'
-         'appstream-glib' 'cromnix-appstream-data')
+         'libnotify' 'desktop-file-utils' 'pacman>=5.0' 'gnutls')
 makedepends=('gettext' 'itstool' 'vala>=0.36' 'atk-dev')
 optdepends=('polkit-gnome: needed for authentification in Cinnamon, Gnome'
 			'mate-polkit: needed for authentification in Mate'
 			'lxsession: needed for authentification in Xfce, LXDE etc.'
 			'pamac-tray-appindicator: tray icon for KDE')
+conflicts=('pamac')
 backup=('etc/pamac.conf')
 options=(!emptydirs)
-source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz"
-		'disable-aur.patch')
-md5sums=('c11dfa80ecd48c62716dc16f0b826bf2'
-         'af51d90497a411473b099256f8ba6309')
+source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
+md5sums=('6778c1f89004b18e070f8ee1217741ba')
 
 prepare() {
-	cd "$srcdir/$pkgname-$pkgver"
+	cd "$srcdir/pamac-${pkgver}"
 	# patches here
-	patch -Np1 -i "${srcdir}"/disable-aur.patch
-	sed -e "s|archlinux-arch-|cromnix-|" -i src/user_daemon.vala
+	#patch -Np1 -i "${srcdir}"/disable-aur.patch
+	#patch -Np1 -i "${srcdir}"/category-fix.patch
 }
 
 build() {
-	cd "$srcdir/$pkgname-$pkgver"
+	cd "$srcdir/pamac-${pkgver}"
 	make all
 }
 
 package() {
-	cd "$srcdir/$pkgname-$pkgver"
+	cd "$srcdir/pamac-${pkgver}"
 	make prefix="$pkgdir"/usr sysconfdir="$pkgdir"/etc install
 
 	rm -rf "${pkgdir}"/usr/lib/systemd

@@ -1,9 +1,9 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=at-spi2-core
-pkgver=2.24.1
+pkgver=2.26.0
 _pkgver=${pkgver%.*}
-pkgrel=2
+pkgrel=1
 pkgdesc='The At-Spi2 Core package is a part of the GNOME Accessibility Project'
 arch=('x86_64')
 url='http://www.gnome.org'
@@ -11,9 +11,8 @@ license=('GPL2')
 depends=('dbus' 'glib' 'libxtst')
 makedepends=('intltool' 'gobject-introspection' 'gtk-doc')
 source=("http://ftp.gnome.org/pub/gnome/sources/${pkgname}/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
-md5sums=('61d0a471e693292934a73f288ebff35c')
+md5sums=('ef3de25da46da8f650915205eb7e1a33')
 
-# todo: rebuild with gtk-doc
 # todo: there is a systemd service included with no openrc alternative
 
 build() {

@@ -2,7 +2,7 @@
 
 pkgbase=at-spi2-atk
 pkgname=('libat-spi2-atk' 'at-spi2-atk-dev')
-pkgver=2.24.1
+pkgver=2.26.0
 _pkgver=${pkgver%.*}
 pkgrel=1
 pkgdesc='The At-Spi2 Atk package contains a library that bridges ATK to At-Spi2 D-Bus service'
@@ -12,7 +12,7 @@ license=('GPL2')
 depends=('at-spi2-core' 'libx11' 'libatk')
 makedepends=('atk-dev')
 source=("http://ftp.gnome.org/pub/gnome/sources/${pkgbase}/${_pkgver}/${pkgbase}-${pkgver}.tar.xz")
-md5sums=('79388fbc4dc7f27394556dd389aeb594')
+md5sums=('555d4ca06a1b75c14db67bffac5f4d1f')
 
 prepare() {
 	if [ -d "${srcdir}/install" ]; then
