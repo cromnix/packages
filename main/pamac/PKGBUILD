@@ -37,6 +37,6 @@ build() {
 package() {
 	cd "$srcdir/$pkgname-$pkgver"
 	make prefix="$pkgdir"/usr sysconfdir="$pkgdir"/etc install
-
+	rm -rf "${pkgdir}"/etc/systemd
 	rm -rf "${pkgdir}"/usr/lib/systemd
 }

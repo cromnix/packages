@@ -1,11 +1,11 @@
 # Maintainer: Chris Cromer <chris@cromer.cl>
 
 pkgname=pamac-classic
-pkgver=5.1.2
+pkgver=5.2.0
 pkgrel=1
 pkgdesc="A Gtk3 frontend for libalpm"
 arch=('x86_64')
-url="https://github.com/cromnix/pamac"
+url="https://github.com/cromnix/pamac-classic"
 license=('GPL3')
 depends=('glib' 'json-glib' 'libsoup' 'dbus-glib' 'polkit' 'vte3' 'gtk3'
          'libnotify' 'desktop-file-utils' 'pacman>=5.0' 'gnutls')
@@ -18,23 +18,23 @@ conflicts=('pamac')
 backup=('etc/pamac.conf')
 options=(!emptydirs)
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
-md5sums=('6778c1f89004b18e070f8ee1217741ba')
+md5sums=('2d898d5b7e82d93c9239669fa5a4830e')
 
 prepare() {
-	cd "$srcdir/pamac-${pkgver}"
+	cd "$srcdir/${pkgname}-${pkgver}"
 	# patches here
 	#patch -Np1 -i "${srcdir}"/disable-aur.patch
 	#patch -Np1 -i "${srcdir}"/category-fix.patch
 }
 
 build() {
-	cd "$srcdir/pamac-${pkgver}"
+	cd "$srcdir/${pkgname}-${pkgver}"
 	make all
 }
 
 package() {
-	cd "$srcdir/pamac-${pkgver}"
+	cd "$srcdir/${pkgname}-${pkgver}"
 	make prefix="$pkgdir"/usr sysconfdir="$pkgdir"/etc install
-
+	rm -rf "${pkgdir}"/etc/systemd
 	rm -rf "${pkgdir}"/usr/lib/systemd
 }
