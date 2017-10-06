@@ -2,7 +2,7 @@
 
 pkgbase=curl
 pkgname=('curl' 'libcurl' 'curl-doc')
-pkgver=7.55.1
+pkgver=7.56.0
 pkgrel=1
 pkgdesc='Software used for transferring files with URL syntax'
 arch=('x86_64')
@@ -11,7 +11,7 @@ license=('MIT')
 options=('strip')
 makedepends=('gnutls' 'zlib' 'openssl' 'ca-certificates')
 source=("https://curl.haxx.se/download/${pkgbase}-${pkgver}.tar.xz")
-md5sums=('ac4a59c38c47adc160ea71eace20257b')
+md5sums=('18ebc36c5dc9317d4a0b5db94a4e12ad')
 
 build() {
 	cd ${srcdir}/${pkgbase}-${pkgver}

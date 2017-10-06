@@ -1,9 +1,9 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=glib
-pkgver=2.54.0
+pkgver=2.54.1
 _pkgver=${pkgver%.*}
-pkgrel=2
+pkgrel=1
 pkgdesc='The GLib package contains low-level libraries useful for providing data structure handling for C'
 arch=('x86_64')
 url='http://www.gtk.org'
@@ -17,7 +17,7 @@ options=('!emptydirs')
 source=("http://ftp.gnome.org/pub/gnome/sources/${pkgname}/${_pkgver}/${pkgname}-${pkgver}.tar.xz"
 		'glib-compile-schemas.hook'
 		'gio-querymodules.hook')
-md5sums=('6e4db71816ccbc8dabf0e58fa7228e76'
+md5sums=('f8903002421c44dc6e5b5baab8066f1f'
          '9e25d7de10bc4dc105f171e9ae46ef69'
          'a52ea506b5cf162a4f72d09cc33fae50')
          

@@ -1,8 +1,8 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=xorg-server
-pkgver=1.19.3
-pkgrel=4
+pkgver=1.19.4
+pkgrel=1
 pkgdesc='The Xorg Server is the core of the X Window system'
 arch=('x86_64')
 url='http://xorg.freedesktop.org'
@@ -15,14 +15,14 @@ makedepends=('pixman' 'libx11' 'mesa' 'xf86driproto' 'xcmiscproto' 'xtrans' 'big
 			 'xf86dgaproto' 'libxmu' 'libxrender' 'libxi' 'dmxproto' 'libxaw' 'libdmx' 'libxtst' 'libxres'
 			 'xkbcomp' 'util-macros' 'font-util' 'glproto' 'dri2proto' 'libgcrypt' 'libepoxy'
 			 'xcb-util' 'xcb-util-image' 'xcb-util-renderutil' 'xcb-util-wm' 'xcb-util-keysyms' 'dri3proto'
-			 'libxshmfence' 'xmlto' 'docbook-xml' 'asciidoc' 'dbus')
+			 'libxshmfence' 'xmlto' 'docbook-xml' 'asciidoc' 'dbus' 'eudev')
 source=("https://xorg.freedesktop.org/releases/individual/xserver/${pkgname}-${pkgver}.tar.gz"
 		'add-prime-support.patch'
 		'startDM.sh'
 		'xdm.initd'
 		'xdm-setup.initd'
 		'xdm.confd')
-md5sums=('a7a51420874af84d90720b60de7936be'
+md5sums=('8e3bbbd95da197dd50fdba4d2bf0a947'
          '45563dbf8f46e54267a13d2a9289ed94'
          '4cebe0ea241e9f7988068c7568945ab7'
          '361d8f948f2943af0ada1b7a5e13a8fc'

@@ -1,9 +1,9 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=librsvg
-pkgver=2.40.18
+pkgver=2.40.19
 _pkgver=${pkgver%.*}
-pkgrel=2
+pkgrel=1
 pkgdesc='The librsvg package contains a library and tools used to manipulate, convert and view Scalable Vector Graphic (SVG) images'
 arch=('x86_64')
 url='https://wiki.gnome.org/Projects/LibRsvg'
@@ -12,11 +12,7 @@ depends=('gdk-pixbuf' 'pango' 'libcroco' 'gtk3' 'libatk')
 makedepends=('intltool' 'python2' 'atk-dev' 'gobject-introspection' 'vala' 'gtk-doc')
 options=('!emptydirs')
 source=("http://ftp.gnome.org/pub/gnome/sources/${pkgname}/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
-md5sums=('eaa5c8a8bbe2600ab5194c0d3b1b621b')
-
-prepare() {
-	cd "${srcdir}/${pkgname}-${pkgver}"
-}
+md5sums=('934eff469b34c732fb91ddb9afd40638')
 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"

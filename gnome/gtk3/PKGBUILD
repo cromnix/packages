@@ -2,7 +2,7 @@
 
 pkgbase=gtk3
 pkgname=('gtk3' 'gtk-update-icon-cache')
-pkgver=3.22.21
+pkgver=3.22.24
 _pkgver=${pkgver%.*}
 pkgrel=1
 pkgdesc='The GTK+ 3 package contains libraries used for creating graphical user interfaces for applications'
@@ -20,7 +20,7 @@ source=("http://ftp.gnome.org/pub/gnome/sources/gtk+/${_pkgver}/gtk+-${pkgver}.t
 		'gtk-update-icon-cache.hook'
 		'gtk-update-icon-cache.script'
 		'settings.ini')
-md5sums=('622c0ae9a271bf55855a0d2d937d6d16'
+md5sums=('b782a15b7b5b2005a1ce4647fb002a49'
          '47d92cc1080c92e8a022334b620f0629'
          'c792ef5bb74ceba564b4d8ad306a6592'
          '57010c34ddf8d70c2870a81e0313bdf0'
@@ -30,13 +30,14 @@ md5sums=('622c0ae9a271bf55855a0d2d937d6d16'
 
 build() {
 	cd "${srcdir}/gtk+-${pkgver}"
-	./configure --prefix=/usr \
+	CXX=/bin/false ./configure --prefix=/usr \
 		--sysconfdir=/etc \
 		--disable-schemas-compile \
 		--enable-broadway-backend \
 		--enable-x11-backend \
 		--disable-wayland-backend \
 		--enable-gtk-doc
+	sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
 	make
 }
 

@@ -1,9 +1,9 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=dconf
-pkgver=0.26.0
+pkgver=0.26.1
 _pkgver=${pkgver%.*}
-pkgrel=2
+pkgrel=1
 pkgdesc='The DConf package contains a low-level configuration system'
 arch=('x86_64')
 url='https://wiki.gnome.org/Projects/dconf/'
@@ -11,7 +11,7 @@ license=('LGPL2.1')
 depends=('glib')
 makedepends=('vala' 'dbus' 'gtk-doc' 'python')
 source=("http://ftp.gnome.org/pub/gnome/sources/${pkgname}/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
-md5sums=('7fc3cb1cf22d904d8744bd12e9c9d3dd')
+md5sums=('a3cb67032e060450fa01c1a0f874bb60')
 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"

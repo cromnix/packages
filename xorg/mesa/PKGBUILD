@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=mesa
-pkgver=17.2.1
+pkgver=17.2.2
 pkgrel=1
 pkgdesc='Mesa is an OpenGL compatible 3D graphics library'
 arch=('x86_64')
@@ -13,8 +13,8 @@ makedepends=('python2' 'libxml2' 'libx11' 'glproto' 'libdrm' 'dri2proto' 'dri3pr
 makedepends+=('mesa')
 provides=('libgl' 'libgles' 'libegl')
 source=("https://mesa.freedesktop.org/archive/${pkgname}-${pkgver}.tar.xz"
-		'http://www.linuxfromscratch.org/patches/blfs/8.0/mesa-13.0.4-add_xdemos-1.patch')
-md5sums=('f53ed38110237d9df5f9198c09ef0ab0'
+		'add-xdemos.patch')
+md5sums=('1a157b5baefb5adf9f4fbb8a6632d74c'
          '48cce4c6a8ae116c4e00ae128ba97603')
 
 # todo: A lot of changes are needed to support more graphics cards and settings
@@ -23,7 +23,7 @@ md5sums=('f53ed38110237d9df5f9198c09ef0ab0'
 prepare() {
 	cd ${srcdir}/${pkgname}-${pkgver}
 
-	patch -Np1 -i "${srcdir}/mesa-13.0.4-add_xdemos-1.patch"
+	patch -Np1 -i "${srcdir}/add-xdemos.patch"
 
 	sed -i "/pthread_stubs_possible=/s/yes/no/" configure.ac
 	autoreconf -fiv
@@ -32,8 +32,6 @@ prepare() {
 build() {
 	cd ${srcdir}/${pkgname}-${pkgver}
 
-	#"i915,r600,nouveau,radeonsi,svga,swrast"
-
 	./configure --prefix=/usr \
 		--sysconfdir=/etc \
 		--enable-texture-float \
@@ -41,10 +39,13 @@ build() {
 		--enable-dri \
 		--enable-xa \
 		--enable-glx-tls \
-		--with-egl-platforms='drm,x11' \
-		--with-gallium-drivers='i915,r600,nouveau,svga,swrast' \
-		--with-dri-drivers='i915,i965,r200,nouveau,swrast'
-
+		--with-platforms='drm,x11' \
+		--with-gallium-drivers='i915,r600,nouveau,svga,swrast,virgl' \
+		--with-dri-drivers='i915,i965,r200,nouveau,swrast' \
+		--with-vulkan-drivers='intel'
+		#--with-gallium-drivers='i915,r300,r600,nouveau,radeonsi,svga,swrast,virgl,swr'
+		#--with-dri-drivers='i915,i965,r200,nouveau,radeon,swrast'
+		#--with-vulkan-drivers='intel,radeon'
 	make
 
 	make -C xdemos DEMOS_PREFIX=/usr DESTDIR={$pkgdir}

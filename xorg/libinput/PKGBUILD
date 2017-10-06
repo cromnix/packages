@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=libinput
-pkgver=1.8.2
+pkgver=1.8.3
 pkgrel=1
 pkgdesc='libinput is a library that handles input devices for display servers and other applications that need to directly deal with input devices'
 arch=('x86_64')
@@ -10,7 +10,7 @@ license=('custom:X11')
 depends=('mtdev' 'libevdev' 'eudev')
 makedepends=('python' 'check')
 source=("http://www.freedesktop.org/software/${pkgname}/${pkgname}-${pkgver}.tar.xz")
-md5sums=('e94e9aa765da9533c23b80b440638de9')
+md5sums=('5265244853ad7cf41232b0d3ee805ab9')
 
 # todo: change eudev to libeudev
 # todo: rebuid with doxygen

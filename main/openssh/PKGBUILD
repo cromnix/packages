@@ -1,8 +1,8 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=openssh
-pkgver=7.5.p1
-_pkgver=7.5p1
+pkgver=7.6.p1
+_pkgver=7.6p1
 pkgrel=1
 pkgdesc='The OpenSSH package contains ssh clients and the sshd daemon'
 arch=('x86_64')
@@ -12,9 +12,9 @@ depends=('openssl')
 optdepends=('xorg-xauth: X11 forwarding'
 			'x11-ssh-askpass: input passphrase in X')
 source=("http://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/${pkgname}-${_pkgver}.tar.gz"
-		"http://www.linuxfromscratch.org/patches/blfs/svn/${pkgname}-${_pkgver}-openssl-1.1.0-1.patch")
-md5sums=('652fdc7d8392f112bef11cacf7e69e23'
-         'f5aa210fd557cac83508ec3a71cfafa1')
+		"${pkgname}-${_pkgver}-openssl-1.1.0-1.patch")
+md5sums=('06a88699018e5fef13d4655abfed1f63'
+         '0ac61cf4dad69ff15a9a80423579fa03')
 
 prepare() {
 	cd "${srcdir}/${pkgname}-${_pkgver}"
