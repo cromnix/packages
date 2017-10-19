@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=vala
-pkgver=0.36.3
+pkgver=0.38.2
 _pkgver=${pkgver%.*}
 pkgrel=1
 pkgdesc='Vala is a new programming language that aims to bring modern programming language features to GNOME developers without imposing any additional runtime requirements and without using a different ABI compared to applications and libraries written in C'
@@ -12,11 +12,22 @@ depends=('glib')
 makedepends=('libxslt' 'vala')
 checkdepends=('dbus' 'libx11' 'gobject-introspection')
 source=("http://ftp.gnome.org/pub/gnome/sources/${pkgname}/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
-md5sums=('ff093f46e1d2e0b179543ec43cf27d76')
+md5sums=('720846116448fc20b0ab3c0921e19798')
+
+# todo: rebuild with missing depends
+
+prepare() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	# this is to fix the build with the missing optional depends
+	sed -i '101d; 107,123d; 125,126d' configure.ac
+	sed -i '/valadoc/d' Makefile.am
+	ACLOCAL= autoreconf -fiv
+}
 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
 	./configure --prefix=/usr
+	sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
 	make
 }
 

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+kernelname=cromnix
+
 updpkgsums
 
 makepkg -od
@@ -13,7 +15,7 @@ make olddefconfig
 popd
 cp ${path}/${folder}/.config config
 
-sed -i "s|CONFIG_LOCALVERSION=.*|CONFIG_LOCALVERSION=\"-cromnix-stable\"|g" ./config
+sed -i "s|CONFIG_LOCALVERSION=.*|CONFIG_LOCALVERSION=\"-${kernelname}\"|g" ./config
 sed -i "s|CONFIG_LOCALVERSION_AUTO=.*|CONFIG_LOCALVERSION_AUTO=n|" ./config
 
 updpkgsums

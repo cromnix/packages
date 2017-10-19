@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=openrc
-pkgver=0.32
+pkgver=0.33.1
 pkgrel=1
 pkgdesc="An init and service control software"
 arch=('x86_64')
@@ -29,13 +29,11 @@ backup=('etc/openrc/rc.conf'
         'etc/openrc/conf.d/swap'
         'etc/openrc/conf.d/urandom')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/OpenRC/openrc/archive/$pkgver.tar.gz"
-		'openrc.logrotate'
-		'quiet.patch')
+		'openrc.logrotate')
 install=openrc.install
 #options=('debug' 'strip')
-md5sums=('d47952524703abbf7c9ed73a1bc4db04'
-         '0d8a00d30812ec460ef8c32a96372c31'
-         'c0ec3c5adb0e3ede01213727a26e5015')
+md5sums=('0fe9183706a315fc393f9ee1b6d0d41b'
+         '0d8a00d30812ec460ef8c32a96372c31')
 
 _args=(
     SYSCONFDIR=/etc/openrc
@@ -44,11 +42,6 @@ _args=(
 	MKSYSVINIT=yes
     MKTERMCAP=ncurses
 )
-
-prepare() {
-    cd "$srcdir/$pkgname-$pkgver"
-	patch -Np1 -i "${srcdir}"/quiet.patch
-}
 
 build() {
     cd "$srcdir/$pkgname-$pkgver"

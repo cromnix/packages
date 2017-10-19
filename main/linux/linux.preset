@@ -1,14 +1,14 @@
-# mkinitcpio preset file for the 'linux' package
+# mkinitcpio preset file for the 'linux@KERNAME@' package
 
 ALL_config="/etc/mkinitcpio.conf"
-ALL_kver="/boot/vmlinuz-@VERSION@-cromnix"
+ALL_kver="/boot/vmlinuz-@VERSION@@KERNAME@"
 
 PRESETS=('default' 'fallback')
 
 #default_config="/etc/mkinitcpio.conf"
-default_image="/boot/initramfs-@VERSION@-cromnix.img"
+default_image="/boot/initramfs-@VERSION@@KERNAME@.img"
 #default_options=""
 
 #fallback_config="/etc/mkinitcpio.conf"
-fallback_image="/boot/initramfs-@VERSION@-cromnix-fallback.img"
+fallback_image="/boot/initramfs-@VERSION@@KERNAME@-fallback.img"
 fallback_options="-S autodetect"

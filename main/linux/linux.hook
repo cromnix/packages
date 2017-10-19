@@ -2,10 +2,10 @@
 Type = File
 Operation = Install
 Operation = Upgrade
-Target = boot/vmlinuz-@VERSION@-cromnix
+Target = boot/vmlinuz-@VERSION@@KERNAME@
 Target = usr/lib/initcpio/*
 
 [Action]
-Description = Updating linux initramfs
+Description = Updating @PKGBASE@ initramfs
 When = PostTransaction
-Exec = /usr/bin/mkinitcpio -p linux
+Exec = /usr/bin/mkinitcpio -p @PKGBASE@

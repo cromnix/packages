@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=pamac
-pkgver=6.0.3
+pkgver=6.1.1
 pkgrel=1
 pkgdesc="A Gtk3 frontend for libalpm"
 arch=('x86_64')
@@ -10,33 +10,31 @@ license=('GPL3')
 depends=('glib' 'json-glib' 'libsoup' 'dbus-glib' 'polkit' 'vte3' 'gtk3'
          'libnotify' 'desktop-file-utils' 'pacman>=5.0' 'gnutls'
          'appstream-glib' 'cromnix-appstream-data')
-makedepends=('gettext' 'itstool' 'vala>=0.36' 'atk-dev')
+makedepends=('gettext' 'itstool' 'vala>=0.36' 'atk-dev' 'meson' 'ninja')
 optdepends=('polkit-gnome: needed for authentification in Cinnamon, Gnome'
 			'mate-polkit: needed for authentification in Mate'
 			'lxsession: needed for authentification in Xfce, LXDE etc.'
 			'pamac-tray-appindicator: tray icon for KDE')
 backup=('etc/pamac.conf')
-options=(!emptydirs)
-source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz"
-		'disable-aur.patch')
-md5sums=('c11dfa80ecd48c62716dc16f0b826bf2'
-         'af51d90497a411473b099256f8ba6309')
+source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
+md5sums=('4388a83d0ec16da61e1274e587d57266')
 
 prepare() {
 	cd "$srcdir/$pkgname-$pkgver"
 	# patches here
-	patch -Np1 -i "${srcdir}"/disable-aur.patch
 	sed -e "s|archlinux-arch-|cromnix-|" -i src/user_daemon.vala
+	[ -d build ] || mkdir build
 }
 
 build() {
-	cd "$srcdir/$pkgname-$pkgver"
-	make all
+	cd "$srcdir/$pkgname-$pkgver/build"
+	meson --prefix=/usr --sysconfdir=/etc
+	ninja
 }
 
 package() {
-	cd "$srcdir/$pkgname-$pkgver"
-	make prefix="$pkgdir"/usr sysconfdir="$pkgdir"/etc install
+	cd "$srcdir/$pkgname-$pkgver/build"
+	DESTDIR="${pkgdir}" ninja install
 	rm -rf "${pkgdir}"/etc/systemd
 	rm -rf "${pkgdir}"/usr/lib/systemd
 }
