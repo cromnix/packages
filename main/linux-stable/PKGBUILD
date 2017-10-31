@@ -3,7 +3,7 @@
 #pkgbase=linux				# Build stock -cromnix kernel
 pkgbase=linux-stable		# Build kernel with a different name
 pkgname=("${pkgbase}" "${pkgbase}-headers" "${pkgbase}-docs" "${pkgbase}-mkinitcpio")
-pkgver=4.13.7
+pkgver=4.13.9
 pkgrel=1
 arch=('x86_64')
 url='http://www.kernel.org/'
@@ -15,8 +15,8 @@ source=("https://www.kernel.org/pub/linux/kernel/v4.x/linux-${pkgver}.tar.xz"
 		'linux-lib-path.patch'
 		'linux.hook'
 		'linux.preset')
-md5sums=('cd49d80f54cbe6a3cd1dc51d28648848'
-         'b35667fd4390a385575e52451003f7bf'
+md5sums=('48b8bb806d97f5bbc1ad983253f162ee'
+         '6a78f8a184f7a5a26c2fd2efad2f49d4'
          '9d34da065c7c15ab5aa73fa4b44f4c21'
          'ad4478b12635105c577947fec8224e98'
          'b5bb1760938dae90c23e53bef1d629d5')

@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=pamac
-pkgver=6.1.1
+pkgver=6.1.2
 pkgrel=1
 pkgdesc="A Gtk3 frontend for libalpm"
 arch=('x86_64')
@@ -17,7 +17,7 @@ optdepends=('polkit-gnome: needed for authentification in Cinnamon, Gnome'
 			'pamac-tray-appindicator: tray icon for KDE')
 backup=('etc/pamac.conf')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
-md5sums=('4388a83d0ec16da61e1274e587d57266')
+md5sums=('e9c229b3d0611901c2d8a95e88b7fd6d')
 
 prepare() {
 	cd "$srcdir/$pkgname-$pkgver"

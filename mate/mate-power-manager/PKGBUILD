@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=mate-power-manager
-pkgver=1.18.0
+pkgver=1.19.0
 _pkgver=${pkgver%.*}
 pkgrel=1
 pkgdesc='Power management tool for the MATE desktop'
@@ -13,7 +13,7 @@ depends=('dbus-glib' 'libcanberra' 'libgnome-keyring' 'libnotify' 'upower')
 makedepends=('intltool' 'itstool' 'mate-panel' 'atk-dev')
 optdepends=('mate-panel: Set brightness and inhibit power management from the panel')
 source=("http://pub.mate-desktop.org/releases/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
-md5sums=('0752b149f3036fb0469afa57edf3d3a2')
+md5sums=('ba85e12c2f9eda40cee06c07310c0f2e')
 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"

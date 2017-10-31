@@ -1,9 +1,9 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=marco
-pkgver=1.18.1
+pkgver=1.19.1
 _pkgver=${pkgver%.*}
-pkgrel=2
+pkgrel=1
 pkgdesc='A window manager for MATE'
 arch=('x86_64')
 url='http://mate-desktop.org/'
@@ -12,7 +12,7 @@ groups=('mate')
 depends=('mate-desktop' 'zenity' 'libcanberra' 'libgtop' 'libsm')
 makedepends=('intltool' 'itstool' 'atk-dev' 'at-spi2-atk-dev')
 source=("http://pub.mate-desktop.org/releases/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
-md5sums=('0d0a3eeb643c7177405122a246188d60')
+md5sums=('f6845b88ac7cb17e64e5e34721ecd1ec')
 
 # todo: rebuild with depends
 

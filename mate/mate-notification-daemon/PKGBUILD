@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=mate-notification-daemon
-pkgver=1.18.0
+pkgver=1.19.0
 _pkgver=${pkgver%.*}
 pkgrel=1
 pkgdesc='Notification daemon for MATE'
@@ -12,7 +12,7 @@ groups=('mate')
 depends=('dbus-glib' 'libcanberra' 'libwnck' 'libnotify')
 makedepends=('intltool' 'atk-dev')
 source=("http://pub.mate-desktop.org/releases/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
-md5sums=('d2d3e92b4d3138e78ae0389f0d9aabb0')
+md5sums=('b9164595a7ba84a7024331c9107eb84d')
 
 # todo: rebuild with depends
 

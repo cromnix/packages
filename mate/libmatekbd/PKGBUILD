@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=libmatekbd
-pkgver=1.18.2
+pkgver=1.19.0
 _pkgver=${pkgver%.*}
 pkgrel=1
 pkgdesc='MATE keyboard library'
@@ -11,7 +11,7 @@ license=('LGPL')
 depends=('gtk3' 'libxklavier')
 makedepends=('intltool' 'atk-dev')
 source=("http://pub.mate-desktop.org/releases/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
-md5sums=('1d5a491f45801a18f692714eac31da76')
+md5sums=('15f696d2d756a694e02ef6dc1580337b')
 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"

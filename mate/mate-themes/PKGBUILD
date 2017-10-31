@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=mate-themes
-pkgver=3.22.13
+pkgver=3.22.14
 _pkgver=${pkgver%.*}
 pkgrel=1
 pkgdesc='Default themes for the MATE desktop'
@@ -15,7 +15,7 @@ optdepends=('gtk-engines: for gtk2 themes'
 			'mate-icon-theme: default icon theme')
 options=('!emptydirs')
 source=("http://pub.mate-desktop.org/releases/themes/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
-md5sums=('f20360ba6453b602556f6c9ca4eebf65')
+md5sums=('861a92c0722c6dafe724fbf4e4df803b')
 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"

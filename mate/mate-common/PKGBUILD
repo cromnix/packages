@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=mate-common
-pkgver=1.18.0
+pkgver=1.19.0
 _pkgver=${pkgver%.*}
 pkgrel=1
 pkgdesc='Common development macros for MATE'
@@ -10,7 +10,7 @@ url='http://mate-desktop.org/'
 license=('GPL')
 depends=('autoconf' 'automake' 'gettext' 'gtk-doc' 'intltool' 'libtool' 'pkg-config')
 source=("http://pub.mate-desktop.org/releases/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
-md5sums=('44994bb86daa8c7092f1e4784c399455')
+md5sums=('af8e956d55ac578c1d18f86f3ea88480')
 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"

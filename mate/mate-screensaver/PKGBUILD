@@ -1,9 +1,9 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=mate-screensaver
-pkgver=1.18.1
+pkgver=1.19.0
 _pkgver=${pkgver%.*}
-pkgrel=2
+pkgrel=1
 pkgdesc='Screensaver for MATE'
 arch=('x86_64')
 url='http://mate-desktop.org/'
@@ -13,7 +13,7 @@ depends=('libmatekbd' 'libnotify' 'libxscrnsaver' 'mate-desktop' 'mate-menus' 'm
 makedepends=('intltool' 'atk-dev')
 optdepends=('rss-glx: Really slick screensavers')
 source=("http://pub.mate-desktop.org/releases/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
-md5sums=('b64bb7852971379bbdd6ee74e0a1a9ed')
+md5sums=('fc7299d4421fac6aec4230153601a9c5')
 
 # todo: rebuild with depends
 # elogind or consolekit?

@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=engrampa
-pkgver=1.18.2
+pkgver=1.19.1
 _pkgver=${pkgver%.*}
 pkgrel=1
 pkgdesc='Archive manipulator for MATE'
@@ -16,7 +16,7 @@ optdepends=('caja: file archiver extension'
 			'unace: ACE archive support'
 			'unrar: RAR archive support')
 source=("http://pub.mate-desktop.org/releases/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
-md5sums=('a05d315096ef74ba416ae90246ce59e3')
+md5sums=('ee281762932ca314bc8b18b5f2da9619')
 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"

@@ -3,7 +3,7 @@
 pkgbase=wpa_supplicant
 pkgname=('wpa_supplicant' 'wpa_supplicant-openrc')
 pkgver=2.6
-pkgrel=6
+pkgrel=7
 pkgdesc="WPA Supplicant is a Wi-Fi Protected Access (WPA) client and IEEE 802.1X supplicant."
 arch=('x86_64')
 url="https://w1.fi/wpa_supplicant/"
@@ -14,16 +14,20 @@ source=("https://w1.fi/releases/$pkgbase-$pkgver.tar.gz"
 		"https://gitweb.gentoo.org/repo/gentoo.git/plain/net-wireless/wpa_supplicant/files/wpa_supplicant-conf.d"
 		'wpa_cli.sh'
 		'wpa_supplicant.conf'
-		'config')
+		'config'
+		'krackattacksfix.patch')
 md5sums=('091569eb4440b7d7f2b4276dbfc03c3c'
          '81e607b82ff5965f9ea6c004ea7287c2'
          'bc117427f2c538439f3f1481a028ee06'
          '3ee21a12dcca2736f23d6dbd5a89da35'
          '6198b16d60af3a0ff96f88688eea3144'
-         '3124d9a6958b0c83c83bd03a72aee89b')
+         '3124d9a6958b0c83c83bd03a72aee89b'
+         '93e3f82d21ec0c364e32d242a658b8ce')
 
 prepare() {
 	cp -v ${srcdir}/config "$srcdir/$pkgbase-$pkgver/wpa_supplicant/.config"
+	cd "$srcdir/$pkgbase-$pkgver"
+	patch -p1 -i "${srcdir}"/krackattacksfix.patch
 }
 
 build() {

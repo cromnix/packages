@@ -1,9 +1,9 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=mate-desktop
-pkgver=1.18.0
+pkgver=1.19.1
 _pkgver=${pkgver%.*}
-pkgrel=2
+pkgrel=1
 pkgdesc='Library with common API for various MATE modules'
 arch=('x86_64')
 url='http://mate-desktop.org/'
@@ -12,7 +12,7 @@ groups=('mate')
 depends=('gtk3' 'startup-notification')
 makedepends=('intltool' 'atk-dev' 'gobject-introspection')
 source=("http://pub.mate-desktop.org/releases/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
-md5sums=('3252cd41ec927805398bc812841215fd')
+md5sums=('b4a0d27686e0d9d1fb375d73aff21ee8')
 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"

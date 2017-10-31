@@ -1,15 +1,15 @@
 # Maintainer: Chris Cromer <chris@cromer.cl>
 
 pkgname=pamac-classic
-pkgver=6.3.0
+pkgver=6.3.5
 pkgrel=1
 pkgdesc="A Gtk3 frontend for libalpm"
 arch=('x86_64')
 url="https://github.com/cromnix/pamac-classic"
 license=('GPL3')
 depends=('glib' 'json-glib' 'libsoup' 'dbus-glib' 'polkit' 'vte3' 'gtk3'
-         'libnotify' 'desktop-file-utils' 'pacman>=5.0' 'gnutls')
-makedepends=('gettext' 'itstool' 'vala>=0.36' 'atk-dev' 'cmake')
+         'libnotify' 'desktop-file-utils' 'pacman' 'gnutls')
+makedepends=('gettext' 'vala' 'atk-dev' 'cmake' 'ninja')
 optdepends=('polkit-gnome: needed for authentification in Cinnamon, Gnome'
 			'mate-polkit: needed for authentification in Mate'
 			'lxsession: needed for authentification in Xfce, LXDE etc.'
@@ -17,7 +17,7 @@ optdepends=('polkit-gnome: needed for authentification in Cinnamon, Gnome'
 conflicts=('pamac')
 backup=('etc/pamac.conf')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
-md5sums=('07c20b3fce8316befa7b47923fc797df')
+md5sums=('7babd10742cca94c471c34c72948d38b')
 
 prepare() {
 	[ -d "${srcdir}"/build ] || mkdir -p "${srcdir}"/build
@@ -25,18 +25,19 @@ prepare() {
 
 build() {
 	cd "${srcdir}"/build
-	cmake "${srcdir}"/${pkgname}-${pkgver} \
+	cmake -GNinja "${srcdir}"/${pkgname}-${pkgver} \
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DCMAKE_INSTALL_LIBDIR=/usr/lib \
 		-DCMAKE_INSTALL_SYSCONFDIR=/etc \
 		-DICON_UPDATE=OFF \
 		-DDISABLE_AUR=ON
-	make
+	#meson "${srcdir}"/${pkgname}-${pkgver} --prefix=/usr --sysconfdir=/etc -DICON_UPDATE=OFF -DDISABLE_AUR=ON
+	ninja
 }
 
 package() {
 	cd "${srcdir}"/build
-	make DESTDIR="${pkgdir}" install
+	DESTDIR="${pkgdir}" ninja install
 	rm -rf "${pkgdir}"/etc/systemd
 	rm -rf "${pkgdir}"/usr/lib/systemd
 }

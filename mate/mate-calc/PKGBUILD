@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=mate-calc
-pkgver=1.18.0
+pkgver=1.19.0
 _pkgver=${pkgver%.*}
 pkgrel=1
 pkgdesc='Calculator for the MATE desktop environment'
@@ -12,7 +12,7 @@ groups=('mate-extra')
 depends=('gtk3')
 makedepends=('intltool' 'itstool' 'atk-dev')
 source=("http://pub.mate-desktop.org/releases/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
-md5sums=('552731cfcb655e4871eb407820962e16')
+md5sums=('13b19bcfdbf16e8ba699fc4e9bc9401e')
 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"

@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=mate-user-guide
-pkgver=1.18.0
+pkgver=1.19.0
 _pkgver=${pkgver%.*}
 pkgrel=1
 pkgdesc='MATE User Guide'
@@ -12,7 +12,7 @@ groups=('mate')
 #depends=('yelp')
 makedepends=('intltool' 'itstool')
 source=("http://pub.mate-desktop.org/releases/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
-md5sums=('d1f7f41d633d9bbece5209fdf217d64b')
+md5sums=('350604a3d054236eb7ab07c52958586d')
 
 # todo: rebuild with depends yelp
 

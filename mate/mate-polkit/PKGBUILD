@@ -1,9 +1,9 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=mate-polkit
-pkgver=1.18.1
+pkgver=1.19.0
 _pkgver=${pkgver%.*}
-pkgrel=2
+pkgrel=1
 pkgdesc='PolicyKit integration for the MATE desktop'
 arch=('x86_64')
 url='http://mate-desktop.org/'
@@ -12,7 +12,7 @@ groups=('mate')
 depends=('gtk3' 'polkit')
 makedepends=('intltool' 'gobject-introspection' 'atk-dev')
 source=("http://pub.mate-desktop.org/releases/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
-md5sums=('1ab96ae9c16d4e030c010e51e9118942')
+md5sums=('15629da9f052430cea0914a2f2212782')
 
 # todo: rebuild with depends
 

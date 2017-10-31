@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=mate-utils
-pkgver=1.18.2
+pkgver=1.19.0
 _pkgver=${pkgver%.*}
 pkgrel=1
 pkgdesc='Common MATE utilities for viewing disk usage, logs and fonts, taking screenshots, managing dictionaries and searching files'
@@ -13,7 +13,7 @@ depends=('mate-desktop' 'libcanberra' 'libgtop' 'libsm')
 makedepends=('intltool' 'itstool' 'mate-panel' 'atk-dev')
 optdepends=('mate-panel: Look up words in dictionaries from the panel')
 source=("http://pub.mate-desktop.org/releases/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
-md5sums=('76f2e840dc4746ea313dc44d3c902d5b')
+md5sums=('b3194ccba445a41d87b27fb655dbce4d')
 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"

@@ -1,9 +1,9 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=caja
-pkgver=1.18.3
+pkgver=1.19.2
 _pkgver=${pkgver%.*}
-pkgrel=4
+pkgrel=1
 pkgdesc='File manager for the MATE desktop'
 arch=('x86_64')
 url='http://mate-desktop.org/'
@@ -13,7 +13,7 @@ depends=('exempi' 'gvfs' 'libexif' 'libsm' 'mate-desktop' 'libnotify')
 makedepends=('intltool' 'atk-dev' 'python' 'gobject-introspection' 'gtk-doc')
 optdepends=('gstreamer: automatic media playback when mouseover')
 source=("http://pub.mate-desktop.org/releases/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
-md5sums=('b416e13cb6e8cc9c76bbf9e2ecb2bc67')
+md5sums=('678b80cb46b27b6c98e59b751449342f')
 
 # todo: rebuild with depends
 

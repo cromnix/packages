@@ -1,9 +1,9 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=mate-settings-daemon
-pkgver=1.18.1
+pkgver=1.19.0
 _pkgver=${pkgver%.*}
-pkgrel=2
+pkgrel=1
 pkgdesc='The MATE Settings daemon'
 arch=('x86_64')
 url='http://mate-desktop.org/'
@@ -14,7 +14,7 @@ makedepends=('intltool' 'atk-dev')
 optdepends=('libcanberra-pulse: PulseAudio support'
 			'pulseaudio-alsa: PulseAudio support')
 source=("http://pub.mate-desktop.org/releases/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
-md5sums=('b7d4c903f941715bfff7b2c95f2c32bd')
+md5sums=('615fbda1119238bac504619b9eb1a88b')
 
 # todo: rebuild with depends
 

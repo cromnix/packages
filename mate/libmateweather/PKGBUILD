@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=libmateweather
-pkgver=1.18.1
+pkgver=1.19.1
 _pkgver=${pkgver%.*}
 pkgrel=1
 pkgdesc='Provides access to weather information from the internet.'
@@ -11,7 +11,7 @@ license=('LGPL')
 depends=('gtk3' 'libsoup')
 makedepends=('intltool' 'atk-dev')
 source=("http://pub.mate-desktop.org/releases/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
-md5sums=('647258183304ce3578f89a344139d6b9')
+md5sums=('bd02e8ef667918ac13b00ed4777c89c2')
 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"

@@ -2,7 +2,7 @@
 
 pkgbase=caja-extensions
 pkgname=('caja-extensions-common' 'caja-gksu' 'caja-image-converter' 'caja-open-terminal' 'caja-sendto' 'caja-share' 'caja-wallpaper' 'caja-xattr-tags')
-pkgver=1.18.1
+pkgver=1.19.0
 pkgrel=1
 pkgdesc="Caja extensions"
 url="http://mate-desktop.org"
@@ -12,7 +12,7 @@ depends=('caja' 'dbus-glib')
 #'gksu' 'gupnp' 'imagemagick' 'samba'
 makedepends=('intltool' 'atk-dev' 'at-spi2-atk-dev')
 source=("http://pub.mate-desktop.org/releases/${pkgver%.*}/$pkgbase-$pkgver.tar.xz")
-sha1sums=('d48c112c597d0b460a380585a61094868698ff47')
+sha1sums=('fad076e77af5f3dba3a80b11d6db446b16f193ce')
 
 build() {
 	cd ${pkgbase}-${pkgver}

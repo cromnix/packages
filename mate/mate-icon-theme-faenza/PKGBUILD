@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=mate-icon-theme-faenza
-pkgver=1.18.1
+pkgver=1.19.0
 _pkgver=${pkgver%.*}
 pkgrel=1
 pkgdesc='Faenza icon theme for MATE'
@@ -11,7 +11,7 @@ license=('GPL')
 groups=('mate-extra')
 makedepends=('mate-common')
 source=("http://pub.mate-desktop.org/releases/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
-md5sums=('93ca26f03154d60c3d22ded51ece965f')
+md5sums=('73e46a24b66856158d99fc7d3bf26919')
 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"

@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=libmatemixer
-pkgver=1.18.0
+pkgver=1.19.0
 _pkgver=${pkgver%.*}
 pkgrel=1
 pkgdesc='Mixer library for MATE Desktop'
@@ -11,7 +11,7 @@ license=('LGPL')
 depends=('glib' 'libalsa')
 makedepends=('intltool' 'alsa-lib-dev')
 source=("http://pub.mate-desktop.org/releases/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
-md5sums=('ec4dcf758b7dcba6c602e6ce8bf280f9')
+md5sums=('be5092cc7564c7f410c8f2b85f9f120d')
 
 # todo: rebuild with libpulse
 

@@ -1,7 +1,7 @@
 # Maintainer: Chris Cromer <cromer@cromnix.org>
 
 pkgname=mate-control-center
-pkgver=1.18.2
+pkgver=1.19.1
 _pkgver=${pkgver%.*}
 pkgrel=1
 pkgdesc='The Control Center for MATE'
@@ -12,7 +12,7 @@ groups=('mate')
 depends=('mate-menus' 'mate-settings-daemon' 'marco' 'libxscrnsaver')
 makedepends=('intltool' 'itstool' 'atk-dev')
 source=("http://pub.mate-desktop.org/releases/${_pkgver}/${pkgname}-${pkgver}.tar.xz")
-md5sums=('6737ac7c84880672e79ab164f6b0e707')
+md5sums=('ce49e5264d7afc7d90bf551bb7b2e74c')
 
 # todo: rebuild with depends
 
